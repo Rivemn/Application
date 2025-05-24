@@ -1,0 +1,15 @@
+# Visual Studio files
+.vs/
+*.user
+*.suo
+
+# .NET compilation files
+bin/
+obj/
+*.xml
+
+# Migration files
+Migrations/
+
+# HTTP requests (e.g. for API tests in Visual Studio or Rider)
+*.http

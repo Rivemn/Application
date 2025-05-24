@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: youruser
+      POSTGRES_PASSWORD: yourpass
+      POSTGRES_DB: deskbooking
+    ports:
+      - "5432:5432"
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    depends_on:
+      - db
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=deskbooking;Username=youruser;Password=yourpass
+    ports:
+      - "5000:80"
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+
+volumes:
+  dbdata:
