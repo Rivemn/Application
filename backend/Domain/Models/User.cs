@@ -12,13 +12,13 @@ namespace MeetingRoomBooking.Core.Models
 			Email= email;
 			CreatedAt= createdAt;
 		}
-		public Guid Id { get;} = Guid.NewGuid();
+		public Guid Id { get;} 
 
-		public string FullName { get;} = string.Empty;
+		public string FullName { get;}
 
-		public string Email { get;} = string.Empty;
+		public string Email { get;}
 
-		public DateTime CreatedAt { get;} = DateTime.UtcNow;
+		public DateTime CreatedAt { get;}
 
 		public static User Create(Guid id, string fullName, string email,  DateTime createdAt)
 		{

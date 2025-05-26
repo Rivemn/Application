@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Domain.Abstractions;
+using Domain.Enums;
+using Domain.Interfaces;
+
 
 namespace Domain.Models
 {
-	public class PrivateRoom : Workspace
+	public class PrivateRoom : Workspace, ICapacitySupport
 	{
 		private PrivateRoom(Guid id, string name, DateTime createdAt)
 			: base(id, name, createdAt)

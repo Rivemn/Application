@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Domain.Abstractions;
+using Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,5 +24,4 @@ namespace Domain.Models
 			return new OpenSpace(id, name, totalDesks, createdAt);
 		}
 	}
-
 }
