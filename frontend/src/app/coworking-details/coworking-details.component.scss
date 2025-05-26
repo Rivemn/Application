@@ -1,0 +1,240 @@
+.coworking-details {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 76px var(--content-padding) 80px;
+  background: var(--bg-light);
+  position: relative;
+}
+p {
+  font-family: "Inter", sans-serif;
+  font-weight: 100;
+  font-size: 16px;
+  line-height: 40px;
+  color: #2d2d2d;
+  text-decoration: none;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.3s ease;
+  border-bottom: 1.5px solid transparent;
+  height: 40px;
+}
+span {
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 40px;
+  color: #2d2d2d;
+  text-decoration: none;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.3s ease;
+  border-bottom: 1.5px solid transparent;
+  height: 40px;
+}
+.booked-message {
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 40px;
+  color: #2d2d2d;
+  text-decoration: none;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.3s ease;
+  border-bottom: 1.5px solid transparent;
+  height: 40px;
+}
+.highlighted-text {
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.section-title {
+  font-family: "Inter", sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 120%;
+  color: var(--text-dark);
+  margin-bottom: 44px;
+  flex: none;
+  order: 0;
+  align-self: stretch;
+  flex-grow: 0;
+  z-index: 0;
+}
+
+/* Workspace Card */
+.workspace-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: var(--white);
+  border-radius: var(--border-radius);
+  padding: 16px;
+  gap: 32px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow);
+}
+.card-main {
+  display: flex;
+  gap: 32px;
+}
+.card-photos {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 340px;
+}
+
+.main-photo {
+  height: 227px;
+  background-size: cover;
+  background-position: center;
+  border-radius: var(--card-radius);
+}
+
+.photo-carousel {
+  display: flex;
+  gap: 8px;
+}
+
+.thumbnail {
+  width: 79px;
+  height: 64px;
+  background: #eee;
+  border-radius: 8px;
+  flex-grow: 1;
+}
+
+.card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 12px 0;
+  gap: 32px;
+}
+
+.card-text {
+  display: flex;
+  gap: 48px;
+}
+
+.card-description {
+  flex: 1;
+}
+
+.card-description h3 {
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.card-description p {
+  color: var(--text-gray);
+  line-height: 24px;
+}
+
+.book-btn {
+  background: var(--primary-color);
+  color: var(--white);
+  border: none;
+  border-radius: 8px;
+  padding: 0 24px;
+  height: 48px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.card-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+/* Capacity Options */
+.capacity-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.capacity-options h4 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.capacity-list {
+  list-style: none;
+  padding-left: 0px;
+  margin: 0;
+  color: var(--text-dark);
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  line-height: 28px;
+}
+
+.amenities,
+.availability {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.amenities h4,
+.availability h4 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.amenities-list {
+  display: flex;
+  gap: 12px;
+}
+
+.amenity-icon {
+  width: 44px;
+  height: 44px;
+  background: #f5f3fb;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Booked Notice */
+.booked-notice {
+  background: #eaf7ee;
+  border-radius: 8px;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.check-icon {
+  width: 24px;
+  height: 24px;
+  background: #73c189;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+}
+
+.check-icon::after {
+  content: "";
+  position: absolute;
+  border: 1.5px solid white;
+  /* Добавьте SVG или псевдоэлементы для иконки галочки */
+}
+.availability-item {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* или любое другое расстояние между иконкой и текстом */
+}

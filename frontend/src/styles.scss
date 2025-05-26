@@ -1,4 +1,79 @@
-body {
+* {
   box-sizing: border-box;
-  background-color: #f7f6f9;
+  margin: 0;
+  padding: 0;
+}
+:root {
+  --max-width: 1440px;
+  --content-padding: 80px;
+  --primary-color: #5c5af3;
+  --text-dark: #2d2d2d;
+  --text-gray: #6b6b6b;
+  --bg-light: #f7f6f9;
+  --white: #ffffff;
+  --border-radius: 20px;
+  --card-radius: 16px;
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+h2 {
+  /* Available workspaces */
+
+  width: 1280px;
+  height: 48px;
+
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 120%;
+  /* identical to box height, or 48px */
+  color: #2d2d2d;
+  /* Inside auto layout */
+  flex: none;
+  order: 0;
+  align-self: stretch;
+  flex-grow: 0;
+  z-index: 0;
+}
+h3 {
+  /* Open space */
+
+  width: 648px;
+  height: 38px;
+
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 32px;
+  line-height: 120%;
+  /* or 38px */
+
+  color: #2d2d2d;
+
+  /* Inside auto layout */
+  flex: none;
+  order: 0;
+  align-self: stretch;
+  flex-grow: 0;
+}
+h4 {
+  /* Amenities */
+
+  width: 212px;
+  height: 22px;
+
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 120%;
+  /* identical to box height, or 22px */
+
+  color: #2d2d2d;
+
+  /* Inside auto layout */
+  flex: none;
+  order: 0;
+  align-self: stretch;
+  flex-grow: 0;
 }
