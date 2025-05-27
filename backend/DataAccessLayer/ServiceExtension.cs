@@ -1,23 +1,41 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Domain.Repositories;
+using Persistence.Repositories;
 
 namespace Persistence
 {
 	public static class ServiceExtensions
 	{
-		public static IServiceCollection AddDataAccessDependencies(this IServiceCollection services,
+		public static IServiceCollection AddDataAccessDependencies(
+			this IServiceCollection services,
 			IConfiguration configuration)
 		{
-			return services
-				.AddDbContext(configuration.GetConnectionString("NpgSqlConnection"));
+			services
+				.AddAppDbContext(configuration)
+				.AddRepositories();
+
+			return services;
 		}
 
-		private static IServiceCollection AddDbContext(this IServiceCollection services, string? connectionString)
+		private static IServiceCollection AddAppDbContext(
+			this IServiceCollection services,
+			IConfiguration configuration)
 		{
-			return services.AddDbContext<AppDbContext>(options =>
+			var connectionString = configuration.GetConnectionString("NpgSqlConnection");
+
+			services.AddDbContext<AppDbContext>(options =>
 				options.UseNpgsql(connectionString));
+
+			return services;
+		}
+
+		private static IServiceCollection AddRepositories(this IServiceCollection services)
+		{
+			services.AddScoped<IWorkspaceRepository, WorkspaceRepository>();
+
+			return services;
 		}
 	}
 }
-

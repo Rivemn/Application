@@ -1,28 +1,37 @@
-﻿
-namespace Domain.Models
+﻿namespace Domain.Models;
+
+public class Workspace
 {
-	public class Workspace
+	public Guid Id { get; private set; }
+	public string Name { get; private set; }
+	public string Description { get; private set; }
+	public string AviabilityUnit { get; private set; }
+
+	private readonly List<Aviability> _aviabilities = new();
+	public IReadOnlyCollection<Aviability> Aviabilities => _aviabilities.AsReadOnly();
+
+	private Workspace(Guid id, string name, string description, string aviabilityUnit)
 	{
-		public Guid Id { get; private set; }
-		public string Name { get; private set; }
-		public string Description { get; private set; }
-		public string AviabilityUnit { get; private set; } // "desks", "rooms", etc.
-
-		private readonly List<Aviability> _aviabilities = new();
-		public IReadOnlyCollection<Aviability> Aviabilities => _aviabilities.AsReadOnly();
-
-		public Workspace(Guid id, string name, string description, string aviabilityUnit)
-		{
-			Id = id;
-			Name = name;
-			Description = description;
-			AviabilityUnit = aviabilityUnit;
-		}
-
-		public void AddAviability(Aviability aviability)
-		{
-			_aviabilities.Add(aviability);
-		}
+		Id = id;
+		Name = name;
+		Description = description;
+		AviabilityUnit = aviabilityUnit;
 	}
 
+	public static (Workspace? workspace, string error) Create(Guid id, string name, string description, string aviabilityUnit)
+	{
+		if (string.IsNullOrWhiteSpace(name))
+			return (null, "Name cannot be empty");
+
+		if (string.IsNullOrWhiteSpace(aviabilityUnit))
+			return (null, "AviabilityUnit cannot be empty");
+
+		var workspace = new Workspace(id, name.Trim(), description?.Trim() ?? "", aviabilityUnit.Trim());
+		return (workspace, string.Empty);
+	}
+
+	public void AddAviability(Aviability aviability)
+	{
+		_aviabilities.Add(aviability);
+	}
 }

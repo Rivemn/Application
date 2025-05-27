@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+﻿
+using Domain.Services;
+using Microsoft.AspNetCore.Mvc;
+using WebAPI.Contracts;
 
 namespace WebAPI.Controllers
 {
@@ -8,36 +9,61 @@ namespace WebAPI.Controllers
 	[ApiController]
 	public class WorkspaceController : ControllerBase
 	{
-		// GET: api/<ValuesController>
+		private readonly IWorkspaceService _service;
+
+		public WorkspaceController(IWorkspaceService service)
+		{
+			_service = service;
+		}
+
 		[HttpGet]
-		public IEnumerable<string> Get()
+		public async Task<IActionResult> GetAll()
 		{
-			return new string[] { "value1", "value2" };
+			var (workspaces, error) = await _service.GetAllAsync();
+
+			if (!string.IsNullOrEmpty(error))
+				return StatusCode(500, error);
+
+			if (workspaces == null || !workspaces.Any())
+				return NoContent(); 
+
+			return Ok(workspaces);
 		}
 
-		// GET api/<ValuesController>/5
 		[HttpGet("{id}")]
-		public string Get(int id)
+		public async Task<IActionResult> GetById(Guid id)
 		{
-			return "value";
+			var (workspace, error) = await _service.GetByIdAsync(id);
+
+			if (!string.IsNullOrEmpty(error))
+				return NotFound(error);
+
+			return Ok(workspace);
 		}
 
-		// POST api/<ValuesController>
 		[HttpPost]
-		public void Post([FromBody] string value)
+		public async Task<IActionResult> Create([FromBody] WorkspaceRequest request)
 		{
+			var (id, error) = await _service.CreateAsync(
+				request.name,
+				request.description,
+				request.aviabilityUnit);
+
+			if (!string.IsNullOrEmpty(error))
+				return BadRequest(error);
+
+			return CreatedAtAction(nameof(GetById), new { id }, id);
 		}
 
-		// PUT api/<ValuesController>/5
-		[HttpPut("{id}")]
-		public void Put(int id, [FromBody] string value)
-		{
-		}
-
-		// DELETE api/<ValuesController>/5
 		[HttpDelete("{id}")]
-		public void Delete(int id)
+		public async Task<IActionResult> Delete(Guid id)
 		{
+			var (success, error) = await _service.DeleteAsync(id);
+
+			if (!success)
+				return NotFound(error);
+
+			return NoContent();
 		}
 	}
 }
