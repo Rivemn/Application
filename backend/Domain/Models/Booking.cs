@@ -1,4 +1,4 @@
-﻿using Domain.Enums;
+﻿
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -6,7 +6,17 @@ namespace MeetingRoomBooking.Core.Models
 {
 	public class Booking
 	{
-		private Booking(Guid id, Guid userId, Guid workspaceId, DateTime start, DateTime end, int quantity, Guid? capacityOptionId, BookingStatus status, DateTime createdAt)
+		public Guid Id { get; private set; }
+		public Guid UserId { get; private set; }
+		public Guid WorkspaceId { get; private set; }
+		public DateTime Start { get; private set; }
+		public DateTime End { get; private set; }
+		public int Quantity { get; private set; }
+		public Guid? CapacityOptionId { get; private set; }
+		public string Status { get; private set; }
+		public DateTime CreatedAt { get; private set; }
+
+		public Booking(Guid id, Guid userId, Guid workspaceId, DateTime start, DateTime end, int quantity, Guid? capacityOptionId, string status, DateTime createdAt)
 		{
 			Id = id;
 			UserId = userId;
@@ -19,19 +29,7 @@ namespace MeetingRoomBooking.Core.Models
 			CreatedAt = createdAt;
 		}
 
-		public Guid Id { get; }
-		public Guid UserId { get; }
-		public Guid WorkspaceId { get; }
-		public DateTime Start { get; }
-		public DateTime End { get; }
-		public int Quantity { get; }
-		public Guid? CapacityOptionId { get; } // null = open space
-		public BookingStatus Status { get; }
-		public DateTime CreatedAt { get; }
-
-		public static Booking Create(Guid id, Guid userId, Guid workspaceId, DateTime start, DateTime end, int quantity, Guid? capacityOptionId, BookingStatus status, DateTime createdAt)
-		{
-			return new Booking(id, userId, workspaceId, start, end, quantity, capacityOptionId, status, createdAt);
-		}
+		public void Approve() => Status = "Approved";
+		public void Cancel() => Status = "Cancelled";
 	}
 }

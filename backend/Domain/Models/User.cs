@@ -24,6 +24,5 @@ namespace MeetingRoomBooking.Core.Models
 		{
 			return new User(id, fullName, email, createdAt);
 		}
-
 	}
 }

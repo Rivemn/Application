@@ -1,4 +1,5 @@
 ﻿using DateSpaceWebAPI.Extensions;
+using Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,7 @@ builder.Services.AddCors(options =>
 			  .AllowAnyMethod();
 	});
 });
+builder.Services.AddDataAccessDependencies(builder.Configuration);
 
 builder.Services.AddControllers();
 

@@ -10,7 +10,7 @@
 
 		public int Id { get; }
 
-		public string Name { get; } = string.Empty;
+		public string Name { get; }
 
 		public List<WorkspaceAmenity> WorkspaceAmenities { get; } = new();
 
