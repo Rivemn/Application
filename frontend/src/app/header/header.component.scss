@@ -1,0 +1,46 @@
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 80px;
+  background: #ffffff;
+  height: 88px;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.logo {
+  height: 48px;
+  width: auto;
+}
+
+.nav-list {
+  display: flex;
+  gap: 63px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  height: 40px;
+}
+
+.nav-link {
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 40px;
+  color: #2d2d2d;
+  text-decoration: none;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.3s ease;
+  border-bottom: 1.5px solid transparent;
+  height: 40px;
+}
+
+.nav-link:hover {
+  color: #555;
+  border-bottom-color: #5c5af3;
+}
