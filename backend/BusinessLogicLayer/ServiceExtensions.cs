@@ -1,0 +1,17 @@
+﻿using Application.Services;
+using Domain.Services;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace Application
+{
+	public static class ServiceExtensions
+	{
+		public static IServiceCollection AddApplicationDependencies(this IServiceCollection services, IConfiguration configuration)
+		{
+			services.AddScoped<IWorkspaceService, WorkspaceService>();
+
+			return services;
+		}
+	}
+}
