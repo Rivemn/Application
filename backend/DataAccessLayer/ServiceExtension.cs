@@ -1,7 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Domain.Repositories;
+using Domain.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Domain.Repositories;
 using Persistence.Repositories;
 
 namespace Persistence
@@ -34,8 +35,11 @@ namespace Persistence
 		private static IServiceCollection AddRepositories(this IServiceCollection services)
 		{
 			services.AddScoped<IWorkspaceRepository, WorkspaceRepository>();
+            services.AddScoped<IAmenityRepository, AmenityRepository>();
+            services.AddScoped<IAviabilityRepository, AviabilityRepository>();
+            services.AddScoped<IWorkspaceAmenityRepository, WorkspaceAmenityRepository>();
 
-			return services;
+            return services;
 		}
 	}
 }

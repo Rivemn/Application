@@ -1,22 +1,25 @@
 ﻿namespace Domain.Models
 {
-	public class Amenity
-	{
-		private Amenity(int id, string name)
-		{
-			Id = id;
-			Name = name;
-		}
+    public class Amenity
+    {
+        public int Id { get; private set; }
+        public string Name { get; private set; }
 
-		public int Id { get; }
+        private Amenity(int id, string name)
+        {
+            Id = id;
+            Name = name;
+        }
 
-		public string Name { get; }
+        public static (Amenity? amenity, string error) Create(int id, string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return (null, "Name cannot be empty");
 
-		public List<WorkspaceAmenity> WorkspaceAmenities { get; } = new();
+            var amenity = new Amenity(id, name.Trim());
+            return (amenity, string.Empty);
+        }
 
-		public static Amenity Create(int id, string name)
-		{
-			return new Amenity(id, name);
-		}
-	}
+        public List<WorkspaceAmenity> WorkspaceAmenities { get; } = new();
+    }
 }
