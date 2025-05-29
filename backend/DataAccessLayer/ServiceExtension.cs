@@ -38,7 +38,7 @@ namespace Persistence
             services.AddScoped<IAmenityRepository, AmenityRepository>();
             services.AddScoped<IAviabilityRepository, AviabilityRepository>();
             services.AddScoped<IWorkspaceAmenityRepository, WorkspaceAmenityRepository>();
-
+            services.AddScoped<IBookingRepository, BookingRepository>();
             return services;
 		}
 	}

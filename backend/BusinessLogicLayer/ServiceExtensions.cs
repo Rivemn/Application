@@ -13,6 +13,7 @@ namespace Application
             services.AddScoped<IAmenityService, AmenityService>();
             services.AddScoped<IAviabilityService, AviabilityService>();
             services.AddScoped<IWorkspaceAmenityService, WorkspaceAmenityService>();
+            services.AddScoped<IBookingService, BookingService>();
             return services;
 		}
 	}
