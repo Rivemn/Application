@@ -16,7 +16,7 @@ namespace MeetingRoomBooking.Core.Models
 		public string Status { get; private set; }
 		public DateTime CreatedAt { get; private set; }
 
-		public Booking(Guid id, Guid userId, Guid workspaceId, DateTime start, DateTime end, int quantity, Guid? capacityOptionId, string status, DateTime createdAt)
+        private Booking(Guid id, Guid userId, Guid workspaceId, DateTime start, DateTime end, int quantity, Guid? capacityOptionId, string status, DateTime createdAt)
 		{
 			Id = id;
 			UserId = userId;
@@ -29,7 +29,27 @@ namespace MeetingRoomBooking.Core.Models
 			CreatedAt = createdAt;
 		}
 
-		public void Approve() => Status = "Approved";
-		public void Cancel() => Status = "Cancelled";
+        public static (Booking? booking, string error) Create(Guid userId, Guid workspaceId, DateTime start, DateTime end, int quantity, Guid? capacityOptionId, string status, DateTime createdAt)
+        {
+            if (start >= end)
+                return (null, "Start time must be before end time");
+
+            if (quantity <= 0)
+                return (null, "Quantity must be greater than 0");
+
+            var booking = new Booking(
+                Guid.NewGuid(),
+                userId,
+                workspaceId,
+                start,
+                end,
+                quantity,
+                capacityOptionId,
+                status,
+                createdAt
+            );
+
+            return (booking, string.Empty);
+        }
 	}
 }
