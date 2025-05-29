@@ -7,8 +7,7 @@ public class Workspace
 	public string Description { get; private set; }
 	public string AviabilityUnit { get; private set; }
 
-	private readonly List<Aviability> _aviabilities = new();
-	public IReadOnlyCollection<Aviability> Aviabilities => _aviabilities.AsReadOnly();
+
 
 	private Workspace(Guid id, string name, string description, string aviabilityUnit)
 	{
@@ -28,10 +27,5 @@ public class Workspace
 
 		var workspace = new Workspace(id, name.Trim(), description?.Trim() ?? "", aviabilityUnit.Trim());
 		return (workspace, string.Empty);
-	}
-
-	public void AddAviability(Aviability aviability)
-	{
-		_aviabilities.Add(aviability);
 	}
 }

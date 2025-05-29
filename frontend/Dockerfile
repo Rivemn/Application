@@ -8,6 +8,6 @@ RUN npm run build --prod
 
 # Serve stage
 FROM nginx:alpine
+
+COPY nginx.conf /etc/nginx/nginx.conf
 COPY --from=build /app/dist/desk-booking-app /usr/share/nginx/html
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
