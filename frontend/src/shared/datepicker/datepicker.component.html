@@ -1,0 +1,22 @@
+<div class="datepicker">
+  <app-dropdown
+    [items]="months"
+    [selectedItem]="selectedMonth()"
+    (itemSelected)="selectedMonth.set($event)"
+  >
+  </app-dropdown>
+
+  <app-dropdown
+    [items]="days"
+    [selectedItem]="selectedDay()"
+    (itemSelected)="selectedDay.set($event)"
+  >
+  </app-dropdown>
+
+  <app-dropdown
+    [items]="years"
+    [selectedItem]="selectedYear()"
+    (itemSelected)="selectedYear.set($event)"
+  >
+  </app-dropdown>
+</div>

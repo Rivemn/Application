@@ -1,0 +1,49 @@
+<div class="main-container">
+  <a href="#" class="go-back"><img src="go-back.svg" /> Go back</a>
+  <h2 class="section-title">Book your workspace</h2>
+
+  <div class="flex">
+    <div class="workspace-card">
+      <h3>Reservation details</h3>
+      <label>Name</label>
+      <input type="text" placeholder="Enter your name" />
+
+      <label>Email</label>
+      <input type="email" placeholder="Enter your email" />
+
+      <label>Workspace type</label> <app-dropdown></app-dropdown>
+      <select>
+        <option>Choose your workspace</option>
+      </select>
+
+      <label>What room size do you need?</label>
+      <div class="room-options">
+        <label
+          ><input type="checkbox" /> Room for <strong>1 person</strong></label
+        >
+        <label
+          ><input type="checkbox" /> Room for <strong>2 people</strong></label
+        >
+        <label
+          ><input type="checkbox" /> Room for <strong>5 people</strong></label
+        >
+        <label
+          ><input type="checkbox" /> Room for <strong>10 people</strong></label
+        >
+      </div>
+    </div>
+
+    <div class="workspace-card">
+      StartTime
+      <app-datepicker></app-datepicker>
+      EndTime
+      <app-datepicker></app-datepicker>
+      StartTime
+      <app-time-picker></app-time-picker>
+      EndTime
+      <app-time-picker></app-time-picker>
+
+      <button class="submit-button">Submit</button>
+    </div>
+  </div>
+</div>

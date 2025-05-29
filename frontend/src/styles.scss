@@ -15,6 +15,26 @@
   --card-radius: 16px;
   --shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
+.main-container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 76px var(--content-padding) 80px;
+  background: var(--bg-light);
+  position: relative;
+}
+.workspace-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: var(--white);
+  border-radius: var(--border-radius);
+  padding: 16px;
+  gap: 32px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow);
+}
+
 h2 {
   /* Available workspaces */
 
