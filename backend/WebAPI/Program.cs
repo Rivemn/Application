@@ -1,6 +1,7 @@
-﻿using DateSpaceWebAPI.Extensions;
+﻿using Application;
+using DateSpaceWebAPI.Extensions;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
-using Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,11 +21,23 @@ builder.Services.AddDataAccessDependencies(builder.Configuration);
 
 builder.Services.AddControllers();
 
-builder.Services.AddSwaggerDocumentation();
+if (builder.Environment.IsDevelopment())
+{
+	builder.Services.AddSwaggerDocumentation();
+}
 
 var app = builder.Build();
 
-app.UseSwaggerDocumentation();
+if (app.Environment.IsDevelopment())
+{
+	app.UseSwaggerDocumentation();
+
+	using (var scope = app.Services.CreateScope())
+	{
+		var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+		dbContext.Database.Migrate();
+	}
+}
 
 app.UseHttpsRedirection();
 app.UseCors("AllowAll");
