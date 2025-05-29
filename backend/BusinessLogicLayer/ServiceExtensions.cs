@@ -14,7 +14,7 @@ namespace Application
             services.AddScoped<IAviabilityService, AviabilityService>();
             services.AddScoped<IWorkspaceAmenityService, WorkspaceAmenityService>();
             services.AddScoped<IBookingService, BookingService>();
-            return services;
+			return services;
 		}
 	}
 }

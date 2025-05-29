@@ -3,6 +3,7 @@ using Domain.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Domain.Repositories;
 using Persistence.Repositories;
 
 namespace Persistence
@@ -39,7 +40,7 @@ namespace Persistence
             services.AddScoped<IAviabilityRepository, AviabilityRepository>();
             services.AddScoped<IWorkspaceAmenityRepository, WorkspaceAmenityRepository>();
             services.AddScoped<IBookingRepository, BookingRepository>();
-            return services;
+			return services;
 		}
 	}
 }

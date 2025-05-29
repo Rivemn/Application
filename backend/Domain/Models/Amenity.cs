@@ -1,15 +1,15 @@
 ﻿namespace Domain.Models
 {
-    public class Amenity
-    {
+	public class Amenity
+	{
         public int Id { get; private set; }
         public string Name { get; private set; }
 
-        private Amenity(int id, string name)
-        {
-            Id = id;
-            Name = name;
-        }
+		private Amenity(int id, string name)
+		{
+			Id = id;
+			Name = name;
+		}
 
         public static (Amenity? amenity, string error) Create(int id, string name)
         {
@@ -20,6 +20,6 @@
             return (amenity, string.Empty);
         }
 
-        public List<WorkspaceAmenity> WorkspaceAmenities { get; } = new();
-    }
+		public List<WorkspaceAmenity> WorkspaceAmenities { get; } = new();
+	}
 }
