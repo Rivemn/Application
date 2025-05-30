@@ -1,20 +1,22 @@
 <div class="dropdown-container">
   <div class="dropdown-field" (click)="toggleDropdown($event)">
-    <span class="field-label">{{ getDisplayValue(selectedItem) }}</span>
-    <span class="chevron">&#9662;</span>
+    <span class="field-label">{{
+      getDisplayValue(selectedItem) || "Select..."
+    }}</span>
+    <span class="chevron">▼</span>
   </div>
 
   @if (isOpen()) {
-  <div class="dropdown-list">
+  <ul class="dropdown-list">
     @for (item of items; track item) {
-    <div
+    <li
       class="dropdown-item"
       [class.selected]="item === selectedItem"
       (click)="selectItem(item, $event)"
     >
       {{ getDisplayValue(item) }}
-    </div>
+    </li>
     }
-  </div>
+  </ul>
   }
 </div>

@@ -1,7 +1,7 @@
 const PROXY_CONFIG = [
   {
     context: ["/api/Workspace"],
-    target: "http://localhost:8080",
+    target: "https://localhost:7088",
     secure: false,
     changeOrigin: true,
   },

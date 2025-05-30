@@ -1,14 +1,17 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DropdownComponent } from '../dropdown/dropdown.component';
 
 @Component({
   selector: 'app-datepicker',
   standalone: true,
-  imports: [DropdownComponent],
+  imports: [DropdownComponent, ReactiveFormsModule],
   templateUrl: './datepicker.component.html',
   styleUrls: ['./datepicker.component.scss'],
 })
 export class DatepickerComponent {
+  form: FormGroup;
+
   days = Array.from({ length: 31 }, (_, i) => i + 1);
   months = [
     'January',
@@ -24,16 +27,18 @@ export class DatepickerComponent {
     'November',
     'December',
   ];
-  years = Array.from(
-    { length: 20 },
-    (_, i) => new Date().getFullYear() - 10 + i
-  );
+  years = Array.from({ length: 20 }, (_, i) => new Date().getFullYear() + i);
 
-  selectedDay = signal<number>(15);
-  selectedMonth = signal<string>('May');
-  selectedYear = signal<number>(new Date().getFullYear());
+  constructor(private fb: FormBuilder) {
+    this.form = this.fb.group({
+      day: [15],
+      month: ['May'],
+      year: [new Date().getFullYear()],
+    });
+  }
 
   getFormattedDate(): string {
-    return `${this.selectedMonth()} ${this.selectedDay()}, ${this.selectedYear()}`;
+    const { day, month, year } = this.form.value;
+    return `${month} ${day}, ${year}`;
   }
 }
