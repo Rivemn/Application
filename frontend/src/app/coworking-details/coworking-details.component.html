@@ -1,0 +1,77 @@
+<div class="main-container">
+  <h2 class="section-title">Available workspaces</h2>
+
+  <div class="workspaces-list">
+    @for (workspace of workspaces$ | async; track workspace.id) {
+    <div class="workspace-card">
+      <div class="card-main">
+        <div class="card-photos">
+          <div
+            class="main-photo"
+            [style.backgroundImage]="'url(' + workspace.mainPhoto + ')'"
+          >
+            <img [src]="workspace.mainPhotoOverlay" />
+          </div>
+          <div class="photo-carousel">
+            @for (photo of workspace.photos; track $index) {
+            <div
+              class="thumbnail"
+              [style.backgroundImage]="'url(' + photo + ')'"
+            >
+              <img [src]="photo" />
+            </div>
+            }
+          </div>
+        </div>
+
+        <div class="card-content">
+          <div class="card-text">
+            <div class="card-description">
+              <h3>{{ workspace.name }}</h3>
+              <p class="description-text">{{ workspace.description }}</p>
+            </div>
+            <button class="book-btn" [routerLink]="['/booking', workspace.id]">
+              Book now
+            </button>
+          </div>
+
+          <div class="card-stats">
+            <div class="amenities">
+              <h4>Amenities</h4>
+              <div class="amenities-list">
+                @for (icon of workspace.amenities; track $index) {
+                <div class="amenity-icon">
+                  <img [src]="icon" />
+                </div>
+                }
+              </div>
+            </div>
+
+            <div class="availability">
+              <h4>Availability</h4>
+              <div class="availability-item">
+                <div class="availability-icon">
+                  <img src="amenities/armchair.svg" />
+                </div>
+                <span>{{ workspace.aviabilityUnit }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      @if(workspace.isBooked){
+      <div class="booked-notice">
+        <span class="check-icon"><img src="done.svg" /></span>
+        <p class="booked-message">
+          This workspace is already booked by you!
+          <strong class="highlighted-text">
+            &nbsp;{{ workspace.bookingInfo }}&nbsp;
+          </strong>
+        </p>
+      </div>
+      }
+    </div>
+    }
+  </div>
+</div>

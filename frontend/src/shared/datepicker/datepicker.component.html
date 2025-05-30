@@ -1,0 +1,14 @@
+<form [formGroup]="form">
+  <div class="datepicker">
+    <div class="datepicker-column">
+      <app-dropdown [items]="months" formControlName="month"></app-dropdown>
+    </div>
+    <div class="datepicker-column">
+      <app-dropdown [items]="days" formControlName="day"></app-dropdown>
+    </div>
+    <div class="datepicker-column">
+      <app-dropdown [items]="years" formControlName="year"></app-dropdown>
+    </div>
+  </div>
+  <p>Selected date: {{ getFormattedDate() }}</p>
+</form>

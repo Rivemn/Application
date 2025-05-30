@@ -1,0 +1,20 @@
+.datepicker {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px;
+  gap: 12px; /* можно уменьшить gap, чтобы меньше занимало */
+  width: 100%;
+  background: #ffffff;
+  border-radius: 16px;
+  font-family: "Inter", sans-serif;
+  box-sizing: border-box;
+}
+
+.datepicker-column {
+  flex: 1 1 0; /* колонки растягиваются равномерно и адаптируются */
+  min-width: 0; /* чтобы избежать переполнения */
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+}
