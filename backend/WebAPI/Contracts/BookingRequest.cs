@@ -2,11 +2,12 @@
 {
     public record BookingRequest
     (
-        Guid userId,
-         Guid workspaceId,
+		 string fullName,
+		 string email,      
+		 Guid workspaceId,
          DateTime start,
          DateTime end,
          int quantity,
-         Guid? capacityOptionId 
+         Guid? capacityOptionId
     );
 }

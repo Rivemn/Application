@@ -8,5 +8,6 @@
 		public int CapacityOption { get;  set; } //1 person or 2 people
 
 		public WorkspaceEntity Workspace { get; set; } = null!;
+		public ICollection<BookingEntity> Bookings { get; set; } = new List<BookingEntity>();
 	}
 }
