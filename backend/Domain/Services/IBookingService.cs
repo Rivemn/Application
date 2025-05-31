@@ -1,4 +1,4 @@
-﻿using MeetingRoomBooking.Core.Models;
+﻿using Domain.Models;
 
 namespace Domain.Services
 {

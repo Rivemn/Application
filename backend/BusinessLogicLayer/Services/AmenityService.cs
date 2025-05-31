@@ -40,5 +40,6 @@ namespace Application.Services
             var success = await _repository.DeleteAsync(id);
             return success ? (true, string.Empty) : (false, "Amenity not found");
         }
+
     }
 }

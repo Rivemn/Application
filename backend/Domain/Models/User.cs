@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace MeetingRoomBooking.Core.Models
+namespace Domain.Models
 {
 	public class User
 	{

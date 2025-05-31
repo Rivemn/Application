@@ -6,11 +6,10 @@ namespace Domain.Models
         public Guid WorkspaceId { get; private set; }
 		public int Capacity { get; private set; }
         public int CapacityOption { get; private set; } // 1 person or 2 people
-		public Workspace Workspace { get; private set; }
+
 
         private Aviability(Workspace workspace, int capacity, int capacityOption)
 		{
-			Workspace = workspace;
 			WorkspaceId = workspace.Id;
             Capacity = capacity;
 			CapacityOption = capacityOption;

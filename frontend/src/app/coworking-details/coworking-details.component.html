@@ -39,9 +39,12 @@
             <div class="amenities">
               <h4>Amenities</h4>
               <div class="amenities-list">
-                @for (icon of workspace.amenities; track $index) {
+                @for (amenity of workspace.amenities; track amenity.id) {
                 <div class="amenity-icon">
-                  <img [src]="icon" />
+                  <img
+                    [src]="'amenities/' + amenity.name + '.svg'"
+                    [alt]="amenity.name"
+                  />
                 </div>
                 }
               </div>

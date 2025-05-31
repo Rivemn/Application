@@ -2,31 +2,29 @@ import { Component } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
+  Validators,
   ReactiveFormsModule,
   FormsModule,
-  Validators,
 } from '@angular/forms';
+import { CommonModule, AsyncPipe } from '@angular/common';
+import { WorkspaceService } from '../services/workspace.service';
+import { Observable } from 'rxjs';
+import { Workspace } from '../contracts/Workspace';
+import { AviabilityService } from '../services/availability.service';
+import { Aviability } from '../contracts/Aviability';
 
 @Component({
   selector: 'app-booking-page',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, AsyncPipe],
   templateUrl: './booking-page.component.html',
-  styleUrl: './booking-page.component.scss',
+  styleUrls: ['./booking-page.component.scss'],
 })
 export class BookingPageComponent {
   form: FormGroup;
   openDropdown: string | null = null;
 
-  roomOptions = [
-    { id: 1, name: 'Room for 1 person' },
-    { id: 2, name: 'Room for 2 people' },
-    { id: 3, name: 'Room for 5 people' },
-    { id: 4, name: 'Room for 10 people' },
-    { id: 5, name: 'Room for 15 people' },
-    { id: 6, name: 'Room for 20 people' },
-    { id: 7, name: 'Room for 25 people' },
-  ];
+  workspaceOptions$: Observable<Workspace[]>;
 
   timeOptions = [
     '8:00 AM',
@@ -60,8 +58,13 @@ export class BookingPageComponent {
   ];
   years = Array.from({ length: 20 }, (_, i) => new Date().getFullYear() + i);
 
-  constructor(private fb: FormBuilder) {
-    const today = new Date(2025, 4, 30); // May 30, 2025 (04:44 PM EEST)
+  constructor(
+    private fb: FormBuilder,
+    private workspaceService: WorkspaceService,
+    private aviabilityService: AviabilityService
+  ) {
+    const today = new Date(2025, 4, 30); // May 30, 2025
+
     this.form = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -86,49 +89,54 @@ export class BookingPageComponent {
       timeStart: [null, Validators.required],
       timeEnd: [null, Validators.required],
     });
+
+    this.workspaceOptions$ = this.workspaceService.getAll();
   }
 
-  toggleDropdown(dropdownName: string) {
-    this.openDropdown =
-      this.openDropdown === dropdownName ? null : dropdownName;
+  toggleDropdown(name: string) {
+    this.openDropdown = this.openDropdown === name ? null : name;
   }
 
-  closeDropdown(dropdownName: string) {
-    if (this.openDropdown === dropdownName) {
+  closeDropdown(name: string) {
+    if (this.openDropdown === name) {
       this.openDropdown = null;
     }
   }
 
-  selectRoom(room: any) {
+  aviabilities: Aviability[] = [];
+
+  selectRoom(room: Workspace) {
     this.form.get('room')?.setValue(room);
     this.openDropdown = null;
+
+    // Загружаем aviabilities по room.id
+    this.aviabilityService.getByWorkspaceId(room.id).subscribe({
+      next: (data) => {
+        this.aviabilities = data;
+        console.log('Aviabilities loaded:', data);
+      },
+      error: (err) => {
+        console.error('Failed to load aviabilities', err);
+      },
+    });
   }
 
   selectDatePart(controlName: string, part: string, event: Event) {
-    const target = event.target as HTMLSelectElement | null;
-    if (!target) return;
+    const value = (event.target as HTMLSelectElement).value;
+    const current = this.form.get(controlName)?.value || {};
+    const updated = { ...current, [part]: parseInt(value, 10) };
 
-    const value = target.value;
-    const currentDate = this.form.get(controlName)?.value || {};
-    const updatedDate = { ...currentDate, [part]: value };
+    const { day, month, year } = updated;
+    const date = new Date(year, month - 1, day);
 
-    const day = parseInt(updatedDate.day) || 0;
-    const month = parseInt(updatedDate.month) || 0;
-    const year = parseInt(updatedDate.year) || 0;
-
-    if (day && month && year) {
-      const date = new Date(year, month - 1, day);
-      if (
-        date.getFullYear() === year &&
-        date.getMonth() + 1 === month &&
-        date.getDate() === day
-      ) {
-        this.form.get(controlName)?.setValue(updatedDate);
-      } else {
-        this.form.get(controlName)?.setValue({ ...updatedDate, day: null });
-      }
+    if (
+      date.getFullYear() === year &&
+      date.getMonth() + 1 === month &&
+      date.getDate() === day
+    ) {
+      this.form.get(controlName)?.setValue(updated);
     } else {
-      this.form.get(controlName)?.setValue(updatedDate);
+      this.form.get(controlName)?.setValue({ ...updated, day: null });
     }
   }
 
@@ -139,8 +147,10 @@ export class BookingPageComponent {
 
   submit() {
     if (this.form.valid) {
-      console.log(this.form.value);
-      // Add submission logic here
+      console.log('Booking submitted:', this.form.value);
+      // Здесь может быть логика отправки запроса
+    } else {
+      console.warn('Form invalid:', this.form.errors);
     }
   }
 }
