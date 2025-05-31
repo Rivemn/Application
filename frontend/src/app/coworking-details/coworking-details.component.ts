@@ -28,20 +28,20 @@ export class CoworkingDetailsComponent {
           this.amenityService.getAmenitiesByWorkspaceId(workspace.id).pipe(
             map((amenities) => ({
               ...workspace,
-              mainPhoto: 'pexels-pixabay-221537.jpg',
-              mainPhotoOverlay: 'photos/OpenSpace/main-photo.png',
-              photos: [
-                'photos/OpenSpace/image1.png',
-                'photos/OpenSpace/image2.png',
-                'photos/OpenSpace/image3.png',
-                'photos/OpenSpace/image4.png',
-              ],
+          mainPhoto: 'pexels-pixabay-221537.jpg',
+          mainPhotoOverlay: 'photos/OpenSpace/main-photo.png',
+          photos: [
+            'photos/OpenSpace/image1.png',
+            'photos/OpenSpace/image2.png',
+            'photos/OpenSpace/image3.png',
+            'photos/OpenSpace/image4.png',
+          ],
               amenities, // здесь уже полноценный список аменитисов
-              isBooked: true,
-              bookingInfo: 'Room for 2 people May 18, 2025 to May 23, 2025',
-            }))
-          )
-        );
+          isBooked: true,
+          bookingInfo: 'Room for 2 people May 18, 2025 to May 23, 2025',
+        }))
+      )
+    );
 
         return forkJoin(workspaceObservables);
       })

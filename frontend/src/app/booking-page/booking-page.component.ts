@@ -5,6 +5,7 @@ import {
   Validators,
   ReactiveFormsModule,
   FormsModule,
+  Validators,
 } from '@angular/forms';
 import { CommonModule, AsyncPipe } from '@angular/common';
 import { WorkspaceService } from '../services/workspace.service';
@@ -109,7 +110,7 @@ export class BookingPageComponent {
     this.form.get('room')?.setValue(room);
     this.openDropdown = null;
 
-    // Загружаем aviabilities по room.id
+    // ��������� aviabilities �� room.id
     this.aviabilityService.getByWorkspaceId(room.id).subscribe({
       next: (data) => {
         this.aviabilities = data;
@@ -129,11 +130,13 @@ export class BookingPageComponent {
     const { day, month, year } = updated;
     const date = new Date(year, month - 1, day);
 
-    if (
-      date.getFullYear() === year &&
-      date.getMonth() + 1 === month &&
-      date.getDate() === day
-    ) {
+    if (day && month && year) {
+      const date = new Date(year, month - 1, day);
+      if (
+        date.getFullYear() === year &&
+        date.getMonth() + 1 === month &&
+        date.getDate() === day
+      ) {
       this.form.get(controlName)?.setValue(updated);
     } else {
       this.form.get(controlName)?.setValue({ ...updated, day: null });
