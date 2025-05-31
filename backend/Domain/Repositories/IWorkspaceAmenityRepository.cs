@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,7 @@ namespace Domain.Repositories
     {
         Task AddAsync(Guid workspaceId, int amenityId);
         Task RemoveAsync(Guid workspaceId, int amenityId);
-        Task<List<int>> GetAmenityIdsByWorkspaceIdAsync(Guid workspaceId);
-    }
+		Task<List<Amenity>> GetAmenitiesByWorkspaceIdAsync(Guid workspaceId);
+
+	}
 }

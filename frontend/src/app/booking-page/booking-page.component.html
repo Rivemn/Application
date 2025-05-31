@@ -41,13 +41,14 @@
             </div>
             @if (openDropdown === 'room') {
             <ul class="dropdown-list">
-              @for (room of roomOptions; track room.id) {
+              @for (workspace of workspaceOptions$ | async; track workspace.id)
+              {
               <li
                 class="dropdown-item"
-                [class.selected]="form.get('room')?.value?.id === room.id"
-                (click)="selectRoom(room)"
+                [class.selected]="form.get('room')?.value?.id === workspace.id"
+                (click)="selectRoom(workspace)"
               >
-                {{ room.name }}
+                {{ workspace.name }}
               </li>
               }
             </ul>
@@ -58,41 +59,24 @@
         <div class="room-size">
           <div class="room-title">What room size do you need?</div>
           <div class="room-options">
+            @for (aviability of aviabilities; track aviability.capacityOption) {
             <label class="room-option">
-              <input type="radio" formControlName="roomSize" value="1" />
+              <input
+                type="radio"
+                formControlName="roomSize"
+                [value]="aviability.capacityOption"
+              />
               <span class="custom-checkbox"></span>
-              <span class="room-label">Room for 1 person</span>
+              <span class="room-label">
+                Room for {{ aviability.capacityOption }}
+                {{ aviability.capacityOption === 1 ? "person" : "people" }}
+              </span>
             </label>
-            <label class="room-option">
-              <input type="radio" formControlName="roomSize" value="2" />
-              <span class="custom-checkbox"></span>
-              <span class="room-label">Room for 2 people</span>
-            </label>
-            <label class="room-option">
-              <input type="radio" formControlName="roomSize" value="5" />
-              <span class="custom-checkbox"></span>
-              <span class="room-label">Room for 5 people</span>
-            </label>
-            <label class="room-option">
-              <input type="radio" formControlName="roomSize" value="10" />
-              <span class="custom-checkbox"></span>
-              <span class="room-label">Room for 10 people</span>
-            </label>
-            <label class="room-option">
-              <input type="radio" formControlName="roomSize" value="15" />
-              <span class="custom-checkbox"></span>
-              <span class="room-label">Room for 15 people</span>
-            </label>
-            <label class="room-option">
-              <input type="radio" formControlName="roomSize" value="20" />
-              <span class="custom-checkbox"></span>
-              <span class="room-label">Room for 20 people</span>
-            </label>
-            <label class="room-option">
-              <input type="radio" formControlName="roomSize" value="25" />
-              <span class="custom-checkbox"></span>
-              <span class="room-label">Room for 25 people</span>
-            </label>
+            } @empty {
+            <div class="no-options">
+              Please select a room to see available sizes.
+            </div>
+            }
           </div>
         </div>
       </div>
