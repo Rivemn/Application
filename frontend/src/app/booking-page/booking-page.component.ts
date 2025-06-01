@@ -1,11 +1,10 @@
-import { Component } from '@angular/core';
+﻿import { Component } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
-    Validators,
+  Validators,
   ReactiveFormsModule,
   FormsModule,
-  Validators,
 } from '@angular/forms';
 import { CommonModule, AsyncPipe } from '@angular/common';
 import { WorkspaceService } from '../services/workspace.service';
@@ -17,15 +16,15 @@ import { Aviability } from '../contracts/Aviability';
 @Component({
   selector: 'app-booking-page',
   standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, FormsModule, AsyncPipe],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, AsyncPipe],
   templateUrl: './booking-page.component.html',
-    styleUrls: ['./booking-page.component.scss'],
+  styleUrls: ['./booking-page.component.scss'],
 })
 export class BookingPageComponent {
   form: FormGroup;
   openDropdown: string | null = null;
 
-    workspaceOptions$: Observable<Workspace[]>;
+  workspaceOptions$: Observable<Workspace[]>;
 
   timeOptions = [
     '8:00 AM',
@@ -59,12 +58,12 @@ export class BookingPageComponent {
   ];
   years = Array.from({ length: 20 }, (_, i) => new Date().getFullYear() + i);
 
-    constructor(
-        private fb: FormBuilder,
-        private workspaceService: WorkspaceService,
-        private aviabilityService: AviabilityService
-    ) {
-        const today = new Date(2025, 4, 30); // May 30, 2025
+  constructor(
+    private fb: FormBuilder,
+    private workspaceService: WorkspaceService,
+    private aviabilityService: AviabilityService
+  ) {
+    const today = new Date(2025, 4, 30); // May 30, 2025
 
     this.form = this.fb.group({
       name: ['', Validators.required],
@@ -91,53 +90,46 @@ export class BookingPageComponent {
       timeEnd: [null, Validators.required],
     });
 
-        this.workspaceOptions$ = this.workspaceService.getAll();
+    this.workspaceOptions$ = this.workspaceService.getAll();
   }
 
-    toggleDropdown(name: string) {
-        this.openDropdown = this.openDropdown === name ? null : name;
+  toggleDropdown(name: string) {
+    this.openDropdown = this.openDropdown === name ? null : name;
   }
 
-    closeDropdown(name: string) {
-        if (this.openDropdown === name) {
+  closeDropdown(name: string) {
+    if (this.openDropdown === name) {
       this.openDropdown = null;
     }
   }
 
-    aviabilities: Aviability[] = [];
+  aviabilities: Aviability[] = [];
 
-    selectRoom(room: Workspace) {
+  selectRoom(room: Workspace) {
     this.form.get('room')?.setValue(room);
     this.openDropdown = null;
 
-        // ��������� aviabilities �� room.id
-        this.aviabilityService.getByWorkspaceId(room.id).subscribe({
-            next: (data) => {
-                this.aviabilities = data;
-                console.log('Aviabilities loaded:', data);
-            },
-            error: (err) => {
-                console.error('Failed to load aviabilities', err);
-            },
-        });
+    // ��������� aviabilities �� room.id
+    this.aviabilityService.getByWorkspaceId(room.id).subscribe({
+      next: (data) => {
+        this.aviabilities = data;
+        console.log('Aviabilities loaded:', data);
+      },
+      error: (err) => {
+        console.error('Failed to load aviabilities', err);
+      },
+    });
   }
 
   selectDatePart(controlName: string, part: string, event: Event) {
-        const value = (event.target as HTMLSelectElement).value;
-        const current = this.form.get(controlName)?.value || {};
-        const updated = { ...current, [part]: parseInt(value, 10) };
+    const value = (event.target as HTMLSelectElement).value;
+    const current = this.form.get(controlName)?.value || {};
+    const updated = { ...current, [part]: parseInt(value, 10) };
     const target = event.target as HTMLSelectElement | null;
     if (!target) return;
 
-        const { day, month, year } = updated;
-        const date = new Date(year, month - 1, day);
-    const value = target.value;
-    const currentDate = this.form.get(controlName)?.value || {};
-    const updatedDate = { ...currentDate, [part]: value };
-
-    const day = parseInt(updatedDate.day) || 0;
-    const month = parseInt(updatedDate.month) || 0;
-    const year = parseInt(updatedDate.year) || 0;
+    const { day, month, year } = updated;
+    const date = new Date(year, month - 1, day);
 
     if (day && month && year) {
       const date = new Date(year, month - 1, day);
@@ -146,13 +138,10 @@ export class BookingPageComponent {
         date.getMonth() + 1 === month &&
         date.getDate() === day
       ) {
-            this.form.get(controlName)?.setValue(updated);
-        this.form.get(controlName)?.setValue(updatedDate);
+        this.form.get(controlName)?.setValue(updated);
       } else {
-        this.form.get(controlName)?.setValue({ ...updatedDate, day: null });
+        this.form.get(controlName)?.setValue({ ...updated, day: null });
       }
-    } else {
-            this.form.get(controlName)?.setValue({ ...updated, day: null });
     }
   }
 
@@ -163,10 +152,10 @@ export class BookingPageComponent {
 
   submit() {
     if (this.form.valid) {
-            console.log('Booking submitted:', this.form.value);
-            // Здесь может быть логика отправки запроса
-        } else {
-            console.warn('Form invalid:', this.form.errors);
+      console.log('Booking submitted:', this.form.value);
+      // Здесь может быть логика отправки запроса
+    } else {
+      console.warn('Form invalid:', this.form.errors);
     }
   }
 }

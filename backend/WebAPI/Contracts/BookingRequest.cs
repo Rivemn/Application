@@ -1,12 +1,15 @@
-﻿namespace WebAPI.Contracts
+﻿using Domain.Models;
+
+namespace WebAPI.Contracts
 {
     public record BookingRequest
     (
-        Guid userId,
-         Guid workspaceId,
+		 string fullName,
+		 string email,      
+		 Guid workspaceId,
          DateTime start,
          DateTime end,
-         int quantity,
-         Guid? capacityOptionId 
-    );
+		Guid aviabilityId
+
+	);
 }

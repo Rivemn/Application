@@ -3,7 +3,7 @@
     public record AviabilityRequest
     (
         Guid WorkspaceId,
-        int Capacity,
+        int Quantity,
          int CapacityOption 
     );
 }
