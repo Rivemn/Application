@@ -4,16 +4,15 @@ namespace Domain.Models
 	public class Aviability
 	{
         public Guid WorkspaceId { get; private set; }
-		public int Capacity { get; private set; }   //capacity
-        public int CapacityOption { get; private set; } // 1 person or 2 people or desks
-		public Workspace Workspace { get; private set; }
+		public int Capacity { get; private set; }
+        public int CapacityOption { get; private set; } // 1 person or 2 people
+
 
 		//если дески то в капасити опшн записіваем дески а в капасити просто отнимаем когда букинг создаем
 		//если комнаты то в капасити опшн 1 person или  2 people а в капасити количество комнат. 
 
 		private Aviability(Workspace workspace, int capacity, int capacityOption)
 		{
-			Workspace = workspace;
 			WorkspaceId = workspace.Id;
             Capacity = capacity;
 			CapacityOption = capacityOption;

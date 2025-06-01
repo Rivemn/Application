@@ -1,5 +1,6 @@
 ﻿
-namespace MeetingRoomBooking.Core.Models
+
+namespace Domain.Models
 {
 	public class Booking
 	{

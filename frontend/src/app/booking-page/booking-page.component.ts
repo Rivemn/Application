@@ -6,6 +6,12 @@ import {
   ReactiveFormsModule,
   FormsModule,
 } from '@angular/forms';
+import { CommonModule, AsyncPipe } from '@angular/common';
+import { WorkspaceService } from '../services/workspace.service';
+import { Observable } from 'rxjs';
+import { Workspace } from '../contracts/Workspace';
+import { AviabilityService } from '../services/availability.service';
+import { Aviability } from '../contracts/Aviability';
 
 @Component({
   selector: 'app-booking-page',

@@ -19,7 +19,5 @@
             var amenity = new Amenity(id, name.Trim());
             return (amenity, string.Empty);
         }
-
-		public List<WorkspaceAmenity> WorkspaceAmenities { get; } = new();
 	}
 }
