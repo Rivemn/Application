@@ -21,13 +21,13 @@ namespace Application.Services
             return (aviabilities, string.Empty);
         }
 
-        public async Task<(Guid id, string error)> CreateAsync(Guid workspaceId, int capacity, int capacityOption)
+        public async Task<(Guid id, string error)> CreateAsync(Guid workspaceId, int quantity, int capacityOption)
         {
             var workspace = await _workspaceRepository.GetByIdAsync(workspaceId);
             if (workspace == null)
                 return (Guid.Empty, "Workspace not found");
 
-            var (aviability, error) = Aviability.Create(workspace, capacity, capacityOption);
+            var (aviability, error) = Aviability.Create(workspace, quantity, capacityOption);
             if (!string.IsNullOrEmpty(error))
                 return (Guid.Empty, error);
 

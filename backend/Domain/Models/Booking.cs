@@ -10,11 +10,10 @@ namespace Domain.Models
 		public Guid AviabilityId { get; }
 		public DateTime Start { get; }
 		public DateTime End { get; }
-		public int Quantity { get; }
 		public string Status { get; }
 		public DateTime CreatedAt { get; }
 
-		private Booking(Guid id, Guid userId, Guid workspaceId, Guid aviabilityId, DateTime start, DateTime end, int quantity, string status, DateTime createdAt)
+		private Booking(Guid id, Guid userId, Guid workspaceId, Guid aviabilityId, DateTime start, DateTime end, string status, DateTime createdAt)
 		{
 			Id = id;
 			UserId = userId;
@@ -22,27 +21,21 @@ namespace Domain.Models
 			AviabilityId = aviabilityId;
 			Start = start;
 			End = end;
-			Quantity = quantity;
 			Status = status;
 			CreatedAt = createdAt;
 		}
 
 
-		public static (Booking? booking, string? error) Create
-			( 
+		public static (Booking? booking, string? error) Create(
 			Guid userId,
 			Guid workspaceId,
-			DateTime start,DateTime end,
-			int quantity,
-			Guid aviabilityId,	 
-	        DateTime createdAt
-			)
+			Guid aviabilityId,
+			DateTime start,
+			DateTime end
+		)
 		{
 			if (start >= end)
 				return (null, "End date must be after start date");
-
-			if (quantity <= 0)
-				return (null, "Quantity must be greater than 0");
 
 			var booking = new Booking(
 				Guid.NewGuid(),
@@ -51,12 +44,38 @@ namespace Domain.Models
 				aviabilityId,
 				start,
 				end,
-				quantity,
 				"Pending",
+				DateTime.UtcNow // авто-генерация даты
+			);
+
+			return (booking, null);
+		}
+		public static (Booking? booking, string? error) Create(
+	Guid userId,
+	Guid workspaceId,
+	Guid aviabilityId,
+	DateTime start,
+	DateTime end,
+	string status,
+	DateTime createdAt
+)
+		{
+			if (start >= end)
+				return (null, "End date must be after start date");
+
+			var booking = new Booking(
+				Guid.NewGuid(),
+				userId,
+				workspaceId,
+				aviabilityId,
+				start,
+				end,
+				status,
 				createdAt
 			);
 
 			return (booking, null);
 		}
+
 	}
 }

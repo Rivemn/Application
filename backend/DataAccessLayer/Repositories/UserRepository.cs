@@ -1,5 +1,5 @@
 ﻿using Domain.Repositories;
-using MeetingRoomBooking.Core.Models;
+using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Entities;
 

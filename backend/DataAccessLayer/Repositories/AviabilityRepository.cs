@@ -25,7 +25,7 @@ namespace Persistence.Repositories
                 .Select(e =>
                 {
                     var workspace = Workspace.Create(e.Workspace.Id, e.Workspace.Name, e.Workspace.Description, e.Workspace.AviabilityUnit).workspace!;
-                    return Aviability.Create(workspace, e.Capacity, e.CapacityOption).aviability!;
+                    return Aviability.Create(workspace, e.Quantity, e.CapacityOption).aviability!;
                 })
                 .ToList();
         }
@@ -36,7 +36,7 @@ namespace Persistence.Repositories
             {
                 Id = Guid.NewGuid(),
                 WorkspaceId = aviability.WorkspaceId,
-                Capacity = aviability.Capacity,
+                Quantity = aviability.Quantity,
                 CapacityOption = aviability.CapacityOption
             };
 
@@ -55,5 +55,26 @@ namespace Persistence.Repositories
             await _context.SaveChangesAsync();
             return true;
         }
-    }
+		public async Task<bool> DecreaseQuantityAsync(Guid id)
+		{
+			var entity = await _context.Aviabilities.FindAsync(id);
+			if (entity == null || entity.Quantity <= 0)
+				return false;
+
+			entity.Quantity -= 1;
+			await _context.SaveChangesAsync();
+			return true;
+		}
+
+		public async Task<bool> IncreaseQuantityAsync(Guid id)
+		{
+			var entity = await _context.Aviabilities.FindAsync(id);
+			if (entity == null)
+				return false;
+
+			entity.Quantity += 1;
+			await _context.SaveChangesAsync();
+			return true;
+		}
+	}
 }

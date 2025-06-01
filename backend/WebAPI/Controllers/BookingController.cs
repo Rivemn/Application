@@ -22,8 +22,7 @@ public class BookingController : ControllerBase
 			request.workspaceId,
 			request.start,
 			request.end,
-			request.quantity,
-			request.capacityOptionId
+			request.aviabilityId
 		);
 
 		if (!string.IsNullOrEmpty(error))

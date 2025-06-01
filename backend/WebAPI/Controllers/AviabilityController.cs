@@ -31,7 +31,7 @@ namespace WebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] AviabilityRequest request)
         {
-            var (id, error) = await _service.CreateAsync(request.WorkspaceId, request.Capacity, request.CapacityOption);
+            var (id, error) = await _service.CreateAsync(request.WorkspaceId, request.Quantity, request.CapacityOption);
             if (!string.IsNullOrEmpty(error))
                 return BadRequest(error);
 

@@ -13,7 +13,7 @@ namespace Persistence.Configurations
 
 			builder.HasKey(a => a.Id);
 
-			builder.Property(a => a.Capacity)
+			builder.Property(a => a.Quantity)
 				.IsRequired();
 
 			builder.Property(a => a.CapacityOption)

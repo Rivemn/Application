@@ -1,6 +1,4 @@
-﻿
-
-namespace Persistence.Entities
+﻿namespace Persistence.Entities
 {
 	public class BookingEntity
 	{
@@ -18,7 +16,6 @@ namespace Persistence.Entities
 		public DateTime Start { get; set; }
 		public DateTime End { get; set; }
 
-		public int Quantity { get; set; }
 		public string Status { get; set; } = string.Empty;
 		public DateTime CreatedAt { get; set; }
 	}

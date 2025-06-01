@@ -4,17 +4,17 @@ namespace Domain.Models
 	public class Aviability
 	{
         public Guid WorkspaceId { get; private set; }
-		public int Capacity { get; private set; }
+		public int Quantity { get; private set; }
         public int CapacityOption { get; private set; } // 1 person or 2 people
 
 
-		//если дески то в капасити опшн записіваем дески а в капасити просто отнимаем когда букинг создаем
+		//если дески то в капасити опшн записіваем дески а в квантити просто отнимаем когда букинг создаем
 		//если комнаты то в капасити опшн 1 person или  2 people а в капасити количество комнат. 
 
-		private Aviability(Workspace workspace, int capacity, int capacityOption)
+		private Aviability(Workspace workspace, int quantity, int capacityOption)
 		{
 			WorkspaceId = workspace.Id;
-            Capacity = capacity;
+            Quantity = quantity;
 			CapacityOption = capacityOption;
 		}
 
@@ -24,7 +24,7 @@ namespace Domain.Models
                 return (null, "Workspace cannot be null");
 
             if (capacity <= 0)
-                return (null, "Capacity must be greater than 0");
+                return (null, "Quantity must be greater than 0");
 
 
             var aviability = new Aviability(workspace, capacity, capacityOption);

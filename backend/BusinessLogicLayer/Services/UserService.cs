@@ -1,6 +1,6 @@
 ﻿using Domain.Repositories;
 using Domain.Services;
-using MeetingRoomBooking.Core.Models;
+using Domain.Models;
 
 namespace Application.Services
 {
