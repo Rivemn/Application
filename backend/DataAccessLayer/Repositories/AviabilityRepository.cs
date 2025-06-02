@@ -25,7 +25,7 @@ namespace Persistence.Repositories
                 .Select(e =>
                 {
                     var workspace = Workspace.Create(e.Workspace.Id, e.Workspace.Name, e.Workspace.Description, e.Workspace.AviabilityUnit).workspace!;
-                    return Aviability.Create(workspace, e.Quantity, e.CapacityOption).aviability!;
+                    return Aviability.Create(e.Id,workspace, e.Quantity, e.CapacityOption).aviability!;
                 })
                 .ToList();
         }

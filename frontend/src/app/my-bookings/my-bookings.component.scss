@@ -1,0 +1,33 @@
+.submit-button {
+  width: 200px;
+  height: 48px;
+}
+.workspaces-list {
+  display: flex;
+  justify-content: center;
+}
+
+.workspace-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background: var(--white);
+  border-radius: var(--border-radius);
+  padding: 40px;
+  gap: 32px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow);
+
+  width: 100%;
+}
+
+.workspace-card h2,
+.workspace-card p {
+  margin: 0;
+}
+
+.submit-button {
+  width: auto;
+  padding: 12px 24px;
+}

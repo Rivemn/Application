@@ -238,3 +238,11 @@
   order: 1;
   flex-grow: 0;
 }
+.error-message {
+  font-family: "Inter", sans-serif;
+  font-weight: 400; /* Matches p and room-label */
+  font-size: 16px; /* Matches input and dropdown text */
+  line-height: 24px; /* Matches p */
+  color: #d32f2f; /* Red color for errors, consistent with common UI patterns */
+  margin-top: 8px; /* Aligns with form-group gap */
+}
