@@ -3,7 +3,8 @@ namespace Domain.Models
 {
 	public class Aviability
 	{
-        public Guid WorkspaceId { get; private set; }
+		public Guid Id { get; set; }
+		public Guid WorkspaceId { get; private set; }
 		public int Quantity { get; private set; }
         public int CapacityOption { get; private set; } // 1 person or 2 people
 
@@ -17,8 +18,15 @@ namespace Domain.Models
             Quantity = quantity;
 			CapacityOption = capacityOption;
 		}
+		private Aviability(Guid id, Workspace workspace, int quantity, int capacityOption)
+		{
+			Id = id;
+			WorkspaceId = workspace.Id;
+			Quantity = quantity;
+			CapacityOption = capacityOption;
+		}
 
-        public static (Aviability? aviability, string error) Create(Workspace workspace, int capacity, int capacityOption)
+		public static (Aviability? aviability, string error) Create(Workspace workspace, int capacity, int capacityOption)
         {
             if (workspace == null)
                 return (null, "Workspace cannot be null");
@@ -30,5 +38,17 @@ namespace Domain.Models
             var aviability = new Aviability(workspace, capacity, capacityOption);
             return (aviability, string.Empty);
         }
+		public static (Aviability? aviability, string error) Create(Guid Id,Workspace workspace, int capacity, int capacityOption)
+		{
+			if (workspace == null)
+				return (null, "Workspace cannot be null");
+
+			if (capacity <= 0)
+				return (null, "Quantity must be greater than 0");
+
+
+			var aviability = new Aviability(Id,workspace, capacity, capacityOption);
+			return (aviability, string.Empty);
+		}
 	}
 }
