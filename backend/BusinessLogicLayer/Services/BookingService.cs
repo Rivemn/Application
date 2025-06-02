@@ -1,6 +1,7 @@
-﻿using Domain.Repositories;
+﻿using Domain.Models;
+using Domain.Repositories;
 using Domain.Services;
-using Domain.Models;
+using Persistence.Repositories;
 
 
 namespace Application.Services
@@ -8,23 +9,36 @@ namespace Application.Services
     public class BookingService : IBookingService
     {
         private readonly IBookingRepository _repository;
+		private readonly IUserService _userService;
 
-        public BookingService(IBookingRepository repository)
-        {
-            _repository = repository;
-        }
+		private readonly IAviabilityRepository _aviabilityRepository;
 
-        public async Task<(Guid id, string error)> CreateAsync(Guid userId, Guid workspaceId, DateTime start, DateTime end, int quantity, Guid? capacityOptionId)
-        {
-            var (booking, error) = Booking.Create(userId, workspaceId, start, end, quantity, capacityOptionId,"Pending",DateTime.Now);
-            if (!string.IsNullOrEmpty(error))
-                return (Guid.Empty, error);
+		public BookingService(IBookingRepository repository, IUserService userService, IAviabilityRepository aviabilityRepository)
+		{
+			_repository = repository;
+			_userService = userService;
+			_aviabilityRepository = aviabilityRepository;
+		}
 
-            var id = await _repository.CreateAsync(booking);
-            return (id, string.Empty);
-        }
+		public async Task<(Guid id, string error)> CreateAsync(string fullName, string email, Guid workspaceId, DateTime start, DateTime end, Guid aviabilityId)
+		{
+			var userId = await _userService.GetOrCreateUserAsync(fullName, email);
 
-        public async Task<(Booking? booking, string error)> GetByIdAsync(Guid id)
+			// Пытаемся уменьшить количество
+			var decreased = await _aviabilityRepository.DecreaseQuantityAsync(aviabilityId);
+			if (!decreased)
+				return (Guid.Empty, "No available quantity for this aviability");
+
+			var (booking, error) = Booking.Create(userId, workspaceId, aviabilityId, start, end);
+			if (!string.IsNullOrEmpty(error))
+				return (Guid.Empty, error);
+
+			var id = await _repository.CreateAsync(booking);
+			return (id, string.Empty);
+		}
+
+
+		public async Task<(Booking? booking, string error)> GetByIdAsync(Guid id)
         {
             var booking = await _repository.GetByIdAsync(id);
             if (booking == null)
@@ -38,11 +52,22 @@ namespace Application.Services
             return await _repository.GetByUserAsync(userId);
         }
 
-        public async Task<(bool success, string error)> DeleteAsync(Guid id)
-        {
-            var success = await _repository.DeleteAsync(id);
-            return success ? (true, string.Empty) : (false, "Booking not found");
-        }
-    }
+		public async Task<(bool success, string error)> DeleteAsync(Guid id)
+		{
+			var booking = await _repository.GetByIdAsync(id);
+			if (booking == null)
+				return (false, "Booking not found");
 
+			// Удаляем бронь
+			var success = await _repository.DeleteAsync(id);
+			if (!success)
+				return (false, "Failed to delete booking");
+
+			// Увеличиваем количество обратно
+			await _aviabilityRepository.IncreaseQuantityAsync(booking.AviabilityId);
+
+			return (true, string.Empty);
+		}
+
+	}
 }
