@@ -77,5 +77,34 @@ namespace Domain.Models
 			return (booking, null);
 		}
 
+		public static (Booking? booking, string? error) CreateWithId(
+	Guid id,
+	Guid userId,
+	Guid workspaceId,
+	Guid aviabilityId,
+	DateTime start,
+	DateTime end,
+	string status,
+	DateTime createdAt
+)
+		{
+			if (start >= end)
+				return (null, "End date must be after start date");
+
+			var booking = new Booking(
+				id,               // <-- сюда передаем уже существующий Id
+				userId,
+				workspaceId,
+				aviabilityId,
+				start,
+				end,
+				status,
+				createdAt
+			);
+
+			return (booking, null);
+		}
+
+
 	}
 }

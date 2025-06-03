@@ -1,11 +1,11 @@
 export interface Booking {
   id: string;
-  fullName: string;
-  email: string;
+  userId: string;
   workspaceId: string;
+  email: string;
+  aviabilityId: string;
   start: string;
   end: string;
-  aviabilityId: string;
   status: string;
   createdAt: string;
 }
