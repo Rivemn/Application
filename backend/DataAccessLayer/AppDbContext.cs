@@ -8,6 +8,7 @@ namespace Persistence
 	public class AppDbContext (DbContextOptions<AppDbContext> options) : DbContext(options)
 	{
 		public DbSet<WorkspaceEntity> Workspaces { get; set; }
+		public DbSet<PhotoEntity> Photos { get; set; }
 		public DbSet<AviabilityEntity> Aviabilities { get; set; }
 		public DbSet<UserEntity> Users { get; set; }
 		public DbSet<BookingEntity> Bookings { get; set; }

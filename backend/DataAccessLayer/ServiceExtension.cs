@@ -36,7 +36,8 @@ namespace Persistence
 		private static IServiceCollection AddRepositories(this IServiceCollection services)
 		{
 			services.AddScoped<IWorkspaceRepository, WorkspaceRepository>();
-            services.AddScoped<IAmenityRepository, AmenityRepository>();
+			services.AddScoped<IPhotoRepository, PhotoRepository>();
+			services.AddScoped<IAmenityRepository, AmenityRepository>();
             services.AddScoped<IAviabilityRepository, AviabilityRepository>();
             services.AddScoped<IWorkspaceAmenityRepository, WorkspaceAmenityRepository>();
             services.AddScoped<IBookingRepository, BookingRepository>();

@@ -1,4 +1,5 @@
 export interface Photo {
-  workspaceId: string;
+  id: number;
   url: string;
+  workspaceId: string;
 }

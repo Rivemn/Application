@@ -5,6 +5,7 @@ const PROXY_CONFIG = [
       "/api/Aviability",
       "/api/workspaces",
       "/api/Booking",
+      "/api/Photo",
     ],
     target: "https://localhost:7088",
     secure: false,
