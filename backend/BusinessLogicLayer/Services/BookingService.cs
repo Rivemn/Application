@@ -24,11 +24,6 @@ namespace Application.Services
 		{
 			var userId = await _userService.GetOrCreateUserAsync(fullName, email);
 
-			// Пытаемся уменьшить количество
-			var decreased = await _aviabilityRepository.DecreaseQuantityAsync(aviabilityId);
-			if (!decreased)
-				return (Guid.Empty, "No available quantity for this aviability");
-
 			var (booking, error) = Booking.Create(userId, workspaceId, aviabilityId, start, end);
 			if (!string.IsNullOrEmpty(error))
 				return (Guid.Empty, error);
@@ -63,8 +58,10 @@ namespace Application.Services
 			if (!success)
 				return (false, "Failed to delete booking");
 
-			// Увеличиваем количество обратно
-			await _aviabilityRepository.IncreaseQuantityAsync(booking.AviabilityId);
+			if (booking.Status == "InProgress")
+			{
+				await _aviabilityRepository.IncreaseQuantityAsync(booking.AviabilityId);
+			}
 
 			return (true, string.Empty);
 		}

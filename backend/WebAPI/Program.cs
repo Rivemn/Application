@@ -2,6 +2,7 @@
 using DateSpaceWebAPI.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,8 @@ builder.Services.AddCors(options =>
 builder.Services.AddApplicationDependencies(builder.Configuration);
 
 builder.Services.AddDataAccessDependencies(builder.Configuration);
+
+builder.Services.AddInfrastructureServices();
 
 builder.Services.AddControllers();
 
