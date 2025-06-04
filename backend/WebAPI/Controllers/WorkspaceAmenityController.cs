@@ -10,7 +10,7 @@ public class WorkspaceAmenityController : ControllerBase
     private readonly IWorkspaceAmenityService _service;
 
 
-	public WorkspaceAmenityController(IWorkspaceAmenityService service, IAmenityService amenityService)
+	public WorkspaceAmenityController(IWorkspaceAmenityService service)
     {
         _service = service;
 

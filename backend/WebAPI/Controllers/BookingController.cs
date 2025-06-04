@@ -2,59 +2,63 @@
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Contracts;
 
-[ApiController]
-[Route("api/[controller]")]
-public class BookingController : ControllerBase
+
+namespace WebAPI.Controllers
 {
-	private readonly IBookingService _service;
-
-	public BookingController(IBookingService service)
+	[ApiController]
+	[Route("api/[controller]")]
+	public class BookingController : ControllerBase
 	{
-		_service = service;
-	}
+		private readonly IBookingService _service;
 
-	[HttpPost]
-	public async Task<IActionResult> Create([FromBody] BookingRequest request)
-	{
-		var (id, error) = await _service.CreateAsync(
-			request.fullName,
-			request.email,
-			request.workspaceId,
-			request.start,
-			request.end,
-			request.aviabilityId
-		);
+		public BookingController(IBookingService service)
+		{
+			_service = service;
+		}
 
-		if (!string.IsNullOrEmpty(error))
-			return BadRequest(error);
+		[HttpPost]
+		public async Task<IActionResult> Create([FromBody] BookingRequest request)
+		{
+			var (id, error) = await _service.CreateAsync(
+				request.FullName,
+				request.Email,
+				request.WorkspaceId,
+				request.Start,
+				request.End,
+				request.AvailabilityId
+			);
 
-		return CreatedAtAction(nameof(GetById), new { id }, id);
-	}
+			if (!string.IsNullOrEmpty(error))
+				return BadRequest(error);
 
-	[HttpGet("{id}")]
-	public async Task<IActionResult> GetById(Guid id)
-	{
-		var (booking, error) = await _service.GetByIdAsync(id);
-		if (!string.IsNullOrEmpty(error))
-			return NotFound(error);
+			return CreatedAtAction(nameof(GetById), new { id }, id);
+		}
 
-		return Ok(booking);
-	}
+		[HttpGet("{id}")]
+		public async Task<IActionResult> GetById(Guid id)
+		{
+			var (booking, error) = await _service.GetByIdAsync(id);
+			if (!string.IsNullOrEmpty(error))
+				return NotFound(error);
 
-	[HttpGet("user/{userId}")]
-	public async Task<IActionResult> GetByUser(Guid userId)
-	{
-		var bookings = await _service.GetByUserAsync(userId);
-		return Ok(bookings);
-	}
+			return Ok(booking);
+		}
 
-	[HttpDelete("{id}")]
-	public async Task<IActionResult> Delete(Guid id)
-	{
-		var (success, error) = await _service.DeleteAsync(id);
-		if (!success)
-			return NotFound(error);
+		[HttpGet("user/{userId}")]
+		public async Task<IActionResult> GetByUser(Guid userId)
+		{
+			var bookings = await _service.GetByUserAsync(userId);
+			return Ok(bookings);
+		}
 
-		return NoContent();
+		[HttpDelete("{id}")]
+		public async Task<IActionResult> Delete(Guid id)
+		{
+			var (success, error) = await _service.DeleteAsync(id);
+			if (!success)
+				return NotFound(error);
+
+			return NoContent();
+		}
 	}
 }

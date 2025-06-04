@@ -26,7 +26,7 @@ namespace WebAPI.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Add([FromBody] PhotoRequest request)
 		{
-			var (photo, error) = Photo.Create(0, request.url, request.workspaceId);
+			var (photo, error) = Photo.Create(0, request.Url, request.WorkspaceId);
 			if (photo == null)
 				return BadRequest(error);
 

@@ -2,14 +2,13 @@
 
 namespace WebAPI.Contracts
 {
-    public record BookingRequest
-    (
-		 string fullName,
-		 string email,      
-		 Guid workspaceId,
-         DateTime start,
-         DateTime end,
-		Guid aviabilityId
-
+	public record BookingRequest
+	(
+		string FullName,
+		string Email,
+		Guid WorkspaceId,
+		DateTime Start,
+		DateTime End,
+		Guid AvailabilityId
 	);
 }

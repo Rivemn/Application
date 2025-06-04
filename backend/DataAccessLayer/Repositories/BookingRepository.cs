@@ -22,9 +22,10 @@ namespace Persistence.Repositories
 				return null;
 
 			var (booking, error) = Booking.Create(
+				entity.Id,
 				entity.UserId,
 				entity.WorkspaceId,
-				entity.AviabilityId,
+				entity.AvailabilityId,
 				entity.Start,
 				entity.End,
 				entity.Status,
@@ -46,9 +47,10 @@ namespace Persistence.Repositories
 			foreach (var entity in entities)
 			{
 				var (booking, _) = Booking.Create(
+					entity.Id,
 					entity.UserId,
 					entity.WorkspaceId,
-					entity.AviabilityId,
+					entity.AvailabilityId,
 					entity.Start,
 					entity.End,
 					entity.Status,
@@ -70,7 +72,7 @@ namespace Persistence.Repositories
 				Id = booking.Id,
 				UserId = booking.UserId,
 				WorkspaceId = booking.WorkspaceId,
-				AviabilityId = booking.AviabilityId,
+				AvailabilityId = booking.AvailabilityId,
 				Start = booking.Start,
 				End = booking.End,
 				Status = booking.Status,

@@ -24,7 +24,7 @@ namespace Application.Services
 		{
 			var userId = await _userService.GetOrCreateUserAsync(fullName, email);
 
-			var (booking, error) = Booking.Create(userId, workspaceId, aviabilityId, start, end);
+			var (booking, error) = Booking.Create(Guid.NewGuid(), userId, workspaceId, aviabilityId, start, end, "Pending",	DateTime.UtcNow);
 			if (!string.IsNullOrEmpty(error))
 				return (Guid.Empty, error);
 
@@ -60,7 +60,7 @@ namespace Application.Services
 
 			if (booking.Status == "InProgress")
 			{
-				await _aviabilityRepository.IncreaseQuantityAsync(booking.AviabilityId);
+				await _aviabilityRepository.IncreaseQuantityAsync(booking.AvailabilityId);
 			}
 
 			return (true, string.Empty);

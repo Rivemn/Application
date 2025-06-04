@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
-namespace DateSpaceWebAPI.Extensions
+namespace WebAPI.Extensions
 {
 	public static class SwaggerServiceExtensions
 	{

@@ -9,7 +9,7 @@ namespace Persistence
 	{
 		public DbSet<WorkspaceEntity> Workspaces { get; set; }
 		public DbSet<PhotoEntity> Photos { get; set; }
-		public DbSet<AviabilityEntity> Aviabilities { get; set; }
+		public DbSet<AvailabilityEntity> Aviabilities { get; set; }
 		public DbSet<UserEntity> Users { get; set; }
 		public DbSet<BookingEntity> Bookings { get; set; }
 
@@ -21,7 +21,7 @@ namespace Persistence
 			base.OnModelCreating(modelBuilder);
 
 			modelBuilder.ApplyConfiguration(new WorkspaceConfiguration());
-			modelBuilder.ApplyConfiguration(new AviabilityConfiguration());
+			modelBuilder.ApplyConfiguration(new AvailabilityConfiguration());
 			modelBuilder.ApplyConfiguration(new BookingConfiguration());
 			modelBuilder.ApplyConfiguration(new UserConfiguration());
 			modelBuilder.ApplyConfiguration(new AmenityConfiguration());

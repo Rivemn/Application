@@ -1,6 +1,6 @@
 ﻿namespace WebAPI.Contracts
 {
-    public record AviabilityRequest
+    public record AvailabilityRequest
     (
         Guid WorkspaceId,
         int Quantity,

@@ -23,9 +23,9 @@ namespace Persistence.Configurations
 				.WithMany() 
 				.HasForeignKey(b => b.WorkspaceId);
 
-			builder.HasOne(b => b.Aviability)
+			builder.HasOne(b => b.Availability)
 				.WithMany(a => a.Bookings)
-				.HasForeignKey(b => b.AviabilityId);
+				.HasForeignKey(b => b.AvailabilityId);
 		}
 	}
 }

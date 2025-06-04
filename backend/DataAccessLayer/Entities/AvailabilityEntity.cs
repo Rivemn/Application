@@ -1,6 +1,6 @@
 ﻿namespace Persistence.Entities
 {
-	public class AviabilityEntity
+	public class AvailabilityEntity
 	{
 		public Guid Id { get;  set; }
 		public Guid WorkspaceId { get; set; }

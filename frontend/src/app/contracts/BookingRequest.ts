@@ -4,5 +4,5 @@ export interface BookingRequest {
   workspaceId: string;
   start: string;
   end: string;
-  aviabilityId: string;
+  availabilityId: string;
 }
