@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { CoworkingDetailsComponent } from './coworking-details/coworking-details.component';
+import { CoworkingDetailsComponent } from './coworking/coworking-details.component';
 import { BookingPageComponent } from './booking-page/booking-page.component';
 import { MyBookingsComponent } from './my-bookings/my-bookings.component';
 

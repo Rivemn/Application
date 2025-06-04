@@ -8,7 +8,7 @@ describe('CoworkingDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CoworkingDetailsComponent]
+      declarations: [CoworkingDetailsComponent]
     })
     .compileComponents();
 

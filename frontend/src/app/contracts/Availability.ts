@@ -1,6 +1,6 @@
 export interface Availability {
   id: string;
   workspaceId: string;
-  capacity: number;
+  quantity: number;
   capacityOption: number;
 }

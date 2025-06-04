@@ -1,9 +1,8 @@
 ﻿using Application;
-using DateSpaceWebAPI.Extensions;
+using WebAPI.Extensions;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
-using WebAPI.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 

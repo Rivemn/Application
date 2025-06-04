@@ -5,8 +5,8 @@ namespace Domain.Models
 	{
 		public Guid Id { get; set; }
 		public Guid WorkspaceId { get; private set; }
-		public int Quantity { get; private set; }
-        public int CapacityOption { get; private set; }
+		public int Quantity { get; private set; }// Number of desks or rooms
+		public int CapacityOption { get; private set; }// Max people per unit
 
 
 

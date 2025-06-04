@@ -1,6 +1,26 @@
 <div class="main-container">
   <h2 class="section-title">Available workspaces</h2>
 
+  @if (isLoading$ | async) {
+  <div class="loading">Loading...</div>
+  } @if (workspaceError$ | async) {
+  <div class="error-message">
+    Failed to load workspaces: {{ workspaceError$ | async }}
+  </div>
+  } @if (amenityError$ | async) {
+  <div class="error-message">
+    Failed to load amenities: {{ amenityError$ | async }}
+  </div>
+  } @if (photoError$ | async) {
+  <div class="error-message">
+    Failed to load photos: {{ photoError$ | async }}
+  </div>
+  } @if (availabilityError$ | async) {
+  <div class="error-message">
+    Failed to load availabilities: {{ availabilityError$ | async }}
+  </div>
+  }
+
   <div class="workspaces-list">
     @for (workspace of workspaces$ | async; track workspace.id) {
     <div class="workspace-card">
@@ -10,7 +30,7 @@
             class="main-photo"
             [style.backgroundImage]="'url(' + workspace.mainPhoto + ')'"
           >
-            <img [src]="workspace.mainPhotoOverlay" />
+            <img [src]="workspace.mainPhoto" alt="Main photo" />
           </div>
           <div class="photo-carousel">
             @for (photo of workspace.photos; track $index) {
@@ -18,7 +38,7 @@
               class="thumbnail"
               [style.backgroundImage]="'url(' + photo + ')'"
             >
-              <img [src]="photo" />
+              <img [src]="photo" alt="Thumbnail" />
             </div>
             }
           </div>
@@ -52,25 +72,41 @@
 
             <div class="availability">
               <h4>Availability</h4>
+              @if (workspace.availabilityUnit === 'desk') {
               <div class="availability-item">
                 <div class="availability-icon">
                   <img src="amenities/armchair.svg" />
                 </div>
-                <span>{{ workspace.aviabilityUnit }}</span>
+                <span
+                  >{{ workspaceAvailabilities(workspace) }}
+                  {{ workspace.availabilityUnit }}</span
+                >
               </div>
+              } @if (workspace.availabilityUnit === 'room') {
+              <div class="availability-list">
+                @for (availability of workspaceAvailabilities(workspace); track
+                availability.id) {
+                <div class="availability-item">
+                  <span>
+                    {{ availability.quantity }}
+                    {{ workspace.availabilityUnit }} for
+                    {{ availability.capacityOption }} people
+                  </span>
+                </div>
+                }
+              </div>
+              }
             </div>
           </div>
         </div>
       </div>
 
-      @if(workspace.isBooked){
+      @if (workspace.isBooked) {
       <div class="booked-notice">
         <span class="check-icon"><img src="done.svg" /></span>
         <p class="booked-message">
           This workspace is already booked by you!
-          <strong class="highlighted-text">
-            &nbsp;{{ workspace.bookingInfo }}&nbsp;
-          </strong>
+          <strong class="highlighted-text">{{ workspace.bookingInfo }}</strong>
         </p>
       </div>
       }
