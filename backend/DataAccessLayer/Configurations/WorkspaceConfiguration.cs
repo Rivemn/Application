@@ -13,7 +13,7 @@ namespace Persistence.Configurations
 			builder.HasKey(w => w.Id);
 			builder.Property(w => w.Name).IsRequired().HasMaxLength(100);
 			builder.Property(w => w.Description).HasMaxLength(500);
-			builder.Property(w => w.AviabilityUnit).IsRequired().HasMaxLength(50);
+			builder.Property(w => w.AvailabilityUnit).IsRequired().HasMaxLength(50);
 		}
 	}
 }

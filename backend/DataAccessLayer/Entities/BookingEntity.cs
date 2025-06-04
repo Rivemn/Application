@@ -10,8 +10,8 @@
 		public Guid WorkspaceId { get; set; }
 		public WorkspaceEntity Workspace { get; set; } = null!;
 
-		public Guid AviabilityId { get; set; }
-		public AviabilityEntity Aviability { get; set; } = null!;
+		public Guid AvailabilityId { get; set; }
+		public AvailabilityEntity Availability { get; set; } = null!;
 
 		public DateTime Start { get; set; }
 		public DateTime End { get; set; }

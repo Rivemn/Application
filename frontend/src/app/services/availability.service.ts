@@ -1,18 +1,18 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Aviability } from '../contracts/Aviability';
+import { Availability } from '../contracts/Availability';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AviabilityService {
-  private readonly baseUrl = '/api/Aviability';
+export class AvailabilityService {
+  private readonly baseUrl = '/api/Availability';
 
   constructor(private http: HttpClient) {}
 
-  getByWorkspaceId(workspaceId: string): Observable<Aviability[]> {
-    return this.http.get<Aviability[]>(
+  getByWorkspaceId(workspaceId: string): Observable<Availability[]> {
+    return this.http.get<Availability[]>(
       `${this.baseUrl}/workspace/${workspaceId}`
     );
   }

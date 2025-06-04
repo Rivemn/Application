@@ -2,7 +2,7 @@
 {
 	public record PhotoRequest
 	(
-		string url,
-		Guid workspaceId
+		string Url,
+		Guid WorkspaceId
 	);
 }

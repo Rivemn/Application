@@ -5,11 +5,11 @@ using Persistence.Entities;
 
 namespace Persistence.Configurations
 {
-	public class AviabilityConfiguration : IEntityTypeConfiguration<AviabilityEntity>
+	public class AvailabilityConfiguration : IEntityTypeConfiguration<AvailabilityEntity>
 	{
-		public void Configure(EntityTypeBuilder<AviabilityEntity> builder)
+		public void Configure(EntityTypeBuilder<AvailabilityEntity> builder)
 		{
-			builder.ToTable("Aviabilities");
+			builder.ToTable("Availabilities");
 
 			builder.HasKey(a => a.Id);
 
@@ -20,7 +20,7 @@ namespace Persistence.Configurations
 				.IsRequired();
 
 			builder.HasOne(a => a.Workspace)
-				.WithMany(w => w.Aviabilities)
+				.WithMany(w => w.Availabilities)
 				.HasForeignKey(a => a.WorkspaceId);
 		}
 	}

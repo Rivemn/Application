@@ -18,7 +18,7 @@ namespace Persistence.Repositories
 		{
 			var entities = await _context.Workspaces.AsNoTracking().ToListAsync();
 			var workspaces = entities
-				.Select(e => Workspace.Create(e.Id, e.Name, e.Description, e.AviabilityUnit).workspace)
+				.Select(e => Workspace.Create(e.Id, e.Name, e.Description, e.AvailabilityUnit).workspace)
 				.ToList();
 
 			return workspaces;
@@ -30,7 +30,7 @@ namespace Persistence.Repositories
 			if (entity == null)
 				return null;
 
-			return Workspace.Create(entity.Id, entity.Name, entity.Description, entity.AviabilityUnit).workspace;
+			return Workspace.Create(entity.Id, entity.Name, entity.Description, entity.AvailabilityUnit).workspace;
 		}
 
 		public async Task<Guid> CreateAsync(Workspace workspace)
@@ -40,7 +40,7 @@ namespace Persistence.Repositories
 				Id = workspace.Id,
 				Name = workspace.Name,
 				Description = workspace.Description,
-				AviabilityUnit = workspace.AviabilityUnit
+				AvailabilityUnit = workspace.AvailabilityUnit
 			};
 
 			await _context.Workspaces.AddAsync(entity);

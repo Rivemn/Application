@@ -4,18 +4,18 @@ using Domain.Services;
 
 namespace Application.Services
 {
-    public class AviabilityService : IAviabilityService
+    public class AvailabilityService : IAviabilityService
     {
         private readonly IAviabilityRepository _repository;
         private readonly IWorkspaceRepository _workspaceRepository;
 
-        public AviabilityService(IAviabilityRepository repository, IWorkspaceRepository workspaceRepository)
+        public AvailabilityService(IAviabilityRepository repository, IWorkspaceRepository workspaceRepository)
         {
             _repository = repository;
             _workspaceRepository = workspaceRepository;
         }
 
-        public async Task<(List<Aviability> aviabilities, string error)> GetByWorkspaceIdAsync(Guid workspaceId)
+        public async Task<(List<Availability> aviabilities, string error)> GetByWorkspaceIdAsync(Guid workspaceId)
         {
             var aviabilities = await _repository.GetByWorkspaceIdAsync(workspaceId);
             return (aviabilities, string.Empty);
@@ -27,7 +27,7 @@ namespace Application.Services
             if (workspace == null)
                 return (Guid.Empty, "Workspace not found");
 
-            var (aviability, error) = Aviability.Create(workspace, quantity, capacityOption);
+            var (aviability, error) = Availability.Create(Guid.NewGuid(),workspace, quantity, capacityOption);
             if (!string.IsNullOrEmpty(error))
                 return (Guid.Empty, error);
 
@@ -39,7 +39,7 @@ namespace Application.Services
         {
             var success = await _repository.DeleteAsync(id);
             if (!success)
-                return (false, "Aviability not found");
+                return (false, "Availability not found");
 
             return (true, string.Empty);
         }

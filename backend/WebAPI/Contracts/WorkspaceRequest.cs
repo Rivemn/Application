@@ -2,8 +2,8 @@
 {
 	public record WorkspaceRequest
 	(
-		string name,
-		string description,
-		string aviabilityUnit
+		string Name,
+		string Description,
+		string AvailabilityUnit
 	);
 }

@@ -10,8 +10,8 @@ import { CommonModule, AsyncPipe } from '@angular/common';
 import { WorkspaceService } from '../services/workspace.service';
 import { Observable } from 'rxjs';
 import { Workspace } from '../contracts/Workspace';
-import { AviabilityService } from '../services/availability.service';
-import { Aviability } from '../contracts/Aviability';
+import { AvailabilityService } from '../services/availability.service';
+import { Availability } from '../contracts/Availability';
 import { BookingConfirmationComponent } from '../shared/booking-confirmation/booking-confirmation.component';
 import { Booking } from '../contracts/Booking';
 import { BookingRequest } from '../contracts/BookingRequest';
@@ -72,7 +72,7 @@ export class BookingPageComponent {
   constructor(
     private fb: FormBuilder,
     private workspaceService: WorkspaceService,
-    private aviabilityService: AviabilityService,
+    private availabilityService: AvailabilityService,
     private bookingService: BookingService
   ) {
     const currentYear = 2025; // Set to current year (June 02, 2025)
@@ -119,13 +119,13 @@ export class BookingPageComponent {
     }
   }
 
-  aviabilities: Aviability[] = [];
+  aviabilities: Availability[] = [];
 
   selectRoom(room: Workspace) {
     this.form.get('room')?.setValue(room);
     this.openDropdown = null;
 
-    this.aviabilityService.getByWorkspaceId(room.id).subscribe({
+    this.availabilityService.getByWorkspaceId(room.id).subscribe({
       next: (data) => {
         this.aviabilities = data;
         console.log('Aviabilities loaded:', data);
@@ -238,7 +238,7 @@ export class BookingPageComponent {
         workspaceId: formValue.room.id,
         fullName: formValue.name,
         email: formValue.email,
-        aviabilityId: formValue.roomSize.id,
+        availabilityId: formValue.roomSize.id,
         start: startDate.toISOString(),
         end: endDate.toISOString(),
       };

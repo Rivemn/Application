@@ -6,11 +6,11 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AviabilityController : ControllerBase
+    public class AvailabilityController : ControllerBase
     {
         private readonly IAviabilityService _service;
 
-        public AviabilityController(IAviabilityService service)
+        public AvailabilityController(IAviabilityService service)
         {
             _service = service;
         }
@@ -29,7 +29,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] AviabilityRequest request)
+        public async Task<IActionResult> Create([FromBody] AvailabilityRequest request)
         {
             var (id, error) = await _service.CreateAsync(request.WorkspaceId, request.Quantity, request.CapacityOption);
             if (!string.IsNullOrEmpty(error))

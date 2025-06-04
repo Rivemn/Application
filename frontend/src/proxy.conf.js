@@ -2,7 +2,7 @@ const PROXY_CONFIG = [
   {
     context: [
       "/api/Workspace",
-      "/api/Aviability",
+      "/api/Availability",
       "/api/workspaces",
       "/api/Booking",
       "/api/Photo",

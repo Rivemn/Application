@@ -3,7 +3,7 @@ export interface Booking {
   userId: string;
   workspaceId: string;
   email: string;
-  aviabilityId: string;
+  availabilityId: string;
   start: string;
   end: string;
   status: string;

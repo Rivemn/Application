@@ -14,7 +14,7 @@ namespace Persistence.Repositories
             _context = context;
         }
 
-        public async Task<List<Aviability>> GetByWorkspaceIdAsync(Guid workspaceId)
+        public async Task<List<Availability>> GetByWorkspaceIdAsync(Guid workspaceId)
         {
             var entities = await _context.Aviabilities
                 .Include(a => a.Workspace)
@@ -24,15 +24,15 @@ namespace Persistence.Repositories
             return entities
                 .Select(e =>
                 {
-                    var workspace = Workspace.Create(e.Workspace.Id, e.Workspace.Name, e.Workspace.Description, e.Workspace.AviabilityUnit).workspace!;
-                    return Aviability.Create(e.Id,workspace, e.Quantity, e.CapacityOption).aviability!;
+                    var workspace = Workspace.Create(e.Workspace.Id, e.Workspace.Name, e.Workspace.Description, e.Workspace.AvailabilityUnit).workspace!;
+                    return Availability.Create(e.Id,workspace, e.Quantity, e.CapacityOption).aviability!;
                 })
                 .ToList();
         }
 
-        public async Task<Guid> CreateAsync(Aviability aviability)
+        public async Task<Guid> CreateAsync(Availability aviability)
         {
-            var entity = new AviabilityEntity
+            var entity = new AvailabilityEntity
             {
                 Id = Guid.NewGuid(),
                 WorkspaceId = aviability.WorkspaceId,

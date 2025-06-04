@@ -2,6 +2,6 @@
 {
     public record AmenityRequest
     (
-        string name
+        string Name
     );
 }

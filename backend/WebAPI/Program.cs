@@ -1,8 +1,9 @@
 ﻿using Application;
 using DateSpaceWebAPI.Extensions;
+using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
-using Infrastructure;
+using WebAPI.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,13 +17,17 @@ builder.Services.AddCors(options =>
 			  .AllowAnyMethod();
 	});
 });
-builder.Services.AddApplicationDependencies(builder.Configuration);
+
+
+builder.Services.AddApplicationDependencies();
 
 builder.Services.AddDataAccessDependencies(builder.Configuration);
 
 builder.Services.AddInfrastructureServices();
 
 builder.Services.AddControllers();
+
+builder.Services.AddFluentValidation();
 
 if (builder.Environment.IsDevelopment())
 {

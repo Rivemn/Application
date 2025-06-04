@@ -35,7 +35,7 @@ namespace WebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] AmenityRequest request)
         {
-            var (id, error) = await _service.CreateAsync(request.name);
+            var (id, error) = await _service.CreateAsync(request.Name);
             if (!string.IsNullOrEmpty(error)) return BadRequest(error);
             return CreatedAtAction(nameof(GetById), new { id }, id);
         }

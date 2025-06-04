@@ -45,9 +45,9 @@ namespace WebAPI.Controllers
 		public async Task<IActionResult> Create([FromBody] WorkspaceRequest request)
 		{
 			var (id, error) = await _service.CreateAsync(
-				request.name,
-				request.description,
-				request.aviabilityUnit);
+				request.Name,
+				request.Description,
+				request.AvailabilityUnit);
 
 			if (!string.IsNullOrEmpty(error))
 				return BadRequest(error);
