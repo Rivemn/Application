@@ -1,4 +1,3 @@
-// booking.selectors.ts
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { BookingState } from './booking.state';
 
@@ -23,4 +22,19 @@ export const selectBookingLoading = createSelector(
 export const selectBookingError = createSelector(
   selectBookingState,
   (state) => state.error
+);
+
+export const selectBookingId = createSelector(
+  selectBookingState,
+  (state) => state.bookingId
+);
+
+export const selectWorkspaces = createSelector(
+  selectBookingState,
+  (state) => state.workspaces
+);
+
+export const selectAvailabilities = createSelector(
+  selectBookingState,
+  (state) => state.availabilities
 );

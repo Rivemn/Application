@@ -20,14 +20,44 @@ namespace Application.Services
 			_aviabilityRepository = aviabilityRepository;
 		}
 
-		public async Task<(Guid id, string error)> CreateAsync(string fullName, string email, Guid workspaceId, DateTime start, DateTime end, Guid aviabilityId)
+		public async Task<(Guid id, string error)> CreateAsync(
+					string fullName,
+					string email,
+					Guid workspaceId,
+					DateTime start,
+					DateTime end,
+					Guid availabilityId)
 		{
+			// Get or create user
 			var userId = await _userService.GetOrCreateUserAsync(fullName, email);
 
-			var (booking, error) = Booking.Create(Guid.NewGuid(), userId, workspaceId, aviabilityId, start, end, "Pending",	DateTime.UtcNow);
+			// Check for conflicting bookings
+			var conflictingBookings = await _repository.GetConflictingBookingsAsync(
+				workspaceId,
+				availabilityId,
+				start,
+				end);
+
+			if (conflictingBookings.Any())
+			{
+				return (Guid.Empty, "The selected time slot is already booked for this workspace and availability.");
+			}
+
+			// Validate booking creation
+			var (booking, error) = Booking.Create(
+				Guid.NewGuid(),
+				userId,
+				workspaceId,
+				availabilityId,
+				start,
+				end,
+				"Pending",
+				DateTime.UtcNow);
+
 			if (!string.IsNullOrEmpty(error))
 				return (Guid.Empty, error);
 
+			// Create booking
 			var id = await _repository.CreateAsync(booking);
 			return (id, string.Empty);
 		}

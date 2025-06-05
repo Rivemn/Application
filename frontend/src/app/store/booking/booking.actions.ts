@@ -1,7 +1,8 @@
-// booking.actions.ts
 import { createAction, props } from '@ngrx/store';
 import { Booking } from '../../contracts/Booking';
 import { BookingRequest } from '../../contracts/BookingRequest';
+import { Workspace } from '../../contracts/Workspace';
+import { Availability } from '../../contracts/Availability';
 
 export const loadBookings = createAction('[Booking] Load Bookings');
 export const loadBookingsSuccess = createAction(
@@ -51,6 +52,20 @@ export const createBookingFailure = createAction(
   '[Booking] Create Booking Failure',
   props<{ error: string }>()
 );
+export const loadBookingsByUserEmail = createAction(
+  '[Booking] Load Bookings By User Email',
+  props<{ email: string }>()
+);
+
+export const loadBookingsByUserEmailSuccess = createAction(
+  '[Booking] Load Bookings By User Email Success',
+  props<{ bookings: Booking[] }>()
+);
+
+export const loadBookingsByUserEmailFailure = createAction(
+  '[Booking] Load Bookings By User Email Failure',
+  props<{ error: string }>()
+);
 
 export const deleteBooking = createAction(
   '[Booking] Delete Booking',
@@ -62,5 +77,28 @@ export const deleteBookingSuccess = createAction(
 );
 export const deleteBookingFailure = createAction(
   '[Booking] Delete Booking Failure',
+  props<{ error: string }>()
+);
+
+export const loadWorkspaces = createAction('[Booking] Load Workspaces');
+export const loadWorkspacesSuccess = createAction(
+  '[Booking] Load Workspaces Success',
+  props<{ workspaces: Workspace[] }>()
+);
+export const loadWorkspacesFailure = createAction(
+  '[Booking] Load Workspaces Failure',
+  props<{ error: string }>()
+);
+
+export const loadAvailabilitiesByWorkspace = createAction(
+  '[Booking] Load Availabilities By Workspace',
+  props<{ workspaceId: string }>()
+);
+export const loadAvailabilitiesByWorkspaceSuccess = createAction(
+  '[Booking] Load Availabilities By Workspace Success',
+  props<{ availabilities: Availability[] }>()
+);
+export const loadAvailabilitiesByWorkspaceFailure = createAction(
+  '[Booking] Load Availabilities By Workspace Failure',
   props<{ error: string }>()
 );

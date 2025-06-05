@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { catchError, map, mergeMap } from 'rxjs/operators';
+import { catchError, exhaustMap, map, mergeMap, tap } from 'rxjs/operators';
 import { BookingService } from '../../services/booking.service';
+import { WorkspaceService } from '../../services/workspace.service';
+import { AvailabilityService } from '../../services/availability.service';
 import {
   loadBookings,
   loadBookingsSuccess,
@@ -19,13 +21,24 @@ import {
   deleteBooking,
   deleteBookingSuccess,
   deleteBookingFailure,
+  loadWorkspaces,
+  loadWorkspacesSuccess,
+  loadWorkspacesFailure,
+  loadAvailabilitiesByWorkspace,
+  loadAvailabilitiesByWorkspaceSuccess,
+  loadAvailabilitiesByWorkspaceFailure,
+  loadBookingsByUserEmail,
+  loadBookingsByUserEmailSuccess,
+  loadBookingsByUserEmailFailure,
 } from './booking.actions';
 
 @Injectable({ providedIn: 'root' })
 export class BookingEffects {
   constructor(
     private actions$: Actions,
-    private bookingService: BookingService
+    private bookingService: BookingService,
+    private workspaceService: WorkspaceService,
+    private availabilityService: AvailabilityService
   ) {}
 
   loadBookings$ = createEffect(() =>
@@ -73,12 +86,29 @@ export class BookingEffects {
   createBooking$ = createEffect(() =>
     this.actions$.pipe(
       ofType(createBooking),
-      mergeMap(({ request }) =>
+      exhaustMap(({ request }) =>
         this.bookingService.create(request).pipe(
+          tap((bookingId) => console.log('Booking created, ID:', bookingId)),
           map((bookingId) => createBookingSuccess({ bookingId })),
-          catchError((error) =>
-            of(createBookingFailure({ error: error.message }))
-          )
+          catchError((error) => {
+            console.error('Booking error:', error);
+            return of(createBookingFailure({ error: error.message }));
+          })
+        )
+      )
+    )
+  );
+  loadBookingsByUserEmail$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loadBookingsByUserEmail),
+      mergeMap(({ email }) =>
+        this.bookingService.getByUserEmail(email).pipe(
+          tap((bookings) => console.log('Fetched bookings:', bookings)),
+          map((bookings) => loadBookingsByUserEmailSuccess({ bookings })),
+          catchError((error) => {
+            console.error('Fetch bookings error:', error);
+            return of(loadBookingsByUserEmailFailure({ error: error.message }));
+          })
         )
       )
     )
@@ -92,6 +122,36 @@ export class BookingEffects {
           map(() => deleteBookingSuccess({ id })),
           catchError((error) =>
             of(deleteBookingFailure({ error: error.message }))
+          )
+        )
+      )
+    )
+  );
+
+  loadWorkspaces$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loadWorkspaces),
+      mergeMap(() =>
+        this.workspaceService.getAll().pipe(
+          map((workspaces) => loadWorkspacesSuccess({ workspaces })),
+          catchError((error) =>
+            of(loadWorkspacesFailure({ error: error.message }))
+          )
+        )
+      )
+    )
+  );
+
+  loadAvailabilitiesByWorkspace$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loadAvailabilitiesByWorkspace),
+      mergeMap(({ workspaceId }) =>
+        this.availabilityService.getByWorkspaceId(workspaceId).pipe(
+          map((availabilities) =>
+            loadAvailabilitiesByWorkspaceSuccess({ availabilities })
+          ),
+          catchError((error) =>
+            of(loadAvailabilitiesByWorkspaceFailure({ error: error.message }))
           )
         )
       )

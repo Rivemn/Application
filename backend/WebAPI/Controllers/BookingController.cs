@@ -1,4 +1,5 @@
-﻿using Domain.Services;
+﻿using Application.Services;
+using Domain.Services;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Contracts;
 
@@ -10,10 +11,12 @@ namespace WebAPI.Controllers
 	public class BookingController : ControllerBase
 	{
 		private readonly IBookingService _service;
+		private readonly IUserService _userService;
 
-		public BookingController(IBookingService service)
+		public BookingController(IBookingService service, IUserService userService)
 		{
 			_service = service;
+			_userService = userService;
 		}
 
 		[HttpPost]
@@ -50,6 +53,16 @@ namespace WebAPI.Controllers
 			var bookings = await _service.GetByUserAsync(userId);
 			return Ok(bookings);
 		}
+		[HttpGet("user/by-email")]
+		public async Task<IActionResult> GetByUserEmail(string email)
+		{
+			if (string.IsNullOrWhiteSpace(email))
+				return BadRequest("Email is required");
+
+			var bookings = await _userService.GetBookingsByEmailAsync(email);
+			return Ok(bookings);
+		}
+
 
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> Delete(Guid id)

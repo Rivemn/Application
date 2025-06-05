@@ -2,8 +2,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { BookingPageComponent } from './booking-page/booking-page.component';
-import { MyBookingsComponent } from './my-bookings/my-bookings.component';
+import { BookingPageComponent } from './booking/booking-page.component';
+import { MyBookingsComponent } from './booking/my-bookings/my-bookings.component';
 import { CoworkingDetailsComponent } from './coworking-details/coworking-details.component';
 
 const routes: Routes = [

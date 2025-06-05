@@ -28,10 +28,9 @@ builder.Services.AddControllers();
 
 builder.Services.AddFluentValidation();
 
-if (builder.Environment.IsDevelopment())
-{
+
 	builder.Services.AddSwaggerDocumentation();
-}
+
 
 var app = builder.Build();
 
@@ -42,11 +41,10 @@ using (var scope = app.Services.CreateScope())
 	dbContext.Database.Migrate();
 }
 
-if (app.Environment.IsDevelopment())
-{
+
 	app.UseSwaggerDocumentation();
 
-}
+
 
 app.UseHttpsRedirection();
 app.UseCors("AllowAll");

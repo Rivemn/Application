@@ -24,6 +24,7 @@ import { HeaderComponent } from './header/header.component';
 import { AppRoutingModule } from './app-routing.module';
 import { CoworkingDetailsComponent } from './coworking-details/coworking-details.component';
 import { CoworkingModule } from './coworking-details/coworking.module';
+import { BookingModule } from './booking/booking.module';
 
 @NgModule({
   declarations: [AppComponent, HeaderComponent],
@@ -31,6 +32,7 @@ import { CoworkingModule } from './coworking-details/coworking.module';
     BrowserModule,
     HttpClientModule,
     CoworkingModule,
+    BookingModule,
     AppRoutingModule,
     StoreModule.forRoot({
       bookings: bookingReducer,

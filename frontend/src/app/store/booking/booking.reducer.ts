@@ -1,4 +1,3 @@
-// booking.reducer.ts
 import { createReducer, on } from '@ngrx/store';
 import {
   loadBookings,
@@ -16,12 +15,24 @@ import {
   deleteBooking,
   deleteBookingSuccess,
   deleteBookingFailure,
+  loadWorkspaces,
+  loadWorkspacesSuccess,
+  loadWorkspacesFailure,
+  loadAvailabilitiesByWorkspace,
+  loadAvailabilitiesByWorkspaceSuccess,
+  loadAvailabilitiesByWorkspaceFailure,
+  loadBookingsByUserEmail,
+  loadBookingsByUserEmailSuccess,
+  loadBookingsByUserEmailFailure,
 } from './booking.actions';
 import { BookingState } from './booking.state';
 
 export const initialState: BookingState = {
   bookings: [],
   selectedBooking: null,
+  bookingId: null,
+  workspaces: [],
+  availabilities: [],
   loading: false,
   error: null,
 };
@@ -33,6 +44,7 @@ export const bookingReducer = createReducer(
     ...state,
     bookings,
     loading: false,
+
     error: null,
   })),
   on(loadBookingsFailure, (state, { error }) => ({
@@ -68,8 +80,9 @@ export const bookingReducer = createReducer(
   })),
 
   on(createBooking, (state) => ({ ...state, loading: true, error: null })),
-  on(createBookingSuccess, (state) => ({
+  on(createBookingSuccess, (state, { bookingId }) => ({
     ...state,
+    bookingId,
     loading: false,
     error: null,
   })),
@@ -87,6 +100,54 @@ export const bookingReducer = createReducer(
     error: null,
   })),
   on(deleteBookingFailure, (state, { error }) => ({
+    ...state,
+    loading: false,
+    error,
+  })),
+
+  // Обработка новых действий
+  on(loadWorkspaces, (state) => ({ ...state, loading: true, error: null })),
+  on(loadWorkspacesSuccess, (state, { workspaces }) => ({
+    ...state,
+    workspaces,
+    loading: false,
+    error: null,
+  })),
+  on(loadWorkspacesFailure, (state, { error }) => ({
+    ...state,
+    loading: false,
+    error,
+  })),
+
+  on(loadAvailabilitiesByWorkspace, (state) => ({
+    ...state,
+    loading: true,
+    error: null,
+  })),
+  on(loadAvailabilitiesByWorkspaceSuccess, (state, { availabilities }) => ({
+    ...state,
+    availabilities,
+    loading: false,
+    error: null,
+  })),
+  on(loadAvailabilitiesByWorkspaceFailure, (state, { error }) => ({
+    ...state,
+    loading: false,
+    error,
+  })),
+
+  on(loadBookingsByUserEmail, (state) => ({
+    ...state,
+    loading: true,
+    error: null,
+  })),
+  on(loadBookingsByUserEmailSuccess, (state, { bookings }) => ({
+    ...state,
+    bookings,
+    loading: false,
+    error: null,
+  })),
+  on(loadBookingsByUserEmailFailure, (state, { error }) => ({
     ...state,
     loading: false,
     error,
