@@ -1,8 +1,15 @@
+<!-- src/app/booking/booking-page/booking-page.component.html -->
 <div class="main-container">
   <a href="#" class="go-back"
     ><img src="go-back.svg" alt="Go back icon" /> Go back</a
   >
   <h2 class="section-title">Book your workspace</h2>
+
+  @if (loading$ | async) {
+  <div class="loading">Loading...</div>
+  } @if (error$ | async; as error) {
+  <div class="error-message">Error: {{ error }}</div>
+  }
 
   <form [formGroup]="form" (ngSubmit)="submit()">
     <div class="flex">
@@ -68,17 +75,18 @@
         <div class="room-size">
           <div class="room-title">What room size do you need?</div>
           <div class="room-options">
-            @for (aviability of aviabilities; track aviability.capacityOption) {
+            @for (availability of availabilities$ | async; track
+            availability.id) {
             <label class="room-option">
               <input
                 type="radio"
                 formControlName="roomSize"
-                [value]="aviability"
+                [value]="availability"
               />
               <span class="custom-checkbox"></span>
               <span class="room-label">
-                Room for {{ aviability.capacityOption }}
-                {{ aviability.capacityOption === 1 ? "person" : "people" }}
+                Room for {{ availability.capacityOption }}
+                {{ availability.capacityOption === 1 ? "person" : "people" }}
               </span>
             </label>
             } @empty {
@@ -258,17 +266,22 @@
         <div class="error-message">Booking cannot exceed 30 days.</div>
         }
 
-        <button class="submit-button" type="submit" [disabled]="!form.valid">
+        <button
+          class="submit-button"
+          type="submit"
+          [disabled]="!form.valid || (loading$ | async)"
+        >
           Submit
         </button>
       </div>
     </div>
   </form>
-</div>
 
-<app-booking-confirmation
-  *ngIf="showConfirmation"
-  [booking]="booking"
-  (close)="showConfirmation = false"
-  (submit)="submit()"
-></app-booking-confirmation>
+  <app-booking-confirmation
+    *ngIf="showConfirmation"
+    [booking]="bookingData"
+    [isError]="isError"
+    [errorMessage]="conflictError"
+    (close)="closeConfirmation()"
+  ></app-booking-confirmation>
+</div>

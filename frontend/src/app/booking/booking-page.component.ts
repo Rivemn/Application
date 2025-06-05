@@ -1,41 +1,40 @@
-﻿import { Component } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  ReactiveFormsModule,
-  FormsModule,
-} from '@angular/forms';
-import { CommonModule, AsyncPipe } from '@angular/common';
-import { WorkspaceService } from '../services/workspace.service';
-import { Observable } from 'rxjs';
+﻿import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Store } from '@ngrx/store';
+import { filter, Observable, take } from 'rxjs';
 import { Workspace } from '../contracts/Workspace';
-import { AvailabilityService } from '../services/availability.service';
 import { Availability } from '../contracts/Availability';
-import { BookingConfirmationComponent } from '../shared/booking-confirmation/booking-confirmation.component';
-import { Booking } from '../contracts/Booking';
 import { BookingRequest } from '../contracts/BookingRequest';
+import * as BookingActions from '../store/booking/booking.actions';
+import {
+  selectWorkspaces,
+  selectAvailabilities,
+  selectBookingLoading,
+  selectBookingError,
+  selectBookingId,
+} from '../store/booking/booking.selectors';
 import { BookingService } from '../services/booking.service';
+import { Booking } from '../contracts/Booking';
 
 @Component({
   selector: 'app-booking-page',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    FormsModule,
-    AsyncPipe,
-    BookingConfirmationComponent,
-  ],
+  standalone: false,
   templateUrl: './booking-page.component.html',
   styleUrls: ['./booking-page.component.scss'],
 })
-export class BookingPageComponent {
+export class BookingPageComponent implements OnInit {
   form: FormGroup;
   openDropdown: string | null = null;
   showConfirmation = false;
+  bookingData: BookingRequest | null = null;
+  conflictError: string = '';
+  isError: boolean = false;
 
   workspaceOptions$: Observable<Workspace[]>;
+  availabilities$: Observable<Availability[]>;
+  loading$: Observable<boolean>;
+  error$: Observable<string | null>;
+  bookingId$: Observable<string | null>;
 
   timeOptions = [
     '8:00 AM',
@@ -67,15 +66,14 @@ export class BookingPageComponent {
     'November',
     'December',
   ];
-  years = Array.from({ length: 20 }, (_, i) => 2025 + i); // Starting from 2025
+  years = Array.from({ length: 20 }, (_, i) => 2025 + i);
 
   constructor(
     private fb: FormBuilder,
-    private workspaceService: WorkspaceService,
-    private availabilityService: AvailabilityService,
-    private bookingService: BookingService
+    private store: Store,
+    private cdr: ChangeDetectorRef
   ) {
-    const currentYear = 2025; // Set to current year (June 02, 2025)
+    const currentYear = 2025;
     this.form = this.fb.group(
       {
         name: ['', Validators.required],
@@ -83,30 +81,47 @@ export class BookingPageComponent {
         room: [null, Validators.required],
         roomSize: [null, Validators.required],
         dateStart: [
-          {
-            day: null,
-            month: null,
-            year: currentYear,
-          },
+          { day: null, month: null, year: currentYear },
           Validators.required,
         ],
         dateEnd: [
-          {
-            day: null,
-            month: null,
-            year: currentYear,
-          },
+          { day: null, month: null, year: currentYear },
           Validators.required,
         ],
         timeStart: [null, Validators.required],
         timeEnd: [null, Validators.required],
       },
-      {
-        validators: this.dateRangeValidator,
-      }
+      { validators: this.dateRangeValidator }
     );
 
-    this.workspaceOptions$ = this.workspaceService.getAll();
+    this.workspaceOptions$ = this.store.select(selectWorkspaces);
+    this.availabilities$ = this.store.select(selectAvailabilities);
+    this.loading$ = this.store.select(selectBookingLoading);
+    this.error$ = this.store.select(selectBookingError);
+    this.bookingId$ = this.store.select(selectBookingId);
+  }
+
+  ngOnInit() {
+    this.store.dispatch(BookingActions.loadWorkspaces());
+    this.bookingId$.pipe(filter(Boolean), take(1)).subscribe((id) => {
+      console.log('Booking successful, ID:', id);
+      this.showConfirmation = true;
+      this.isError = false;
+
+      this.cdr.detectChanges();
+    });
+
+    this.error$.subscribe((error) => {
+      if (error) {
+        console.error('Booking error:', error);
+        this.conflictError = error.includes('time slot is already booked')
+          ? 'Selected time is not available. Please choose a different time slot.'
+          : error;
+        this.isError = true;
+        this.showConfirmation = true;
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   toggleDropdown(name: string) {
@@ -119,28 +134,18 @@ export class BookingPageComponent {
     }
   }
 
-  aviabilities: Availability[] = [];
-
   selectRoom(room: Workspace) {
     this.form.get('room')?.setValue(room);
     this.openDropdown = null;
-
-    this.availabilityService.getByWorkspaceId(room.id).subscribe({
-      next: (data) => {
-        this.aviabilities = data;
-        console.log('Aviabilities loaded:', data);
-      },
-      error: (err) => {
-        console.error('Failed to load aviabilities', err);
-      },
-    });
+    this.store.dispatch(
+      BookingActions.loadAvailabilitiesByWorkspace({ workspaceId: room.id })
+    );
   }
 
   selectDatePart(controlName: string, part: string, event: Event) {
     const value = (event.target as HTMLSelectElement).value;
     const current = this.form.get(controlName)?.value || {};
     const updated = { ...current, [part]: parseInt(value, 10) };
-
     this.form.get(controlName)?.setValue(updated);
     this.form.get(controlName)?.markAsTouched();
     this.form.updateValueAndValidity();
@@ -206,8 +211,6 @@ export class BookingPageComponent {
     return null;
   }
 
-  booking!: BookingRequest;
-
   submit() {
     if (this.form.valid) {
       const formValue = this.form.value;
@@ -234,7 +237,7 @@ export class BookingPageComponent {
       if (endPeriod === 'AM' && endHours === 12) endHours = 0;
       endDate.setHours(endHours, endMinutes);
 
-      this.booking = {
+      this.bookingData = {
         workspaceId: formValue.room.id,
         fullName: formValue.name,
         email: formValue.email,
@@ -243,21 +246,24 @@ export class BookingPageComponent {
         end: endDate.toISOString(),
       };
 
-      console.log(this.booking);
-
-      this.bookingService.create(this.booking).subscribe({
-        next: (id) => {
-          console.log('Booking successfully created with id:', id);
-          this.showConfirmation = true;
-          this.form.reset();
-        },
-        error: (err) => {
-          console.error('Booking failed:', err);
-        },
-      });
+      console.log('Submitting booking:', this.bookingData);
+      this.store.dispatch(
+        BookingActions.createBooking({ request: this.bookingData })
+      );
+      this.showConfirmation = true;
+      localStorage.setItem('email', formValue.email);
     } else {
       this.form.markAllAsTouched();
-      console.warn('Form invalid:', this.form.errors);
+      console.log('Form is invalid:', this.form.errors);
     }
+  }
+
+  closeConfirmation() {
+    this.showConfirmation = false;
+    this.conflictError = '';
+    this.isError = false;
+    this.bookingData = null;
+    this.form.reset();
+    this.cdr.detectChanges();
   }
 }

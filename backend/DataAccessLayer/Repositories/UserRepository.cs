@@ -36,5 +36,39 @@ namespace Persistence.Repositories
 			await _context.SaveChangesAsync();
 			return entity.Id;
 		}
+		public async Task<List<Booking>> GetBookingsByEmailAsync(string email)
+		{
+			var user = await _context.Users
+				.Include(u => u.Bookings)
+				.FirstOrDefaultAsync(u => u.Email == email);
+
+			if (user == null || user.Bookings == null)
+				return new List<Booking>();
+
+			var result = new List<Booking>();
+
+			foreach (var entity in user.Bookings)
+			{
+				var (booking, error) = Booking.Create(
+					entity.Id,
+					entity.UserId,
+					entity.WorkspaceId,
+					entity.AvailabilityId,
+					entity.Start,
+					entity.End,
+					entity.Status,
+					entity.CreatedAt
+				);
+
+				if (booking != null)
+					result.Add(booking);
+				else
+					Console.WriteLine($"Invalid booking skipped: {error}"); 
+			}
+
+			return result;
+		}
+
+
 	}
 }

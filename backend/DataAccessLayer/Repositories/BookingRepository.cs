@@ -96,6 +96,42 @@ namespace Persistence.Repositories
                 return true;
             }
 
+		public async Task<List<Booking>> GetConflictingBookingsAsync(
+			Guid workspaceId,
+			Guid availabilityId,
+			DateTime start,
+			DateTime end)
+		{
+			var entities = await _context.Bookings
+				.Where(b =>
+					b.WorkspaceId == workspaceId &&
+					b.AvailabilityId == availabilityId &&
+					b.Start < end && // Overlap condition
+					b.End > start)
+				.ToListAsync();
+
+			var bookings = new List<Booking>();
+
+			foreach (var entity in entities)
+			{
+				var (booking, _) = Booking.Create(
+					entity.Id,
+					entity.UserId,
+					entity.WorkspaceId,
+					entity.AvailabilityId,
+					entity.Start,
+					entity.End,
+					entity.Status,
+					entity.CreatedAt
+				);
+
+				if (booking != null)
+					bookings.Add(booking);
+			}
+
+			return bookings;
+		}
+
 
 	}
 

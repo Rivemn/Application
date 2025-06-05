@@ -1,7 +1,18 @@
 <div class="main-container">
   <h2 class="section-title">My Bookings</h2>
 
-  @if (bookings.length === 0) {
+  <!-- Display loading state -->
+  @if (loading$ | async) {
+  <div class="loading">Loading bookings...</div>
+  }
+
+  <!-- Display error state -->
+  @if (error$ | async; as error) {
+  <div class="error">Error: {{ error }}</div>
+  }
+
+  <!-- Display when no bookings exist -->
+  @if ((bookings$ | async)?.length === 0 && !(loading$ | async)) {
   <div class="workspaces-list">
     <div class="workspace-card">
       <h2>You don’t have any bookings yet</h2>
@@ -12,19 +23,18 @@
     </div>
   </div>
   } @else {
+  <!-- Display bookings list -->
   <div class="workspaces-list">
-    @for (booking of bookings; track booking.id) {
+    @for (booking of bookings$ | async; track booking.id) {
     <div class="workspace-card">
       <div
-        class="workspace-photo"
+        class="workoutspace-photo"
         [style.backgroundImage]="'url(photos/OpenSpace/main-photo.png)'"
       ></div>
       <div class="workspace-content">
         <div class="workspace-title">
           <h3>
-            {{
-              workspacesMap[booking.workspaceId]?.name || "Unknown Workspace"
-            }}
+            {{ workspacesMap[booking.workspaceId].name || "Loading..." }}
           </h3>
           <div class="workspace-buttons">
             <button
@@ -35,7 +45,7 @@
             </button>
           </div>
         </div>
-        <div class="workspace-stats">
+        <div classBookingService="workspace-stats">
           <div class="stat-row">
             <div class="stat-icon">
               <img src="calendar.svg" alt="Calendar" />

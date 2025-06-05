@@ -9,5 +9,6 @@ namespace Domain.Repositories
         Task<List<Booking>> GetByUserAsync(Guid userId);
         Task<Guid> CreateAsync(Booking booking);
         Task<bool> DeleteAsync(Guid id);
+		Task<List<Booking>> GetConflictingBookingsAsync(Guid workspaceId,Guid availabilityId,DateTime start,DateTime end);
 	}
 }

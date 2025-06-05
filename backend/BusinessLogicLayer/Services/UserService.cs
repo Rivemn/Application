@@ -22,5 +22,11 @@ namespace Application.Services
 			var newUser = User.Create(Guid.NewGuid(), email, email, DateTime.UtcNow);
 			return await _userRepository.CreateAsync(newUser);
 		}
+
+		public async Task<List<Booking>> GetBookingsByEmailAsync(string email)
+		{
+			return await _userRepository.GetBookingsByEmailAsync(email);
+		}
+
 	}
 }
