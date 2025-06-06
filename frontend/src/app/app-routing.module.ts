@@ -2,9 +2,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { BookingPageComponent } from './booking/booking-page.component';
+import { BookingPageComponent } from './booking/booking-page/booking-page.component';
 import { MyBookingsComponent } from './booking/my-bookings/my-bookings.component';
-import { CoworkingDetailsComponent } from './coworking-details/coworking-details.component';
+import { CoworkingDetailsComponent } from './coworking/coworking-details/coworking-details.component';
 
 const routes: Routes = [
   { path: 'coworking', component: CoworkingDetailsComponent },

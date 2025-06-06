@@ -2,33 +2,33 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, combineLatest, map } from 'rxjs';
-import { Workspace } from '../contracts/Workspace';
-import { Amenity } from '../contracts/Amenity';
-import { loadAmenitiesByWorkspace } from '../store/amenity/amenity.actions';
+import { Workspace } from '../../contracts/Workspace';
+import { Amenity } from '../../contracts/Amenity';
+import { loadAmenitiesByWorkspace } from '../../store/amenity/amenity.actions';
 import {
   selectAmenityLoading,
   selectAmenityError,
   selectAllAmenities,
-} from '../store/amenity/amenity.selectors';
-import { loadAvailabilitiesByWorkspace } from '../store/availability/availability.actions';
+} from '../../store/amenity/amenity.selectors';
+import { loadAvailabilitiesByWorkspace } from '../../store/availability/availability.actions';
 import {
   selectAvailabilityLoading,
   selectAvailabilityError,
   selectAllAvailabilities,
-} from '../store/availability/availability.selectors';
-import { loadPhotosByWorkspace } from '../store/photo/photo.actions';
+} from '../../store/availability/availability.selectors';
+import { loadPhotosByWorkspace } from '../../store/photo/photo.actions';
 import {
   selectPhotoLoading,
   selectPhotoError,
   selectAllPhotos,
-} from '../store/photo/photo.selectors';
-import { loadWorkspaces } from '../store/workspace/workspace.actions';
+} from '../../store/photo/photo.selectors';
+import { loadWorkspaces } from '../../store/workspace/workspace.actions';
 import {
   selectWorkspaceLoading,
   selectWorkspaceError,
   selectAllWorkspaces,
-} from '../store/workspace/workspaces.selectors';
-import { Availability } from '../contracts/Availability';
+} from '../../store/workspace/workspaces.selectors';
+import { Availability } from '../../contracts/Availability';
 
 interface ExtendedWorkspace extends Workspace {
   mainPhoto: string;

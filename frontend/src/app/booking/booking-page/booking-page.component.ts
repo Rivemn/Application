@@ -2,19 +2,19 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { filter, Observable, take } from 'rxjs';
-import { Workspace } from '../contracts/Workspace';
-import { Availability } from '../contracts/Availability';
-import { BookingRequest } from '../contracts/BookingRequest';
-import * as BookingActions from '../store/booking/booking.actions';
+import { Workspace } from '../../contracts/Workspace';
+import { Availability } from '../../contracts/Availability';
+import { BookingRequest } from '../../contracts/BookingRequest';
+import * as BookingActions from '../../store/booking/booking.actions';
 import {
   selectWorkspaces,
   selectAvailabilities,
   selectBookingLoading,
   selectBookingError,
   selectBookingId,
-} from '../store/booking/booking.selectors';
-import { BookingService } from '../services/booking.service';
-import { Booking } from '../contracts/Booking';
+} from '../../store/booking/booking.selectors';
+import { BookingService } from '../../services/booking.service';
+import { Booking } from '../../contracts/Booking';
 
 @Component({
   selector: 'app-booking-page',

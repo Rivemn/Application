@@ -42,7 +42,7 @@ using (var scope = app.Services.CreateScope())
 }
 
 
-	app.UseSwaggerDocumentation();
+app.UseSwaggerDocumentation();
 
 
 

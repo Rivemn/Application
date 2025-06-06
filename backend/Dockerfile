@@ -12,6 +12,7 @@ COPY ["WebAPI/WebAPI.csproj", "WebAPI/"]
 COPY ["BusinessLogicLayer/Application.csproj", "BusinessLogicLayer/"]
 COPY ["DataAccessLayer/Persistence.csproj", "DataAccessLayer/"]
 COPY ["Domain/Domain.csproj", "Domain/"]
+COPY ["Infrastructure/Infrastructure.csproj", "Infrastructure/"]
 
 RUN dotnet restore "WebAPI/WebAPI.csproj"
 
