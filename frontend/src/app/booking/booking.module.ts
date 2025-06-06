@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 
-import { BookingPageComponent } from './booking-page.component';
+import { BookingPageComponent } from './booking-page/booking-page.component';
 import { bookingReducer } from '../store/booking/booking.reducer';
 import { BookingEffects } from '../store/booking/booking.effects';
 import { BookingConfirmationComponent } from './booking-confirmation/booking-confirmation.component';

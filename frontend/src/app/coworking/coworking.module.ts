@@ -14,7 +14,7 @@ import { PhotoEffects } from '../store/photo/photo.effects';
 import { AvailabilityEffects } from '../store/availability/availability.effects';
 
 import { workspaceReducer } from '../store/workspace/workspaces.reducer';
-import { CoworkingDetailsComponent } from './coworking-details.component';
+import { CoworkingDetailsComponent } from './coworking-details/coworking-details.component';
 
 @NgModule({
   declarations: [CoworkingDetailsComponent],
