@@ -1,0 +1,248 @@
+.flex {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 0;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.long-card {
+  min-width: 300px;
+  flex-basis: 600px;
+}
+
+.short-card {
+  min-width: 300px;
+  width: 488px;
+  flex-basis: 400px;
+  padding-bottom: 24px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.form-group input {
+  width: 100%;
+  height: 48px;
+  padding: 0 16px;
+  background: #fcfbff;
+  border: 1px solid #c2bcd8;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: "Inter", sans-serif;
+  color: var(--text-dark);
+}
+
+.form-group input:-webkit-autofill {
+  box-shadow: 0 0 0 1000px #fcfbff inset !important;
+  -webkit-text-fill-color: var(--text-dark) !important;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
+.date-picker {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px;
+  gap: 12px;
+  width: 100%;
+  background: var(--white);
+  border-radius: var(--card-radius);
+  font-family: "Inter", sans-serif;
+  box-sizing: border-box;
+}
+
+.datepicker-column {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: relative;
+}
+
+.datepicker-column label {
+  font-family: "Inter", sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 120%;
+  color: var(--text-dark);
+  flex: none;
+  order: 0;
+  align-self: stretch;
+  flex-grow: 0;
+}
+
+.datepicker-column select {
+  width: 100%;
+  height: 48px;
+  padding: 0 16px;
+  background: #fcfbff;
+  border: 1px solid #c2bcd8;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: "Inter", sans-serif;
+  color: var(--text-dark);
+  appearance: none;
+  cursor: pointer;
+}
+
+.datepicker-column select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.dropdown-container {
+  position: relative;
+  max-width: 100%;
+}
+
+.dropdown-field {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px;
+  height: 48px;
+  background: #fcfbff;
+  border: 1px solid #c2bcd8;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.field-label {
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--text-dark);
+}
+
+.chevron {
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid #354052;
+  border-bottom: 2px solid #354052;
+  transform: rotate(45deg);
+}
+
+.dropdown-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #fcfbff;
+  border: 1px solid #c2bcd8;
+  border-radius: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 100;
+  margin-top: 2px;
+}
+
+.dropdown-item {
+  padding: 12px 16px;
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  color: var(--text-dark);
+  cursor: pointer;
+}
+
+.dropdown-item:hover,
+.dropdown-item.selected {
+  background-color: #dfdfff;
+}
+
+.room-size {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.room-title {
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--text-dark);
+}
+
+.room-options {
+  display: grid;
+  grid-template-rows: repeat(4, 24px); /* 4 items per column, each 24px tall */
+  grid-auto-flow: column; /* Fill top-to-bottom in each column */
+  gap: 16px 16px; /* 16px vertical gap between items, 16px horizontal gap between columns */
+  width: auto; /* Let the width grow based on columns */
+  flex: none;
+  order: 1;
+  flex-grow: 0;
+}
+
+.room-option {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0;
+  gap: 8px;
+  width: 162px;
+  height: 24px;
+  flex: none;
+  flex-grow: 0;
+}
+
+.room-option input[type="radio"] {
+  display: none;
+}
+
+.custom-checkbox {
+  width: 24px;
+  height: 24px;
+  border: 1px solid #c2bcd8;
+  border-radius: 4px;
+  background: #f5f3fb;
+  position: relative;
+  flex: none;
+  order: 0;
+  flex-grow: 0;
+}
+
+.room-option input[type="radio"]:checked + .custom-checkbox::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 6px;
+  border: solid white;
+  border-width: 0 0 2px 2px;
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.room-option input[type="radio"]:checked + .custom-checkbox {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.room-label {
+  width: 130px;
+  height: 17px;
+  font-family: "Inter", sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 120%;
+  color: var(--text-dark);
+  flex: none;
+  order: 1;
+  flex-grow: 0;
+}
+.error-message {
+  font-family: "Inter", sans-serif;
+  font-weight: 400; /* Matches p and room-label */
+  font-size: 16px; /* Matches input and dropdown text */
+  line-height: 24px; /* Matches p */
+  color: #d32f2f; /* Red color for errors, consistent with common UI patterns */
+  margin-top: 8px; /* Aligns with form-group gap */
+}

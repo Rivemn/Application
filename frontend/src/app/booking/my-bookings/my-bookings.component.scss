@@ -1,0 +1,158 @@
+/* Локальні стилі для компонента MyBookingsComponent */
+
+.workspaces-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.workspace-card {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 16px;
+  gap: 32px;
+  width: 100%;
+  max-width: 1280px;
+  height: 224px;
+  background: var(--white);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  flex: none;
+}
+
+.workspace-photo {
+  width: 280px;
+  height: 192px;
+  background-size: cover;
+  background-position: center;
+  border-radius: var(--card-radius);
+  flex: none;
+}
+
+.workspace-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 12px 0;
+  gap: 24px;
+  flex: 1;
+}
+
+.workspace-title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 32px;
+  width: 100%;
+}
+
+.workspace-title h3 {
+  font-family: "Inter", sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 120%;
+  color: var(--text-dark);
+  margin: 0;
+  flex: 1;
+}
+
+.workspace-buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.workspace-button {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.edit-button {
+  border: 1px solid #c2bcd8;
+}
+
+.edit-button img {
+  width: 24px;
+  height: 24px;
+}
+
+.delete-button {
+  border: 1px solid #f56e6e;
+}
+
+.delete-button img {
+  width: 24px;
+  height: 24px;
+}
+
+.workspace-stats {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+}
+
+.stat-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.stat-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: #f5f3fb;
+  border-radius: 12px;
+}
+
+.stat-icon img {
+  width: 24px;
+  height: 24px;
+}
+
+.stat-text {
+  font-family: "Inter", sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 120%;
+  color: var(--text-dark);
+}
+
+.stat-status {
+  font-family: "Inter", sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 120%;
+  color: var(--text-dark);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.stat-status::before {
+  content: "";
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  background-size: contain;
+}

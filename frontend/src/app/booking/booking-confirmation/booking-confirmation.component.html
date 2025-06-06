@@ -1,0 +1,41 @@
+<!-- src/app/booking/booking-confirmation/booking-confirmation.component.html -->
+<div class="overlay">
+  <div class="confirmation-card" [ngClass]="{ 'error-state': isError }">
+    <button class="close-btn" (click)="closeModal()">✕</button>
+
+    <img
+      src="x.svg"
+      [alt]="isError ? 'Error' : 'Success'"
+      class="icon-circle"
+      [ngClass]="{ 'error-circle': isError }"
+    />
+
+    <div class="confirmation-text">
+      <h2 [ngClass]="{ 'error-title': isError }">{{ title }}</h2>
+      @if (isError) {
+      <p>{{ errorMessage }}</p>
+      } @else if (booking) {
+      <p>
+        Your room is booked from from
+        <strong>
+          {{ booking.start | date : "MMM d, yyyy" }} to
+          {{ booking.end | date : "MMM d, yyyy" }}.
+        </strong>
+      </p>
+      <p>
+        A confirmation has been sent to your email
+        <strong>{{ booking.email }}</strong>
+      </p>
+      } @else {
+      <p>No booking data available.</p>
+      }
+    </div>
+
+    <button
+      class="submit-button"
+      (click)="showMyBookings ? goToMyBookings() : closeModal()"
+    >
+      {{ buttonText }}
+    </button>
+  </div>
+</div>

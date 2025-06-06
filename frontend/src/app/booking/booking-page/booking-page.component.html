@@ -1,0 +1,287 @@
+<!-- src/app/booking/booking-page/booking-page.component.html -->
+<div class="main-container">
+  <a href="#" class="go-back"
+    ><img src="go-back.svg" alt="Go back icon" /> Go back</a
+  >
+  <h2 class="section-title">Book your workspace</h2>
+
+  @if (loading$ | async) {
+  <div class="loading">Loading...</div>
+  } @if (error$ | async; as error) {
+  <div class="error-message">Error: {{ error }}</div>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <div class="flex">
+      <div class="workspace-card long-card">
+        <h3>Reservation details</h3>
+
+        <div class="form-group">
+          <h4>Name</h4>
+          <input
+            type="text"
+            placeholder="Enter your name"
+            formControlName="name"
+          />
+          @if (form.get('name')?.touched && form.get('name')?.invalid) {
+          <div class="error-message">Name is required.</div>
+          }
+        </div>
+
+        <div class="form-group">
+          <h4>Email</h4>
+          <input
+            type="email"
+            placeholder="Enter your email"
+            formControlName="email"
+          />
+          @if (form.get('email')?.touched && form.get('email')?.invalid) {
+          <div class="error-message">A valid email is required.</div>
+          }
+        </div>
+
+        <div class="form-group">
+          <h4>Workspace type</h4>
+          <div
+            class="dropdown-container"
+            (clickOutside)="closeDropdown('room')"
+          >
+            <div class="dropdown-field" (click)="toggleDropdown('room')">
+              <span class="field-label">
+                {{ form.get("room")?.value?.name || "Select room type" }}
+              </span>
+              <span class="chevron"></span>
+            </div>
+            @if (openDropdown === 'room') {
+            <ul class="dropdown-list">
+              @for (workspace of workspaceOptions$ | async; track workspace.id)
+              {
+              <li
+                class="dropdown-item"
+                [class.selected]="form.get('room')?.value?.id === workspace.id"
+                (click)="selectRoom(workspace)"
+              >
+                {{ workspace.name }}
+              </li>
+              }
+            </ul>
+            }
+          </div>
+          @if (form.get('room')?.touched && form.get('room')?.invalid) {
+          <div class="error-message">Please select a room type.</div>
+          }
+        </div>
+
+        <div class="room-size">
+          <div class="room-title">What room size do you need?</div>
+          <div class="room-options">
+            @for (availability of availabilities$ | async; track
+            availability.id) {
+            <label class="room-option">
+              <input
+                type="radio"
+                formControlName="roomSize"
+                [value]="availability"
+              />
+              <span class="custom-checkbox"></span>
+              <span class="room-label">
+                Room for {{ availability.capacityOption }}
+                {{ availability.capacityOption === 1 ? "person" : "people" }}
+              </span>
+            </label>
+            } @empty {
+            <div class="error-message">
+              Please select a room to see available sizes.
+            </div>
+            }
+          </div>
+          @if (form.get('roomSize')?.touched && form.get('roomSize')?.invalid) {
+          <div class="error-message">Please select a room size.</div>
+          }
+        </div>
+      </div>
+
+      <div class="workspace-card short-card">
+        <h3>Choose date and time</h3>
+
+        <div class="form-group">
+          <h4>Start date</h4>
+          <div class="date-picker">
+            <div class="datepicker-column">
+              <label for="dateStartMonth">Month</label>
+              <select
+                id="dateStartMonth"
+                (change)="selectDatePart('dateStart', 'month', $event)"
+                [value]="form.get('dateStart')?.value?.month || ''"
+              >
+                <option value="" disabled selected>Select Month</option>
+                @for (month of months; track month; let i = $index) {
+                <option [value]="i + 1">{{ month }}</option>
+                }
+              </select>
+            </div>
+            <div class="datepicker-column">
+              <label for="dateStartYear">Year</label>
+              <select
+                id="dateStartYear"
+                (change)="selectDatePart('dateStart', 'year', $event)"
+                [value]="form.get('dateStart')?.value?.year || ''"
+              >
+                <option value="" disabled selected>Select Year</option>
+                @for (year of years; track year) {
+                <option [value]="year">{{ year }}</option>
+                }
+              </select>
+            </div>
+            <div class="datepicker-column">
+              <label for="dateStartDay">Day</label>
+              <select
+                id="dateStartDay"
+                (change)="selectDatePart('dateStart', 'day', $event)"
+                [value]="form.get('dateStart')?.value?.day || ''"
+              >
+                <option value="" disabled selected>Select Day</option>
+                @for (day of days; track day) {
+                <option [value]="day">{{ day }}</option>
+                }
+              </select>
+            </div>
+          </div>
+          @if (form.touched && form.hasError('incompleteDate')) {
+          <div class="error-message">
+            All date fields (day, month, year) are required.
+          </div>
+          }
+        </div>
+
+        <div class="form-group">
+          <h4>End date</h4>
+          <div class="date-picker">
+            <div class="datepicker-column">
+              <label for="dateEndMonth">Month</label>
+              <select
+                id="dateEndMonth"
+                (change)="selectDatePart('dateEnd', 'month', $event)"
+                [value]="form.get('dateEnd')?.value?.month || ''"
+              >
+                <option value="" disabled selected>Select Month</option>
+                @for (month of months; track month; let i = $index) {
+                <option [value]="i + 1">{{ month }}</option>
+                }
+              </select>
+            </div>
+            <div class="datepicker-column">
+              <label for="dateEndYear">Year</label>
+              <select
+                id="dateEndYear"
+                (change)="selectDatePart('dateEnd', 'year', $event)"
+                [value]="form.get('dateEnd')?.value?.year || ''"
+              >
+                <option value="" disabled selected>Select Year</option>
+                @for (year of years; track year) {
+                <option [value]="year">{{ year }}</option>
+                }
+              </select>
+            </div>
+            <div class="datepicker-column">
+              <label for="dateEndDay">Day</label>
+              <select
+                id="dateEndDay"
+                (change)="selectDatePart('dateEnd', 'day', $event)"
+                [value]="form.get('dateEnd')?.value?.day || ''"
+              >
+                <option value="" disabled selected>Select Day</option>
+                @for (day of days; track day) {
+                <option [value]="day">{{ day }}</option>
+                }
+              </select>
+            </div>
+          </div>
+          @if (form.touched && form.hasError('incompleteDate')) {
+          <div class="error-message">
+            All date fields (day, month, year) are required.
+          </div>
+          }
+        </div>
+
+        <div class="form-group">
+          <h4>Start time</h4>
+          <div
+            class="dropdown-container"
+            (clickOutside)="closeDropdown('timeStart')"
+          >
+            <div class="dropdown-field" (click)="toggleDropdown('timeStart')">
+              <span class="field-label">
+                {{ form.get("timeStart")?.value || "Choose start time" }}
+              </span>
+              <span class="chevron"></span>
+            </div>
+            @if (openDropdown === 'timeStart') {
+            <ul class="dropdown-list">
+              @for (time of timeOptions; track time) {
+              <li
+                class="dropdown-item"
+                [class.selected]="form.get('timeStart')?.value === time"
+                (click)="selectTime('timeStart', time)"
+              >
+                {{ time }}
+              </li>
+              }
+            </ul>
+            }
+          </div>
+        </div>
+
+        <div class="form-group">
+          <h4>End time</h4>
+          <div
+            class="dropdown-container"
+            (clickOutside)="closeDropdown('timeEnd')"
+          >
+            <div class="dropdown-field" (click)="toggleDropdown('timeEnd')">
+              <span class="field-label">
+                {{ form.get("timeEnd")?.value || "Choose end time" }}
+              </span>
+              <span class="chevron"></span>
+            </div>
+            @if (openDropdown === 'timeEnd') {
+            <ul class="dropdown-list">
+              @for (time of timeOptions; track time) {
+              <li
+                class="dropdown-item"
+                [class.selected]="form.get('timeEnd')?.value === time"
+                (click)="selectTime('timeEnd', time)"
+              >
+                {{ time }}
+              </li>
+              }
+            </ul>
+            }
+          </div>
+        </div>
+
+        @if (form.touched && form.hasError('invalidTimeRange')) {
+        <div class="error-message">End time must be after start time.</div>
+        } @if (form.touched && form.hasError('maxDurationExceeded')) {
+        <div class="error-message">Booking cannot exceed 30 days.</div>
+        }
+
+        <button
+          class="submit-button"
+          type="submit"
+          [disabled]="!form.valid || (loading$ | async)"
+        >
+          Submit
+        </button>
+      </div>
+    </div>
+  </form>
+
+  <app-booking-confirmation
+    *ngIf="showConfirmation"
+    [booking]="bookingData"
+    [isError]="isError"
+    [errorMessage]="conflictError"
+    (close)="closeConfirmation()"
+  ></app-booking-confirmation>
+</div>
