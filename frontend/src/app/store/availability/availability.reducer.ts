@@ -22,7 +22,7 @@ export const availabilityReducer = createReducer(
   })),
   on(loadAvailabilitiesByWorkspaceSuccess, (state, { availabilities }) => ({
     ...state,
-    availabilities: [...state.availabilities, ...availabilities],
+    availabilities: [...state.availabilities, ...state.availabilities],
     loading: false,
     error: null,
   })),

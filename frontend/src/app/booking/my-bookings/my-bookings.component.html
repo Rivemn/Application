@@ -14,7 +14,7 @@
   <!-- Display when no bookings exist -->
   @if ((bookings$ | async)?.length === 0 && !(loading$ | async)) {
   <div class="workspaces-list">
-    <div class="workspace-card">
+    <div class="workspace-card no-bookings">
       <h2>You don’t have any bookings yet</h2>
       <p>Start by choosing a coworking space</p>
       <button class="submit-button" (click)="goToCoworking()">

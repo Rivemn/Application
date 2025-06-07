@@ -47,7 +47,8 @@ namespace WebAPI.Controllers
 			var (id, error) = await _service.CreateAsync(
 				request.Name,
 				request.Description,
-				request.AvailabilityUnit);
+				request.AvailabilityUnit,
+				request.coworkingId);
 
 			if (!string.IsNullOrEmpty(error))
 				return BadRequest(error);

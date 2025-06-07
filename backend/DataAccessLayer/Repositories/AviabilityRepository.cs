@@ -24,7 +24,7 @@ namespace Persistence.Repositories
             return entities
                 .Select(e =>
                 {
-                    var workspace = Workspace.Create(e.Workspace.Id, e.Workspace.Name, e.Workspace.Description, e.Workspace.AvailabilityUnit).workspace!;
+                    var workspace = Workspace.Create(e.Workspace.Id, e.Workspace.Name, e.Workspace.Description, e.Workspace.AvailabilityUnit,e.Workspace.CoworkingId).workspace!;
                     return Availability.Create(e.Id,workspace, e.Quantity, e.CapacityOption).aviability!;
                 })
                 .ToList();
