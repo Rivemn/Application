@@ -4,6 +4,7 @@
 	(
 		string Name,
 		string Description,
-		string AvailabilityUnit
+		string AvailabilityUnit,
+		Guid coworkingId
 	);
 }

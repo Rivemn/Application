@@ -7,6 +7,7 @@ namespace Persistence
 {
 	public class AppDbContext (DbContextOptions<AppDbContext> options) : DbContext(options)
 	{
+		public DbSet<CoworkingEntity> Coworkings { get; set; }
 		public DbSet<WorkspaceEntity> Workspaces { get; set; }
 		public DbSet<PhotoEntity> Photos { get; set; }
 		public DbSet<AvailabilityEntity> Aviabilities { get; set; }
@@ -20,6 +21,7 @@ namespace Persistence
 		{
 			base.OnModelCreating(modelBuilder);
 
+			modelBuilder.ApplyConfiguration(new CoworkingConfiguration());
 			modelBuilder.ApplyConfiguration(new WorkspaceConfiguration());
 			modelBuilder.ApplyConfiguration(new AvailabilityConfiguration());
 			modelBuilder.ApplyConfiguration(new BookingConfiguration());
@@ -31,6 +33,23 @@ namespace Persistence
 		}
 		private void SeedData(ModelBuilder modelBuilder)
 		{
+
+			var coworkings = new List<CoworkingEntity>
+			{
+				new CoworkingEntity
+				{
+					Id = Guid.Parse("123e4567-e89b-12d3-a456-426614174000"),
+					Name = "Downtown Hub",
+					Address = "123 Main St, Cityville"
+				},
+				new CoworkingEntity
+				{
+					Id = Guid.Parse("223e4567-e89b-12d3-a456-426614174001"),
+					Name = "Tech Park CoWork",
+					Address = "456 Tech Rd, Innovate City"
+				}
+			};
+			modelBuilder.Entity<CoworkingEntity>().HasData(coworkings);
 			// Amenities
 			var amenities = new List<AmenityEntity>
 			{
@@ -51,16 +70,25 @@ namespace Persistence
 					Id = Guid.Parse("f1e2d3c4-5678-9101-1121-314151617181"),
 					Name = "Private Office",
 					Description = "Quiet space for focused work",
-					AvailabilityUnit = "room"
+					AvailabilityUnit = "room",
+					CoworkingId = Guid.Parse("123e4567-e89b-12d3-a456-426614174000")
 				},
 				new WorkspaceEntity
 				{
 					Id = Guid.Parse("e2d3c4b5-6789-1011-1213-141516171819"),
 					Name = "Meeting Room",
 					Description = "Space for team meetings",
-					AvailabilityUnit = "room"
+					AvailabilityUnit = "room",
+					CoworkingId = Guid.Parse("123e4567-e89b-12d3-a456-426614174000")
 				},
-
+				new WorkspaceEntity
+				{
+					Id = Guid.Parse("d3e4f5c6-7891-0111-2131-415161718192"),
+					Name = "Open Desk",
+					Description = "Shared desk space",
+					AvailabilityUnit = "desk",
+					CoworkingId = Guid.Parse("223e4567-e89b-12d3-a456-426614174001")
+				}
 			};
 			modelBuilder.Entity<WorkspaceEntity>().HasData(workspaces);
 

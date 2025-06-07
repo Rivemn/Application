@@ -1,0 +1,41 @@
+<div class="main-container">
+  <h2 class="section-title">Available coworking spaces</h2>
+
+  @if (isLoading$ | async) {
+  <div class="loading">Loading...</div>
+  } @if (error$ | async) {
+  <div class="error-message">
+    Failed to load coworking spaces: {{ error$ | async }}
+  </div>
+  } @if (!(isLoading$ | async) && !(error$ | async) && (coworkings$ |
+  async)?.length === 0) {
+  <div class="flex justify-center items-center h-screen">
+    <p class="text-gray-500 text-lg">
+      No coworking spaces available at the moment.
+    </p>
+  </div>
+  }
+
+  <div class="workspaces-list">
+    @for (coworking of coworkings$ | async; track coworking.id) {
+    <div class="workspace-card">
+      <div class="card-main">
+        <div class="card-photos"></div>
+      </div>
+
+      <div class="card-content">
+        <div class="card-text">
+          <div class="card-description">
+            <h3>{{ coworking.name }}</h3>
+            <p class="description-text">{{ coworking.address }}</p>
+          </div>
+          <button class="book-btn" [routerLink]="['/coworking', coworking.id]">
+            View Details
+          </button>
+        </div>
+      </div>
+    </div>
+
+    }
+  </div>
+</div>

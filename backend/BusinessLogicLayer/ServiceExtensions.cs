@@ -9,6 +9,7 @@ namespace Application
 	{
 		public static IServiceCollection AddApplicationDependencies(this IServiceCollection services)
 		{
+			services.AddScoped<ICoworkingService, CoworkingService>();
 			services.AddScoped<IWorkspaceService, WorkspaceService>();
 			services.AddScoped<IPhotoService, PhotoService>();
 			services.AddScoped<IAmenityService, AmenityService>();

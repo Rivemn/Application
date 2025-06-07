@@ -28,9 +28,9 @@ namespace Application.Services
 			return (workspace, string.Empty);
 		}
 
-		public async Task<(Guid id, string error)> CreateAsync(string name, string description, string aviabilityUnit)
+		public async Task<(Guid id, string error)> CreateAsync(string name, string description, string aviabilityUnit, Guid? coworkingId)
 		{
-			var (workspace, error) = Workspace.Create(Guid.NewGuid(), name, description, aviabilityUnit);
+			var (workspace, error) = Workspace.Create(Guid.NewGuid(), name, description, aviabilityUnit, coworkingId);
 			if (!string.IsNullOrEmpty(error))
 				return (Guid.Empty, error);
 

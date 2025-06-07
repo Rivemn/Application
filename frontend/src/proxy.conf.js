@@ -6,6 +6,7 @@ const PROXY_CONFIG = [
       "/api/workspaces",
       "/api/Booking",
       "/api/Photo",
+      "/api/Coworking",
     ],
     target: "https://localhost:7088",
     secure: false,
