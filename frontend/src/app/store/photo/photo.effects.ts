@@ -7,12 +7,9 @@ import {
   loadPhotosByWorkspace,
   loadPhotosByWorkspaceSuccess,
   loadPhotosByWorkspaceFailure,
-  addPhoto,
-  addPhotoSuccess,
-  addPhotoFailure,
-  deletePhoto,
-  deletePhotoSuccess,
-  deletePhotoFailure,
+  loadPhotosByCoworking,
+  loadPhotosByCoworkingFailure,
+  loadPhotosByCoworkingSuccess,
 } from './photo.actions';
 import { PhotoService } from '../../services/photo.service';
 
@@ -34,26 +31,14 @@ export class PhotoEffects {
     )
   );
 
-  addPhoto$ = createEffect(() =>
+  loadPhotosByCoworking$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(addPhoto),
-      mergeMap(({ photo }) =>
-        this.photoService.addPhoto(photo).pipe(
-          map((newPhoto) => addPhotoSuccess({ photo: newPhoto })),
-          catchError((error) => of(addPhotoFailure({ error: error.message })))
-        )
-      )
-    )
-  );
-
-  deletePhoto$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(deletePhoto),
-      mergeMap(({ id }) =>
-        this.photoService.deletePhoto(id).pipe(
-          map(() => deletePhotoSuccess({ id })),
+      ofType(loadPhotosByCoworking),
+      mergeMap(({ coworkingId }) =>
+        this.photoService.getByCoworkingId(coworkingId).pipe(
+          map((photos) => loadPhotosByCoworkingSuccess({ photos })),
           catchError((error) =>
-            of(deletePhotoFailure({ error: error.message }))
+            of(loadPhotosByCoworkingFailure({ error: error.message }))
           )
         )
       )

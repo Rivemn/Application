@@ -16,17 +16,23 @@ namespace WebAPI.Controllers
 			_service = service;
 		}
 
-		[HttpGet("{workspaceId}")]
+		[HttpGet("workspace/{workspaceId}")]
 		public async Task<IActionResult> GetByWorkspace(Guid workspaceId)
 		{
 			var photos = await _service.GetByWorkspaceIdAsync(workspaceId);
+			return Ok(photos);
+		}
+		[HttpGet("coworking/{coworkingId}")]
+		public async Task<IActionResult> GetByCoworking(Guid coworkingId)
+		{
+			var photos = await _service.GetByCoworkingIdAsync(coworkingId);
 			return Ok(photos);
 		}
 
 		[HttpPost]
 		public async Task<IActionResult> Add([FromBody] PhotoRequest request)
 		{
-			var (photo, error) = Photo.Create(0, request.Url, request.WorkspaceId);
+			var (photo, error) = Photo.Create(0, request.Url, request.WorkspaceId, request.CoworkingId);
 			if (photo == null)
 				return BadRequest(error);
 

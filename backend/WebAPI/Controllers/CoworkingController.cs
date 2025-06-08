@@ -39,7 +39,7 @@ namespace WebApi.Controllers
 		[HttpPost]
 		public async Task<ActionResult<Guid>> Create([FromBody] CreateCoworkingRequest request)
 		{
-			var (id, error) = await _coworkingService.CreateAsync(request.Name, request.Address);
+			var (id, error) = await _coworkingService.CreateAsync(request.Name, request.Description, request.Address);
 			if (!string.IsNullOrEmpty(error))
 				return BadRequest(error);
 

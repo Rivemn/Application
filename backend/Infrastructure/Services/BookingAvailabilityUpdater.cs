@@ -28,7 +28,7 @@ public class BookingAvailabilityUpdater : IBookingAvailabilityUpdater
 		{
 			booking.Status = "Completed";
 
-			var aviability = await _dbContext.Aviabilities
+			var aviability = await _dbContext.Availabilities
 				.FirstOrDefaultAsync(a => a.Id == booking.AvailabilityId, cancellationToken);
 
 			if (aviability != null)
@@ -46,7 +46,7 @@ public class BookingAvailabilityUpdater : IBookingAvailabilityUpdater
 		{
 			booking.Status = "InProgress"; // или "Occupied", если у вас такой статус есть
 
-			var aviability = await _dbContext.Aviabilities
+			var aviability = await _dbContext.Availabilities
 				.FirstOrDefaultAsync(a => a.Id == booking.AvailabilityId, cancellationToken);
 
 			if (aviability != null && aviability.Quantity > 0)

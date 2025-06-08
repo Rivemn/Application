@@ -16,8 +16,13 @@ namespace Persistence.Configurations
 			builder.Property(w => w.AvailabilityUnit).IsRequired().HasMaxLength(50);
 
 			builder.HasOne(w => w.Coworking)
-	.WithMany(c => c.Workspaces)
-	.HasForeignKey(w => w.CoworkingId);
+	       .WithMany(c => c.Workspaces)
+	       .HasForeignKey(w => w.CoworkingId);
+
+			builder.HasMany(w => w.Photos)
+	        .WithOne(p => p.Workspace)
+	        .HasForeignKey(p => p.WorkspaceId)
+	        .OnDelete(DeleteBehavior.Restrict);
 		}
 	}
 }

@@ -24,7 +24,7 @@ namespace Persistence.Repositories
 				.ToListAsync();
 
 			var coworkings = entities
-				.Select(e => Coworking.Create(e.Id, e.Name, e.Address).coworking)
+				.Select(e => Coworking.Create(e.Id, e.Name, e.Description, e.Address).coworking)
 				.Where(c => c != null)
 				.ToList();
 
@@ -42,7 +42,7 @@ namespace Persistence.Repositories
 			if (entity == null)
 				return null;
 
-			return Coworking.Create(entity.Id, entity.Name, entity.Address).coworking;
+			return Coworking.Create(entity.Id, entity.Name,entity.Description, entity.Address).coworking;
 		}
 
 		public async Task<Guid> CreateAsync(Coworking coworking)

@@ -3,6 +3,7 @@
 	public record CreateCoworkingRequest
 	(
 		 string Name,
+		 string Description,
 		 string Address
 	);
 }

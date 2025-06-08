@@ -22,7 +22,22 @@ namespace Persistence.Repositories
 				.ToListAsync();
 
 			var photos = entities
-				.Select(p => Photo.Create(p.Id, p.Url, p.WorkspaceId).photo)
+				.Select(p => Photo.Create(p.Id, p.Url, p.WorkspaceId,p.CoworkingId).photo)
+				.Where(p => p != null)!
+				.ToList()!;
+
+			return photos;
+		}
+
+		public async Task<List<Photo>> GetByCoworkingIdAsync(Guid coworkingId)
+		{
+			var entities = await _context.Photos
+				.AsNoTracking()
+				.Where(p => p.CoworkingId == coworkingId)
+				.ToListAsync();
+
+			var photos = entities
+				.Select(p => Photo.Create(p.Id, p.Url, p.WorkspaceId,p.CoworkingId).photo)
 				.Where(p => p != null)!
 				.ToList()!;
 

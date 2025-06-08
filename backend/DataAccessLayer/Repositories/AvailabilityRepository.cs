@@ -5,18 +5,18 @@ using Persistence.Entities;
 
 namespace Persistence.Repositories
 {
-    public class AviabilityRepository : IAviabilityRepository
+    public class AvailabilityRepository : IAviabilityRepository
     {
         private readonly AppDbContext _context;
 
-        public AviabilityRepository(AppDbContext context)
+        public AvailabilityRepository(AppDbContext context)
         {
             _context = context;
         }
 
         public async Task<List<Availability>> GetByWorkspaceIdAsync(Guid workspaceId)
         {
-            var entities = await _context.Aviabilities
+            var entities = await _context.Availabilities
                 .Include(a => a.Workspace)
                 .Where(a => a.WorkspaceId == workspaceId)
                 .ToListAsync();
@@ -40,24 +40,24 @@ namespace Persistence.Repositories
                 CapacityOption = aviability.CapacityOption
             };
 
-            await _context.Aviabilities.AddAsync(entity);
+            await _context.Availabilities.AddAsync(entity);
             await _context.SaveChangesAsync();
             return entity.Id;
         }
 
         public async Task<bool> DeleteAsync(Guid id)
         {
-            var entity = await _context.Aviabilities.FindAsync(id);
+            var entity = await _context.Availabilities.FindAsync(id);
             if (entity == null)
                 return false;
 
-            _context.Aviabilities.Remove(entity);
+            _context.Availabilities.Remove(entity);
             await _context.SaveChangesAsync();
             return true;
         }
 		public async Task<bool> DecreaseQuantityAsync(Guid id)
 		{
-			var entity = await _context.Aviabilities.FindAsync(id);
+			var entity = await _context.Availabilities.FindAsync(id);
 			if (entity == null || entity.Quantity <= 0)
 				return false;
 
@@ -68,7 +68,7 @@ namespace Persistence.Repositories
 
 		public async Task<bool> IncreaseQuantityAsync(Guid id)
 		{
-			var entity = await _context.Aviabilities.FindAsync(id);
+			var entity = await _context.Availabilities.FindAsync(id);
 			if (entity == null)
 				return false;
 

@@ -38,7 +38,7 @@ namespace Persistence
 			services.AddScoped<IWorkspaceRepository, WorkspaceRepository>();
 			services.AddScoped<IPhotoRepository, PhotoRepository>();
 			services.AddScoped<IAmenityRepository, AmenityRepository>();
-            services.AddScoped<IAviabilityRepository, AviabilityRepository>();
+            services.AddScoped<IAviabilityRepository, AvailabilityRepository>();
             services.AddScoped<IWorkspaceAmenityRepository, WorkspaceAmenityRepository>();
             services.AddScoped<IBookingRepository, BookingRepository>();
 			services.AddScoped<IUserRepository, UserRepository>();

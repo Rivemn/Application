@@ -3,6 +3,7 @@
 	public record PhotoRequest
 	(
 		string Url,
-		Guid WorkspaceId
+		Guid? WorkspaceId,
+		Guid? CoworkingId
 	);
 }
