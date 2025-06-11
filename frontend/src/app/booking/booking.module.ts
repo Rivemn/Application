@@ -14,12 +14,14 @@ import { CapacityLabelPipe } from './capacity-label.pipe';
 import { workspaceReducer } from '../store/workspace/workspaces.reducer';
 import { WorkspaceEffects } from '../store/workspace/workspace.effects';
 import { availabilityReducer } from '../store/availability/availability.reducer';
+import { AiAssistantComponent } from './my-bookings/ai-assistant/ai-assistant.component';
 
 @NgModule({
   declarations: [
     BookingPageComponent,
     BookingConfirmationComponent,
     MyBookingsComponent,
+    AiAssistantComponent,
   ],
   imports: [
     CommonModule,
