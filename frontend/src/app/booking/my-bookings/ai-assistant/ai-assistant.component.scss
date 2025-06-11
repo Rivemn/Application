@@ -1,0 +1,168 @@
+.ai-assistant-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0;
+  gap: 24px;
+  width: 1280px;
+  height: 89px;
+  flex: none;
+  order: 3;
+  align-self: stretch;
+  flex-grow: 0;
+  z-index: 3;
+}
+
+/* Example questions heading */
+.example-questions {
+  width: 1280px;
+  height: 22px;
+  font-family: "Inter", sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 120%;
+  color: #2d2d2d;
+  flex: none;
+  order: 0;
+  align-self: stretch;
+  flex-grow: 0;
+}
+
+/* List of example question buttons */
+.example-list {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 0;
+  gap: 16px;
+  width: 909px;
+  height: 43px;
+  flex: none;
+  order: 1;
+  flex-grow: 0;
+}
+
+/* Individual example question button */
+.example-button {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 16px;
+  gap: 10px;
+  background: #edf0ff;
+  border: 1.5px solid #5c5af3;
+  border-radius: 4px;
+  flex: none;
+  flex-grow: 0;
+  font-family: "Inter", sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 120%;
+  color: #5c5af3;
+  cursor: pointer;
+}
+
+/* Specific widths for each button */
+.button-1 {
+  width: 300px;
+  height: 43px;
+}
+.button-1 span {
+  width: 269px;
+  height: 19px;
+}
+.button-2 {
+  width: 350px;
+  height: 43px;
+}
+.button-2 span {
+  width: 350px;
+  height: 19px;
+}
+.button-3 {
+  width: 300px;
+  height: 43px;
+}
+.button-3 span {
+  width: 300px;
+  height: 19px;
+}
+
+/* Input field container */
+.input-field {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  gap: 176px;
+  width: 1280px;
+  height: 64px;
+  background: #fcfbff;
+  border: 1px solid #c2bcd8;
+  border-radius: 8px;
+  flex: none;
+  order: 4;
+  align-self: stretch;
+  flex-grow: 0;
+  z-index: 4;
+}
+
+/* Text input */
+.input-field input {
+  width: 80%; /* Increased from 111px to 80% of container */
+  height: 19px;
+  font-family: "Inter", sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 120%;
+  color: #787878;
+  border: none;
+  background: none;
+  flex: none;
+  order: 0;
+  flex-grow: 0;
+}
+
+/* Send button */
+.send-button {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  gap: 10px;
+  width: 44px;
+  height: 44px;
+  background: #5c5af3;
+  border-radius: 4px;
+  flex: none;
+  order: 1;
+  flex-grow: 0;
+  cursor: pointer;
+}
+
+/* Vector icon inside send button */
+.send-icon {
+  width: 24px;
+  height: 24px;
+  position: relative;
+  flex: none;
+  order: 0;
+  flex-grow: 0;
+}
+
+.send-icon::before {
+  content: "";
+  position: absolute;
+  left: 11.16%;
+  right: 12.5%;
+  top: 12.5%;
+  bottom: 11.16%;
+  border: 1.5px solid #ffffff;
+  transform: rotate(45deg);
+}

@@ -1,7 +1,6 @@
 <div class="main-container">
   <h2 class="section-title">My Bookings</h2>
 
-  <!-- Bookings List -->
   <div class="workspaces-list">
     @for (item of bookings$ | async; track item.booking.id) {
     <div class="workspace-card">
@@ -48,5 +47,7 @@
       </div>
     </div>
     }
+
+    <app-ai-assistant [bookings]="(bookings$ | async) || []"></app-ai-assistant>
   </div>
 </div>

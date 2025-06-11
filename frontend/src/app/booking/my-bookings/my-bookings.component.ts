@@ -10,7 +10,7 @@ import * as WorkspaceActions from '../../store/workspace/workspace.actions';
 import { selectAllBookings } from '../../store/booking/booking.selectors';
 import { selectWorkspaceState } from '../../store/workspace/workspaces.selectors';
 
-interface BookingDetails {
+export interface BookingDetails {
   booking: Booking;
   workspace?: Workspace;
 }
