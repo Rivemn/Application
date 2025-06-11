@@ -1,79 +1,57 @@
-// workspace.reducer.ts
 import { createReducer, on } from '@ngrx/store';
-
-import { WorkspaceState } from './workspace.state';
-import {
-  createWorkspace,
-  createWorkspaceFailure,
-  createWorkspaceSuccess,
-  deleteWorkspace,
-  deleteWorkspaceFailure,
-  deleteWorkspaceSuccess,
-  loadWorkspaceById,
-  loadWorkspaceByIdFailure,
-  loadWorkspaceByIdSuccess,
-  loadWorkspaces,
-  loadWorkspacesFailure,
-  loadWorkspacesSuccess,
-} from './workspace.actions';
-
-export const initialState: WorkspaceState = {
-  workspaces: [],
-  selectedWorkspace: null,
-  loading: false,
-  error: null,
-};
+import * as WorkspaceActions from './workspace.actions';
+import { initialState, WorkspaceState } from './workspace.state';
 
 export const workspaceReducer = createReducer(
   initialState,
-  on(loadWorkspaces, (state) => ({ ...state, loading: true, error: null })),
-  on(loadWorkspacesSuccess, (state, { workspaces }) => ({
+  on(WorkspaceActions.loadWorkspacesByCoworking, (state) => ({
     ...state,
-    workspaces,
-    loading: false,
+    loading: true,
     error: null,
   })),
-  on(loadWorkspacesFailure, (state, { error }) => ({
+  on(
+    WorkspaceActions.loadWorkspacesByCoworkingSuccess,
+    (state, { workspaces, coworkingId }) => {
+      const filteredWorkspaces = state.workspaces.filter(
+        (w) => w.coworkingId !== coworkingId
+      );
+      return {
+        ...state,
+        workspaces: [...filteredWorkspaces, ...workspaces],
+        loading: false,
+        error: null,
+      };
+    }
+  ),
+  on(WorkspaceActions.loadWorkspacesByCoworkingFailure, (state, { error }) => ({
+    ...state,
+    error,
+    loading: false,
+  })),
+  on(WorkspaceActions.loadWorkspaceById, (state) => ({
+    ...state,
+    loading: true,
+    error: null,
+  })),
+  on(WorkspaceActions.loadWorkspaceByIdSuccess, (state, { workspace }) => {
+    const workspaceExists = state.workspaces.some((w) => w.id === workspace.id);
+    return {
+      ...state,
+      workspaces: workspaceExists
+        ? state.workspaces.map((w) => (w.id === workspace.id ? workspace : w))
+        : [...state.workspaces, workspace],
+      selectedWorkspace: workspace,
+      loading: false,
+      error: null,
+    };
+  }),
+  on(WorkspaceActions.loadWorkspaceByIdFailure, (state, { error }) => ({
     ...state,
     loading: false,
     error,
   })),
-
-  on(loadWorkspaceById, (state) => ({ ...state, loading: true, error: null })),
-  on(loadWorkspaceByIdSuccess, (state, { workspace }) => ({
+  on(WorkspaceActions.setSelectedWorkspace, (state, { workspace }) => ({
     ...state,
     selectedWorkspace: workspace,
-    loading: false,
-    error: null,
-  })),
-  on(loadWorkspaceByIdFailure, (state, { error }) => ({
-    ...state,
-    loading: false,
-    error,
-  })),
-
-  on(createWorkspace, (state) => ({ ...state, loading: true, error: null })),
-  on(createWorkspaceSuccess, (state) => ({
-    ...state,
-    loading: false,
-    error: null,
-  })),
-  on(createWorkspaceFailure, (state, { error }) => ({
-    ...state,
-    loading: false,
-    error,
-  })),
-
-  on(deleteWorkspace, (state) => ({ ...state, loading: true, error: null })),
-  on(deleteWorkspaceSuccess, (state, { id }) => ({
-    ...state,
-    workspaces: state.workspaces.filter((workspace) => workspace.id !== id),
-    loading: false,
-    error: null,
-  })),
-  on(deleteWorkspaceFailure, (state, { error }) => ({
-    ...state,
-    loading: false,
-    error,
   }))
 );

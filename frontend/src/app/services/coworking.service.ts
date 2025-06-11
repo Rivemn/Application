@@ -15,4 +15,7 @@ export class CoworkingService {
   getAll(): Observable<Coworking[]> {
     return this.http.get<Coworking[]>(this.apiUrl);
   }
+  getById(id: string): Observable<Coworking> {
+    return this.http.get<Coworking>(`${this.apiUrl}/${id}`);
+  }
 }

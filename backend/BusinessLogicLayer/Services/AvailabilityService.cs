@@ -20,8 +20,16 @@ namespace Application.Services
             var aviabilities = await _repository.GetByWorkspaceIdAsync(workspaceId);
             return (aviabilities, string.Empty);
         }
+		public async Task<(Availability? aviability, string error)> GetByIdAsync(Guid id)
+		{
+			var aviability = await _repository.GetByIdAsync(id);
+			if (aviability == null)
+				return (null, "Availability not found");
 
-        public async Task<(Guid id, string error)> CreateAsync(Guid workspaceId, int quantity, int capacityOption)
+			return (aviability, string.Empty);
+		}
+
+		public async Task<(Guid id, string error)> CreateAsync(Guid workspaceId, int quantity, int capacityOption)
         {
             var workspace = await _workspaceRepository.GetByIdAsync(workspaceId);
             if (workspace == null)

@@ -10,3 +10,15 @@ export const loadCoworkingsFailure = createAction(
   '[Coworking] Load Coworkings Failure',
   props<{ error: string }>()
 );
+export const loadCoworkingById = createAction(
+  '[Coworking] Load By Id',
+  props<{ id: string }>()
+);
+export const loadCoworkingByIdSuccess = createAction(
+  '[Coworking] Load By Id Success',
+  props<{ coworking: Coworking }>()
+);
+export const loadCoworkingByIdFailure = createAction(
+  '[Coworking] Load By Id Failure',
+  props<{ error: string }>()
+);

@@ -24,10 +24,10 @@ import { CoworkingEffects } from '../store/coworking/coworking.effects';
   imports: [
     CommonModule,
     RouterModule,
-    StoreModule.forFeature('workspace', workspaceReducer),
+
     StoreModule.forFeature('amenity', amenityReducer),
     StoreModule.forFeature('photo', photoReducer),
-    StoreModule.forFeature('availability', availabilityReducer),
+
     StoreModule.forFeature('coworking', coworkingReducer),
     EffectsModule.forFeature([
       WorkspaceEffects,

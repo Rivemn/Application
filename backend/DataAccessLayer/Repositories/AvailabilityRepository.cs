@@ -29,8 +29,28 @@ namespace Persistence.Repositories
                 })
                 .ToList();
         }
+		public async Task<Availability?> GetByIdAsync(Guid id)
+		{
+			var entity = await _context.Availabilities
+				.Include(a => a.Workspace)
+				.FirstOrDefaultAsync(a => a.Id == id);
 
-        public async Task<Guid> CreateAsync(Availability aviability)
+			if (entity == null)
+				return null;
+
+			var workspace = Workspace.Create(
+				entity.Workspace.Id,
+				entity.Workspace.Name,
+				entity.Workspace.Description,
+				entity.Workspace.AvailabilityUnit,
+				entity.Workspace.CoworkingId
+			).workspace!;
+
+			return Availability.Create(entity.Id, workspace, entity.Quantity, entity.CapacityOption).aviability!;
+		}
+
+
+		public async Task<Guid> CreateAsync(Availability aviability)
         {
             var entity = new AvailabilityEntity
             {

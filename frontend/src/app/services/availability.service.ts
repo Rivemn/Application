@@ -16,4 +16,7 @@ export class AvailabilityService {
       `${this.baseUrl}/workspace/${workspaceId}`
     );
   }
+  getById(id: string): Observable<Availability> {
+    return this.http.get<Availability>(`${this.baseUrl}/${id}`);
+  }
 }

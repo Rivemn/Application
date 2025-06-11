@@ -36,9 +36,12 @@ import { CoworkingEffects } from './store/coworking/coworking.effects';
     CoworkingModule,
     BookingModule,
     AppRoutingModule,
+    StoreModule.forFeature('workspace', workspaceReducer),
+    StoreModule.forFeature('availability', availabilityReducer),
     StoreModule.forRoot({
       bookings: bookingReducer,
       workspaces: workspaceReducer,
+
       availabilities: availabilityReducer,
       photos: photoReducer,
       amenities: amenityReducer,

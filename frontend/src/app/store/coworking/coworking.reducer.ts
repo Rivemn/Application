@@ -3,20 +3,11 @@ import {
   loadCoworkings,
   loadCoworkingsSuccess,
   loadCoworkingsFailure,
+  loadCoworkingById,
+  loadCoworkingByIdSuccess,
+  loadCoworkingByIdFailure,
 } from './coworking.actions';
-import { Coworking } from '../../contracts/Coworking';
-
-export interface CoworkingState {
-  coworkings: Coworking[];
-  loading: boolean;
-  error: string | null;
-}
-
-export const initialState: CoworkingState = {
-  coworkings: [],
-  loading: false,
-  error: null,
-};
+import { initialState } from './coworking.state';
 
 export const coworkingReducer = createReducer(
   initialState,
@@ -28,6 +19,19 @@ export const coworkingReducer = createReducer(
     error: null,
   })),
   on(loadCoworkingsFailure, (state, { error }) => ({
+    ...state,
+    loading: false,
+    error,
+  })),
+
+  on(loadCoworkingById, (state) => ({ ...state, loading: true, error: null })),
+  on(loadCoworkingByIdSuccess, (state, { coworking }) => ({
+    ...state,
+    selectedCoworking: coworking,
+    loading: false,
+    error: null,
+  })),
+  on(loadCoworkingByIdFailure, (state, { error }) => ({
     ...state,
     loading: false,
     error,

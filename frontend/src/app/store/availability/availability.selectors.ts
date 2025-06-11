@@ -10,6 +10,12 @@ export const selectAllAvailabilities = createSelector(
   (state) => state.availabilities
 );
 
+export const selectAvailabilityById = (id: string) =>
+  createSelector(
+    selectAvailabilityState,
+    (state) => state.availabilityById[id] || null
+  );
+
 export const selectAvailabilityLoading = createSelector(
   selectAvailabilityState,
   (state) => state.loading

@@ -1,5 +1,5 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { CoworkingState } from './coworking.reducer';
+import { CoworkingState } from './coworking.state';
 
 export const selectCoworkingState =
   createFeatureSelector<CoworkingState>('coworking');
@@ -9,6 +9,11 @@ export const selectCoworkings = createSelector(
   (state: CoworkingState) => state.coworkings
 );
 
+export const selectSelectedCoworking = createSelector(
+  selectCoworkingState,
+  (state) => state.selectedCoworking
+);
+
 export const selectCoworkingLoading = createSelector(
   selectCoworkingState,
   (state) => state.loading
@@ -16,5 +21,5 @@ export const selectCoworkingLoading = createSelector(
 
 export const selectCoworkingError = createSelector(
   selectCoworkingState,
-  (state: CoworkingState) => state.error
+  (state) => state.error
 );

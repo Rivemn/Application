@@ -27,8 +27,17 @@ namespace WebAPI.Controllers
 
             return Ok(aviabilities);
         }
+		[HttpGet("{id}")]
+		public async Task<IActionResult> GetById(Guid id)
+		{
+			var (aviability, error) = await _service.GetByIdAsync(id);
+			if (!string.IsNullOrEmpty(error))
+				return NotFound(error);
 
-        [HttpPost]
+			return Ok(aviability);
+		}
+
+		[HttpPost]
         public async Task<IActionResult> Create([FromBody] AvailabilityRequest request)
         {
             var (id, error) = await _service.CreateAsync(request.WorkspaceId, request.Quantity, request.CapacityOption);

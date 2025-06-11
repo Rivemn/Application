@@ -6,3 +6,10 @@ export interface WorkspaceState {
   loading: boolean;
   error: string | null;
 }
+
+export const initialState: WorkspaceState = {
+  workspaces: [],
+  selectedWorkspace: null,
+  loading: false,
+  error: null,
+};

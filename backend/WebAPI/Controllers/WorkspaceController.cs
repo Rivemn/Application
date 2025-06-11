@@ -30,6 +30,20 @@ namespace WebAPI.Controllers
 			return Ok(workspaces);
 		}
 
+		[HttpGet("by-coworking/{coworkingId}")]
+		public async Task<IActionResult> GetByCoworkingId(Guid coworkingId)
+		{
+			var (workspaces, error) = await _service.GetByCoworkingIdAsync(coworkingId);
+
+			if (!string.IsNullOrEmpty(error))
+				return StatusCode(500, error);
+
+			if (workspaces == null || !workspaces.Any())
+				return NoContent();
+
+			return Ok(workspaces);
+		}
+
 		[HttpGet("{id}")]
 		public async Task<IActionResult> GetById(Guid id)
 		{

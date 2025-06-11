@@ -97,15 +97,21 @@ namespace Persistence
 				new PhotoEntity { Id = 2, Url = "photos/OpenSpace/image1.png", WorkspaceId = Guid.Parse("d3e4f5c6-7891-0111-2131-415161718192") },
 				new PhotoEntity { Id = 3, Url = "photos/OpenSpace/image2.png", WorkspaceId = Guid.Parse("d3e4f5c6-7891-0111-2131-415161718192") },
 				new PhotoEntity { Id = 4, Url = "photos/OpenSpace/image3.png", WorkspaceId = Guid.Parse("d3e4f5c6-7891-0111-2131-415161718192") },
+				new PhotoEntity { Id = 5, Url = "photos/OpenSpace/image4.png", WorkspaceId = Guid.Parse("d3e4f5c6-7891-0111-2131-415161718192") },
 
 				// Meeting Room
-				new PhotoEntity { Id = 5, Url = "photos/MeetingRoom/main-photo.png", WorkspaceId = Guid.Parse("e2d3c4b5-6789-1011-1213-141516171819") },
-				new PhotoEntity { Id = 6, Url = "photos/MeetingRoom/image1.png", WorkspaceId = Guid.Parse("e2d3c4b5-6789-1011-1213-141516171819") },
-				new PhotoEntity { Id = 7, Url = "photos/MeetingRoom/image2.png", WorkspaceId = Guid.Parse("e2d3c4b5-6789-1011-1213-141516171819") },
+				new PhotoEntity { Id = 6, Url = "photos/MeetingRoom/main-photo.png", WorkspaceId = Guid.Parse("e2d3c4b5-6789-1011-1213-141516171819") },
+				new PhotoEntity { Id = 7, Url = "photos/MeetingRoom/image1.png", WorkspaceId = Guid.Parse("e2d3c4b5-6789-1011-1213-141516171819") },
+				new PhotoEntity { Id = 8, Url = "photos/MeetingRoom/image2.png", WorkspaceId = Guid.Parse("e2d3c4b5-6789-1011-1213-141516171819") },
+				new PhotoEntity { Id = 9, Url = "photos/MeetingRoom/image3.png", WorkspaceId = Guid.Parse("e2d3c4b5-6789-1011-1213-141516171819") },
+				new PhotoEntity { Id = 17, Url = "photos/MeetingRoom/image4.png", WorkspaceId = Guid.Parse("e2d3c4b5-6789-1011-1213-141516171819") },
 
 				// Private Room
-				new PhotoEntity { Id = 8, Url = "photos/PrivateRoom/main-photo.png", WorkspaceId = Guid.Parse("f1e2d3c4-5678-9101-1121-314151617181") },
-				new PhotoEntity { Id = 9, Url = "photos/PrivateRoom/image1.png", WorkspaceId = Guid.Parse("f1e2d3c4-5678-9101-1121-314151617181") },
+				new PhotoEntity { Id = 12, Url = "photos/PrivateRoom/main-photo.png", WorkspaceId = Guid.Parse("f1e2d3c4-5678-9101-1121-314151617181") },
+				new PhotoEntity { Id = 13, Url = "photos/PrivateRoom/image1.png", WorkspaceId = Guid.Parse("f1e2d3c4-5678-9101-1121-314151617181") },
+				new PhotoEntity { Id = 14, Url = "photos/PrivateRoom/image2.png", WorkspaceId = Guid.Parse("f1e2d3c4-5678-9101-1121-314151617181") },
+				new PhotoEntity { Id = 15, Url = "photos/PrivateRoom/image3.png", WorkspaceId = Guid.Parse("f1e2d3c4-5678-9101-1121-314151617181") },
+				new PhotoEntity { Id = 16, Url = "photos/PrivateRoom/image4.png", WorkspaceId = Guid.Parse("f1e2d3c4-5678-9101-1121-314151617181") },
 
 				// Coworkings
 				new PhotoEntity { Id = 10, Url = "photos/Coworkings/urban-space.png", CoworkingId = Guid.Parse("123e4567-e89b-12d3-a456-426614174000") },

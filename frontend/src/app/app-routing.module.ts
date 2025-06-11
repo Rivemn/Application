@@ -8,9 +8,9 @@ import { CoworkingDetailsComponent } from './coworking/coworking-details/coworki
 import { CoworkingListComponent } from './coworking/coworking-list/coworking-list.component';
 
 const routes: Routes = [
-  { path: 'coworking-detail', component: CoworkingDetailsComponent },
+  { path: 'coworking/:id', component: CoworkingDetailsComponent },
   { path: 'coworking-list', component: CoworkingListComponent },
-  { path: 'booking/:id', component: BookingPageComponent },
+  { path: 'booking/:coworkingId', component: BookingPageComponent },
   { path: 'my-bookings', component: MyBookingsComponent },
   { path: '', redirectTo: '/coworking-list', pathMatch: 'full' },
 ];
