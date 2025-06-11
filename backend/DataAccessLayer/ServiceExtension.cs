@@ -3,7 +3,6 @@ using Domain.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Domain.Repositories;
 using Persistence.Repositories;
 
 namespace Persistence
@@ -35,10 +34,11 @@ namespace Persistence
 
 		private static IServiceCollection AddRepositories(this IServiceCollection services)
 		{
+			services.AddScoped<ICoworkingRepository, CoworkingRepository>();
 			services.AddScoped<IWorkspaceRepository, WorkspaceRepository>();
 			services.AddScoped<IPhotoRepository, PhotoRepository>();
 			services.AddScoped<IAmenityRepository, AmenityRepository>();
-            services.AddScoped<IAviabilityRepository, AviabilityRepository>();
+            services.AddScoped<IAviabilityRepository, AvailabilityRepository>();
             services.AddScoped<IWorkspaceAmenityRepository, WorkspaceAmenityRepository>();
             services.AddScoped<IBookingRepository, BookingRepository>();
 			services.AddScoped<IUserRepository, UserRepository>();

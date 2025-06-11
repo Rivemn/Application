@@ -12,14 +12,9 @@ export class PhotoService {
   constructor(private http: HttpClient) {}
 
   getByWorkspaceId(workspaceId: string): Observable<Photo[]> {
-    return this.http.get<Photo[]>(`${this.apiUrl}/${workspaceId}`);
+    return this.http.get<Photo[]>(`${this.apiUrl}/workspace/${workspaceId}`);
   }
-
-  addPhoto(photo: { url: string; workspaceId: string }): Observable<Photo> {
-    return this.http.post<Photo>(this.apiUrl, photo);
-  }
-
-  deletePhoto(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  getByCoworkingId(coworkingId: string): Observable<Photo[]> {
+    return this.http.get<Photo[]>(`${this.apiUrl}/coworking/${coworkingId}`);
   }
 }

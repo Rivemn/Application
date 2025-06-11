@@ -12,8 +12,11 @@ namespace WebAPI.Validators
 				.Matches(@"^photos\/[\w\-\/]+\/[\w\-]+\.(jpg|jpeg|png|gif|webp)$")
 				.WithMessage("URL must be a valid relative path like 'photos/.../....[jpg|png|gif|webp]'");
 
-			RuleFor(x => x.WorkspaceId)
-				.NotEmpty().WithMessage("WorkspaceId is required.");
+			RuleFor(x => x)
+				.Must(x =>
+					(x.WorkspaceId.HasValue && !x.CoworkingId.HasValue) ||
+					(!x.WorkspaceId.HasValue && x.CoworkingId.HasValue))
+				.WithMessage("Exactly one of CoworkingId or WorkspaceId must be provided.");
 		}
 	}
 }

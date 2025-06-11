@@ -1,20 +1,25 @@
 ﻿import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { filter, Observable, take } from 'rxjs';
+import { filter, map, Observable, take, combineLatest, of } from 'rxjs';
 import { Workspace } from '../../contracts/Workspace';
 import { Availability } from '../../contracts/Availability';
 import { BookingRequest } from '../../contracts/BookingRequest';
 import * as BookingActions from '../../store/booking/booking.actions';
+import * as WorkspaceActions from '../../store/workspace/workspace.actions';
+import * as AvailabilityActions from '../../store/availability/availability.actions';
 import {
-  selectWorkspaces,
-  selectAvailabilities,
-  selectBookingLoading,
-  selectBookingError,
-  selectBookingId,
-} from '../../store/booking/booking.selectors';
-import { BookingService } from '../../services/booking.service';
-import { Booking } from '../../contracts/Booking';
+  selectAllAvailabilities,
+  selectAvailabilityLoading,
+  selectAvailabilityError,
+} from '../../store/availability/availability.selectors';
+import { selectBookingId } from '../../store/booking/booking.selectors';
+import {
+  selectWorkspacesByCoworking,
+  selectWorkspacesByCoworkingLoading,
+  selectWorkspacesByCoworkingError,
+} from '../../store/workspace/workspaces.selectors';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-booking-page',
@@ -29,12 +34,17 @@ export class BookingPageComponent implements OnInit {
   bookingData: BookingRequest | null = null;
   conflictError: string = '';
   isError: boolean = false;
+  coworkingId!: string;
 
   workspaceOptions$: Observable<Workspace[]>;
   availabilities$: Observable<Availability[]>;
+  workspaceLoading$: Observable<boolean>;
+  availabilityLoading$: Observable<boolean>;
+  workspaceError$: Observable<string | null>;
+  availabilityError$: Observable<string | null>;
+  bookingId$: Observable<string | null>;
   loading$: Observable<boolean>;
   error$: Observable<string | null>;
-  bookingId$: Observable<string | null>;
 
   timeOptions = [
     '8:00 AM',
@@ -71,7 +81,8 @@ export class BookingPageComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private store: Store,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private route: ActivatedRoute
   ) {
     const currentYear = 2025;
     this.form = this.fb.group(
@@ -91,32 +102,84 @@ export class BookingPageComponent implements OnInit {
         timeStart: [null, Validators.required],
         timeEnd: [null, Validators.required],
       },
-      { validators: this.dateRangeValidator }
+      { validators: [this.dateRangeValidator, this.roomSizeValidator] }
     );
 
-    this.workspaceOptions$ = this.store.select(selectWorkspaces);
-    this.availabilities$ = this.store.select(selectAvailabilities);
-    this.loading$ = this.store.select(selectBookingLoading);
-    this.error$ = this.store.select(selectBookingError);
+    // Initialize observables
+    this.workspaceOptions$ = this.store.select(selectWorkspacesByCoworking);
+    this.availabilities$ = of([]);
+    this.workspaceLoading$ = this.store.select(
+      selectWorkspacesByCoworkingLoading
+    );
+    this.availabilityLoading$ = this.store.select(selectAvailabilityLoading);
+    this.workspaceError$ = this.store.select(selectWorkspacesByCoworkingError);
+    this.availabilityError$ = this.store.select(selectAvailabilityError);
     this.bookingId$ = this.store.select(selectBookingId);
+
+    // Combine loading states
+    this.loading$ = combineLatest([
+      this.workspaceLoading$,
+      this.availabilityLoading$,
+    ]).pipe(
+      map(
+        ([workspaceLoading, availabilityLoading]) =>
+          workspaceLoading || availabilityLoading
+      )
+    );
+
+    // Combine error states
+    this.error$ = combineLatest([
+      this.workspaceError$,
+      this.availabilityError$,
+    ]).pipe(
+      map(
+        ([workspaceError, availabilityError]) =>
+          workspaceError || availabilityError
+      )
+    );
+
+    // Reset roomSize when room changes
+    this.form.get('room')?.valueChanges.subscribe(() => {
+      this.form.get('roomSize')?.reset();
+      this.form.get('roomSize')?.markAsUntouched();
+      this.cdr.detectChanges();
+    });
   }
 
   ngOnInit() {
-    this.store.dispatch(BookingActions.loadWorkspaces());
+    // Extract coworkingId from route
+    this.route.paramMap.subscribe((params) => {
+      this.coworkingId = params.get('coworkingId') || '';
+      if (this.coworkingId) {
+        // Dispatch action to load workspaces
+        this.store.dispatch(
+          WorkspaceActions.loadWorkspacesByCoworking({
+            coworkingId: this.coworkingId,
+          })
+        );
+      } else {
+        this.conflictError = 'Invalid coworking ID';
+        this.isError = true;
+        this.showConfirmation = true;
+        this.cdr.detectChanges();
+      }
+    });
+
+    // Handle booking success
     this.bookingId$.pipe(filter(Boolean), take(1)).subscribe((id) => {
       console.log('Booking successful, ID:', id);
       this.showConfirmation = true;
       this.isError = false;
-
       this.cdr.detectChanges();
     });
 
+    // Handle errors
     this.error$.subscribe((error) => {
       if (error) {
-        console.error('Booking error:', error);
-        this.conflictError = error.includes('time slot is already booked')
+        console.error('Error:', error);
+        this.conflictError = error.includes('time slot')
           ? 'Selected time is not available. Please choose a different time slot.'
-          : error;
+          : 'Error loading data. Please try again.';
         this.isError = true;
         this.showConfirmation = true;
         this.cdr.detectChanges();
@@ -137,9 +200,20 @@ export class BookingPageComponent implements OnInit {
   selectRoom(room: Workspace) {
     this.form.get('room')?.setValue(room);
     this.openDropdown = null;
+    // Dispatch action to load availabilities for the selected workspace
     this.store.dispatch(
-      BookingActions.loadAvailabilitiesByWorkspace({ workspaceId: room.id })
+      AvailabilityActions.loadAvailabilitiesByWorkspace({
+        workspaceId: room.id,
+      })
     );
+    // Update availabilities$ for the selected workspace
+    this.availabilities$ = this.store
+      .select(selectAllAvailabilities)
+      .pipe(
+        map((availabilities) =>
+          availabilities.filter((a) => a.workspaceId === room.id)
+        )
+      );
   }
 
   selectDatePart(controlName: string, part: string, event: Event) {
@@ -211,6 +285,20 @@ export class BookingPageComponent implements OnInit {
     return null;
   }
 
+  roomSizeValidator(form: FormGroup): { [key: string]: any } | null {
+    const room = form.get('room')?.value;
+    const roomSize = form.get('roomSize')?.value;
+
+    if (room && roomSize && roomSize?.workspaceId !== room.id) {
+      return {
+        invalidRoomSize:
+          'Selected room size does not match the selected workspace',
+      };
+    }
+
+    return null;
+  }
+
   submit() {
     if (this.form.valid) {
       const formValue = this.form.value;
@@ -264,6 +352,7 @@ export class BookingPageComponent implements OnInit {
     this.isError = false;
     this.bookingData = null;
     this.form.reset();
+    this.availabilities$ = of([]);
     this.cdr.detectChanges();
   }
 }

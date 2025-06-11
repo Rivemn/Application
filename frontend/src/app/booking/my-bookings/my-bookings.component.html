@@ -1,77 +1,52 @@
 <div class="main-container">
   <h2 class="section-title">My Bookings</h2>
 
-  <!-- Display loading state -->
-  @if (loading$ | async) {
-  <div class="loading">Loading bookings...</div>
-  }
-
-  <!-- Display error state -->
-  @if (error$ | async; as error) {
-  <div class="error">Error: {{ error }}</div>
-  }
-
-  <!-- Display when no bookings exist -->
-  @if ((bookings$ | async)?.length === 0 && !(loading$ | async)) {
+  <!-- Bookings List -->
   <div class="workspaces-list">
-    <div class="workspace-card">
-      <h2>You don’t have any bookings yet</h2>
-      <p>Start by choosing a coworking space</p>
-      <button class="submit-button" (click)="goToCoworking()">
-        Browse Spaces
-      </button>
-    </div>
-  </div>
-  } @else {
-  <!-- Display bookings list -->
-  <div class="workspaces-list">
-    @for (booking of bookings$ | async; track booking.id) {
+    @for (item of bookings$ | async; track item.booking.id) {
     <div class="workspace-card">
       <div
         class="workoutspace-photo"
-        [style.backgroundImage]="'url(photos/OpenSpace/main-photo.png)'"
+        style="background-image: url('photos/OpenSpace/main-photo.png')"
       ></div>
       <div class="workspace-content">
         <div class="workspace-title">
-          <h3>
-            {{ workspacesMap[booking.workspaceId].name || "Loading..." }}
-          </h3>
+          <h3>{{ item.workspace?.name || "Loading..." }}</h3>
           <div class="workspace-buttons">
             <button
               class="workspace-button delete-button"
-              (click)="deleteBooking(booking.id)"
+              (click)="deleteBooking(item.booking.id)"
             >
               <img src="trash.svg" alt="Delete" />
             </button>
           </div>
         </div>
-        <div classBookingService="workspace-stats">
+        <div class="workspace-stats">
           <div class="stat-row">
             <div class="stat-icon">
               <img src="calendar.svg" alt="Calendar" />
             </div>
-            <span class="stat-text"
-              >{{ booking.start | date : "MMM d, yyyy" }} -
-              {{ booking.end | date : "MMM d, yyyy" }}</span
-            >
-            <span class="stat-text"
-              >({{ calculateDays(booking.start, booking.end) }} days)</span
-            >
-            <span class="stat-status">status: {{ booking.status }}</span>
+            <span class="stat-text">
+              {{ item.booking.start | date : "MMM d, yyyy" }} -
+              {{ item.booking.end | date : "MMM d, yyyy" }}
+            </span>
+            <span class="stat-text">
+              ({{ calculateDays(item.booking.start, item.booking.end) }} days)
+            </span>
+            <span class="stat-status">status: {{ item.booking.status }}</span>
           </div>
           <div class="stat-row">
             <div class="stat-icon">
               <img src="clock-hour-3.svg" alt="Clock" />
             </div>
-            <span class="stat-text"
-              >from {{ booking.start | date : "h:mm a" }} to
-              {{ booking.end | date : "h:mm a" }}</span
-            >
+            <span class="stat-text">
+              from {{ item.booking.start | date : "h:mm a" }} to
+              {{ item.booking.end | date : "h:mm a" }}
+            </span>
           </div>
         </div>
       </div>
     </div>
     }
   </div>
-  }
 </div>

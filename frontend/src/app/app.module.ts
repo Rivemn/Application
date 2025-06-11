@@ -25,6 +25,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { CoworkingDetailsComponent } from './coworking/coworking-details/coworking-details.component';
 import { CoworkingModule } from './coworking/coworking.module';
 import { BookingModule } from './booking/booking.module';
+import { coworkingReducer } from './store/coworking/coworking.reducer';
+import { CoworkingEffects } from './store/coworking/coworking.effects';
 
 @NgModule({
   declarations: [AppComponent, HeaderComponent],
@@ -34,12 +36,16 @@ import { BookingModule } from './booking/booking.module';
     CoworkingModule,
     BookingModule,
     AppRoutingModule,
+    StoreModule.forFeature('workspace', workspaceReducer),
+    StoreModule.forFeature('availability', availabilityReducer),
     StoreModule.forRoot({
       bookings: bookingReducer,
       workspaces: workspaceReducer,
+
       availabilities: availabilityReducer,
       photos: photoReducer,
       amenities: amenityReducer,
+      coworkings: coworkingReducer,
     }),
     EffectsModule.forRoot([
       BookingEffects,
@@ -47,6 +53,7 @@ import { BookingModule } from './booking/booking.module';
       AvailabilityEffects,
       PhotoEffects,
       AmenityEffects,
+      CoworkingEffects,
     ]),
     StoreDevtoolsModule.instrument({
       maxAge: 25,

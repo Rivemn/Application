@@ -14,28 +14,15 @@ export const loadPhotosByWorkspaceFailure = createAction(
   props<{ error: string }>()
 );
 
-export const addPhoto = createAction(
-  '[Photo] Add Photo',
-  props<{ photo: { url: string; workspaceId: string } }>()
+export const loadPhotosByCoworking = createAction(
+  '[Photo] Load Photos By Coworking',
+  props<{ coworkingId: string }>()
 );
-export const addPhotoSuccess = createAction(
-  '[Photo] Add Photo Success',
-  props<{ photo: Photo }>()
+export const loadPhotosByCoworkingSuccess = createAction(
+  '[Photo] Load Photos By Coworking Success',
+  props<{ photos: Photo[] }>()
 );
-export const addPhotoFailure = createAction(
-  '[Photo] Add Photo Failure',
-  props<{ error: string }>()
-);
-
-export const deletePhoto = createAction(
-  '[Photo] Delete Photo',
-  props<{ id: number }>()
-);
-export const deletePhotoSuccess = createAction(
-  '[Photo] Delete Photo Success',
-  props<{ id: number }>()
-);
-export const deletePhotoFailure = createAction(
-  '[Photo] Delete Photo Failure',
+export const loadPhotosByCoworkingFailure = createAction(
+  '[Photo] Load Photos By Coworking Failure',
   props<{ error: string }>()
 );

@@ -18,8 +18,13 @@ namespace Persistence.Configurations
 
 			builder.HasOne(p => p.Workspace)
 				.WithMany(w => w.Photos)
-				.HasForeignKey("WorkspaceId")
-				.IsRequired();
+				.HasForeignKey(p => p.WorkspaceId)
+				.OnDelete(DeleteBehavior.Restrict);
+
+			builder.HasOne(p => p.Coworking)
+		   .WithMany()
+		   .HasForeignKey(p => p.CoworkingId)
+		   .OnDelete(DeleteBehavior.Restrict);
 		}
 	}
 }

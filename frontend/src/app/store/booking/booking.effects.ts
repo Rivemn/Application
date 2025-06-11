@@ -128,20 +128,6 @@ export class BookingEffects {
     )
   );
 
-  loadWorkspaces$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(loadWorkspaces),
-      mergeMap(() =>
-        this.workspaceService.getAll().pipe(
-          map((workspaces) => loadWorkspacesSuccess({ workspaces })),
-          catchError((error) =>
-            of(loadWorkspacesFailure({ error: error.message }))
-          )
-        )
-      )
-    )
-  );
-
   loadAvailabilitiesByWorkspace$ = createEffect(() =>
     this.actions$.pipe(
       ofType(loadAvailabilitiesByWorkspace),

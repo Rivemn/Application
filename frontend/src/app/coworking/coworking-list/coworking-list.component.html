@@ -1,0 +1,47 @@
+<div class="main-container">
+  <h2 class="section-title">Coworking List</h2>
+
+  <div class="workspaces-list">
+    @for (coworking of coworkings$ | async; track coworking.id) {
+    <div class="workspace-card">
+      <div
+        class="workspace-photo"
+        [style.backgroundImage]="
+          'url(' +
+          (coworking.photos.length > 0
+            ? coworking.photos[0].url
+            : 'default-photo.png') +
+          ')'
+        "
+      ></div>
+
+      <div class="workspace-content">
+        <div class="workspace-title">
+          <h3>{{ coworking.name }}</h3>
+          <div class="workspace-buttons">
+            <button
+              class="submit-button"
+              [routerLink]="['/coworking', coworking.id]"
+            >
+              View Details
+            </button>
+          </div>
+        </div>
+
+        <div class="workspace-stats">
+          <div class="stat-row">
+            <span class="stat-text description-text">
+              {{ coworking.description }}
+            </span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-text address-text">
+              {{ coworking.address }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+</div>
