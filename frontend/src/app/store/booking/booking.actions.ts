@@ -89,6 +89,7 @@ export const loadWorkspacesFailure = createAction(
   '[Booking] Load Workspaces Failure',
   props<{ error: string }>()
 );
+export const resetBooking = createAction('[Booking] Reset Booking');
 
 export const loadAvailabilitiesByWorkspace = createAction(
   '[Booking] Load Availabilities By Workspace',

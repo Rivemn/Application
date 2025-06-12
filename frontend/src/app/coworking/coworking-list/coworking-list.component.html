@@ -19,12 +19,9 @@
         <div class="workspace-title">
           <h3>{{ coworking.name }}</h3>
           <div class="workspace-buttons">
-            <button
-              class="submit-button"
-              [routerLink]="['/coworking', coworking.id]"
+            <app-button [link]="['/coworking', coworking.id]"
+              >View Details</app-button
             >
-              View Details
-            </button>
           </div>
         </div>
 

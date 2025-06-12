@@ -32,19 +32,18 @@ export class WorkspaceEffects {
   loadWorkspaceById$ = createEffect(() =>
     this.actions$.pipe(
       ofType(WorkspaceActions.loadWorkspaceById),
-      switchMap(({ id }) =>
+      mergeMap(({ id }) =>
         this.workspaceService.getById(id).pipe(
-          map((workspace) => {
-            return WorkspaceActions.loadWorkspaceByIdSuccess({ workspace });
-          }),
-          catchError((error) => {
-            console.error(`Error loading workspace with id ${id}:`, error);
-            return of(
+          map((workspace) =>
+            WorkspaceActions.loadWorkspaceByIdSuccess({ workspace })
+          ),
+          catchError((error) =>
+            of(
               WorkspaceActions.loadWorkspaceByIdFailure({
                 error: error.message,
               })
-            );
-          })
+            )
+          )
         )
       )
     )

@@ -166,3 +166,14 @@
   height: 24px;
   background-size: contain;
 }
+.ai-assistant-container {
+  width: 100%;
+  max-width: 100%; /* Critical to prevent overflow */
+  padding: 16px;
+  background: var(--white);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}

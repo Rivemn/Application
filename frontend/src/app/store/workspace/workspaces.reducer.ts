@@ -11,17 +11,12 @@ export const workspaceReducer = createReducer(
   })),
   on(
     WorkspaceActions.loadWorkspacesByCoworkingSuccess,
-    (state, { workspaces, coworkingId }) => {
-      const filteredWorkspaces = state.workspaces.filter(
-        (w) => w.coworkingId !== coworkingId
-      );
-      return {
-        ...state,
-        workspaces: [...filteredWorkspaces, ...workspaces],
-        loading: false,
-        error: null,
-      };
-    }
+    (state, { workspaces }) => ({
+      ...state,
+      workspaces,
+      loading: false,
+      error: null,
+    })
   ),
   on(WorkspaceActions.loadWorkspacesByCoworkingFailure, (state, { error }) => ({
     ...state,

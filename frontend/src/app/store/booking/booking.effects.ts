@@ -1,7 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { catchError, exhaustMap, map, mergeMap, tap } from 'rxjs/operators';
+import {
+  catchError,
+  exhaustMap,
+  map,
+  mergeMap,
+  switchMap,
+  tap,
+} from 'rxjs/operators';
 import { BookingService } from '../../services/booking.service';
 import { WorkspaceService } from '../../services/workspace.service';
 import { AvailabilityService } from '../../services/availability.service';
@@ -86,14 +93,19 @@ export class BookingEffects {
   createBooking$ = createEffect(() =>
     this.actions$.pipe(
       ofType(createBooking),
-      exhaustMap(({ request }) =>
+      switchMap(({ request }) =>
         this.bookingService.create(request).pipe(
-          tap((bookingId) => console.log('Booking created, ID:', bookingId)),
           map((bookingId) => createBookingSuccess({ bookingId })),
-          catchError((error) => {
-            console.error('Booking error:', error);
-            return of(createBookingFailure({ error: error.message }));
-          })
+          catchError((error) =>
+            of(
+              createBookingFailure({
+                error:
+                  error.message.includes('time slot') || error.status === 409
+                    ? 'Selected time slot is not available'
+                    : 'Failed to create booking. Please try again.',
+              })
+            )
+          )
         )
       )
     )

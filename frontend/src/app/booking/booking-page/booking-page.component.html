@@ -266,13 +266,13 @@
         <div class="error-message">Booking cannot exceed 30 days.</div>
         }
 
-        <button
-          class="submit-button"
-          type="submit"
+        <app-button
+          [fullWidth]="true"
           [disabled]="!form.valid || (loading$ | async)"
+          (onClick)="submit()"
         >
           Submit
-        </button>
+        </app-button>
       </div>
     </div>
   </form>

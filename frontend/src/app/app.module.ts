@@ -27,6 +27,7 @@ import { CoworkingModule } from './coworking/coworking.module';
 import { BookingModule } from './booking/booking.module';
 import { coworkingReducer } from './store/coworking/coworking.reducer';
 import { CoworkingEffects } from './store/coworking/coworking.effects';
+import { ButtonComponent } from './shared/button/button.component';
 
 @NgModule({
   declarations: [AppComponent, HeaderComponent],

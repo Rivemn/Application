@@ -15,6 +15,7 @@ import { workspaceReducer } from '../store/workspace/workspaces.reducer';
 import { WorkspaceEffects } from '../store/workspace/workspace.effects';
 import { availabilityReducer } from '../store/availability/availability.reducer';
 import { AiAssistantComponent } from './my-bookings/ai-assistant/ai-assistant.component';
+import { ButtonComponent } from '../shared/button/button.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { AiAssistantComponent } from './my-bookings/ai-assistant/ai-assistant.co
     EffectsModule.forFeature([BookingEffects, WorkspaceEffects]),
     AsyncPipe,
     CapacityLabelPipe,
+    ButtonComponent,
   ],
   exports: [BookingPageComponent],
 })

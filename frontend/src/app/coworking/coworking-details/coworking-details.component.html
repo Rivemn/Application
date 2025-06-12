@@ -50,9 +50,7 @@
               <h3>{{ workspace.name }}</h3>
               <p class="description-text">{{ workspace.description }}</p>
             </div>
-            <button class="book-btn" [routerLink]="['/booking', coworkingId]">
-              Book now
-            </button>
+            <app-button [link]="['/booking', coworkingId]">Book now</app-button>
           </div>
 
           <div class="card-stats">
