@@ -5,12 +5,14 @@ import { RouterModule, Routes } from '@angular/router';
 import { BookingPageComponent } from './booking/booking-page/booking-page.component';
 import { MyBookingsComponent } from './booking/my-bookings/my-bookings.component';
 import { CoworkingDetailsComponent } from './coworking/coworking-details/coworking-details.component';
+import { CoworkingListComponent } from './coworking/coworking-list/coworking-list.component';
 
 const routes: Routes = [
-  { path: 'coworking', component: CoworkingDetailsComponent },
-  { path: 'booking/:id', component: BookingPageComponent },
+  { path: 'coworking/:id', component: CoworkingDetailsComponent },
+  { path: 'coworking-list', component: CoworkingListComponent },
+  { path: 'booking/:coworkingId', component: BookingPageComponent },
   { path: 'my-bookings', component: MyBookingsComponent },
-  { path: '', redirectTo: '/coworking', pathMatch: 'full' },
+  { path: '', redirectTo: '/coworking-list', pathMatch: 'full' },
 ];
 
 @NgModule({

@@ -1,0 +1,39 @@
+<div class="ai-assistant-container">
+  <h2>AI assistant</h2>
+  <p class="example-questions">Example questions</p>
+  <div class="example-list">
+    <div
+      class="example-button button-1"
+      (click)="setInputText('How many bookings do I have?')"
+    >
+      <span>How many bookings do I have?</span>
+    </div>
+    <div
+      class="example-button button-2"
+      (click)="setInputText('What do I have booked for next week?')"
+    >
+      <span>What do I have booked for next week?</span>
+    </div>
+    <div
+      class="example-button button-3"
+      (click)="setInputText('List all my private room bookings')"
+    >
+      <span>List all my private room bookings</span>
+    </div>
+  </div>
+  <div class="input-field">
+    <input
+      type="text"
+      [(ngModel)]="inputText"
+      placeholder="Ask anything..."
+      (keyup.enter)="onSubmit()"
+    />
+    <div class="send-button" (click)="onSubmit()">
+      <div><img src="send.svg" alt="" /></div>
+    </div>
+  </div>
+  <div class="response-container" *ngIf="response || isLoading">
+    <div *ngIf="isLoading" class="loading">Loading...</div>
+    <div *ngIf="!isLoading && response" class="response">{{ response }}</div>
+  </div>
+</div>

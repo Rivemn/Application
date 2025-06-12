@@ -1,4 +1,3 @@
-// src/app/coworking/coworking-details/coworking-details.component.ts
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, combineLatest, map } from 'rxjs';
@@ -22,13 +21,14 @@ import {
   selectPhotoError,
   selectAllPhotos,
 } from '../../store/photo/photo.selectors';
-import { loadWorkspaces } from '../../store/workspace/workspace.actions';
+import { loadWorkspacesByCoworking } from '../../store/workspace/workspace.actions';
 import {
-  selectWorkspaceLoading,
-  selectWorkspaceError,
-  selectAllWorkspaces,
+  selectWorkspacesByCoworkingLoading,
+  selectWorkspacesByCoworkingError,
+  selectWorkspacesByCoworking,
 } from '../../store/workspace/workspaces.selectors';
 import { Availability } from '../../contracts/Availability';
+import { ActivatedRoute } from '@angular/router';
 
 interface ExtendedWorkspace extends Workspace {
   mainPhoto: string;
@@ -46,7 +46,10 @@ interface ExtendedWorkspace extends Workspace {
   styleUrls: ['./coworking-details.component.scss'],
 })
 export class CoworkingDetailsComponent implements OnInit {
+  coworkingId!: string;
+
   workspaces$!: Observable<ExtendedWorkspace[]>;
+  isLoading$!: Observable<boolean>;
   workspaceLoading$!: Observable<boolean>;
   amenityLoading$!: Observable<boolean>;
   photoLoading$!: Observable<boolean>;
@@ -55,16 +58,24 @@ export class CoworkingDetailsComponent implements OnInit {
   amenityError$!: Observable<string | null>;
   photoError$!: Observable<string | null>;
   availabilityError$!: Observable<string | null>;
-  isLoading$!: Observable<boolean>;
 
-  constructor(private store: Store) {}
+  constructor(private store: Store, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.workspaceLoading$ = this.store.select(selectWorkspaceLoading);
+    this.route.paramMap.subscribe((params) => {
+      this.coworkingId = params.get('id') || '';
+      this.store.dispatch(
+        loadWorkspacesByCoworking({ coworkingId: this.coworkingId })
+      );
+    });
+
+    this.workspaceLoading$ = this.store.select(
+      selectWorkspacesByCoworkingLoading
+    );
     this.amenityLoading$ = this.store.select(selectAmenityLoading);
     this.photoLoading$ = this.store.select(selectPhotoLoading);
     this.availabilityLoading$ = this.store.select(selectAvailabilityLoading);
-    this.workspaceError$ = this.store.select(selectWorkspaceError);
+    this.workspaceError$ = this.store.select(selectWorkspacesByCoworkingError);
     this.amenityError$ = this.store.select(selectAmenityError);
     this.photoError$ = this.store.select(selectPhotoError);
     this.availabilityError$ = this.store.select(selectAvailabilityError);
@@ -74,57 +85,56 @@ export class CoworkingDetailsComponent implements OnInit {
       this.amenityLoading$,
       this.photoLoading$,
       this.availabilityLoading$,
-    ]).pipe(
-      map(
-        ([
-          workspaceLoading,
-          amenityLoading,
-          photoLoading,
-          availabilityLoading,
-        ]) =>
-          workspaceLoading ||
-          amenityLoading ||
-          photoLoading ||
-          availabilityLoading
-      )
-    );
+    ]).pipe(map(([w, a, p, av]) => w || a || p || av));
+
+    const workspaces$ = this.store
+      .select(selectWorkspacesByCoworking)
+      .pipe(map((w) => w ?? []));
+
+    // Загружаем связанные сущности после получения рабочих пространств
+    workspaces$.subscribe((workspaces) => {
+      workspaces.forEach((workspace) => {
+        this.store.dispatch(
+          loadAmenitiesByWorkspace({ workspaceId: workspace.id })
+        );
+        this.store.dispatch(
+          loadPhotosByWorkspace({ workspaceId: workspace.id })
+        );
+        this.store.dispatch(
+          loadAvailabilitiesByWorkspace({ workspaceId: workspace.id })
+        );
+      });
+    });
 
     this.workspaces$ = combineLatest([
-      this.store
-        .select(selectAllWorkspaces)
-        .pipe(map((workspaces) => workspaces ?? [])),
-      this.store
-        .select(selectAllAmenities)
-        .pipe(map((amenities) => amenities ?? [])),
-      this.store.select(selectAllPhotos).pipe(map((photos) => photos ?? [])),
-      this.store
-        .select(selectAllAvailabilities)
-        .pipe(map((availabilities) => availabilities ?? [])),
+      workspaces$,
+      this.store.select(selectAllAmenities).pipe(map((a) => a ?? [])),
+      this.store.select(selectAllPhotos).pipe(map((p) => p ?? [])),
+      this.store.select(selectAllAvailabilities).pipe(map((a) => a ?? [])),
     ]).pipe(
       map(([workspaces, amenities, photos, availabilities]) =>
         workspaces.map((workspace) => {
           const workspaceAmenities = amenities.filter(
-            (amenity) => amenity.workspaceId === workspace.id
+            (a) => a.workspaceId === workspace.id
           );
           const workspacePhotos = photos.filter(
-            (photo) => photo.workspaceId === workspace.id
+            (p) => p.workspaceId === workspace.id
           );
           const workspaceAvailabilities = availabilities.filter(
-            (availability) => availability.workspaceId === workspace.id
+            (a) => a.workspaceId === workspace.id
           );
 
           const mainPhoto = workspacePhotos[0]?.url ?? 'default-main.jpg';
           const otherPhotos = workspacePhotos.slice(1, 5).map((p) => p.url);
 
-          // Determine if booked based on current date (June 04, 2025, 08:10 PM EEST)
-          const currentDate = new Date('2025-06-04T20:10:00+03:00'); // EEST offset
-          const isBooked =
-            workspaceAvailabilities.some(
-              (a) =>
-                a.capacityOption === 2 &&
-                new Date('2025-05-18') <= currentDate &&
-                currentDate <= new Date('2025-05-23')
-            ) || false;
+          const currentDate = new Date('2025-06-04T20:10:00+03:00');
+          const isBooked = workspaceAvailabilities.some(
+            (a) =>
+              a.capacityOption === 2 &&
+              new Date('2025-05-18') <= currentDate &&
+              currentDate <= new Date('2025-05-23')
+          );
+
           const bookingInfo = isBooked
             ? 'Room for 2 people May 18, 2025 to May 23, 2025'
             : '';
@@ -141,30 +151,15 @@ export class CoworkingDetailsComponent implements OnInit {
         })
       )
     );
-
-    this.store.dispatch(loadWorkspaces());
-    this.store.select(selectAllWorkspaces).subscribe((workspaces) => {
-      workspaces.forEach((workspace) => {
-        this.store.dispatch(
-          loadAmenitiesByWorkspace({ workspaceId: workspace.id })
-        );
-        this.store.dispatch(
-          loadPhotosByWorkspace({ workspaceId: workspace.id })
-        );
-        this.store.dispatch(
-          loadAvailabilitiesByWorkspace({ workspaceId: workspace.id })
-        );
-      });
-    });
   }
 
   workspaceAvailabilities(workspace: ExtendedWorkspace): any {
     if (workspace.availabilityUnit === 'desk') {
-      return workspace.availabilities.reduce((sum, a) => sum + a.quantity, 0); // Total quantity for desks
+      return workspace.availabilities.reduce((sum, a) => sum + a.quantity, 0);
     } else if (workspace.availabilityUnit === 'room') {
       return workspace.availabilities.sort(
         (a, b) => a.capacityOption - b.capacityOption
-      ); // Sorted array for rooms
+      );
     }
     return [];
   }

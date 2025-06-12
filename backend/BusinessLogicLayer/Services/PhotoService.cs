@@ -18,6 +18,10 @@ namespace Application.Services
 		{
 			return _repository.GetByWorkspaceIdAsync(workspaceId);
 		}
+		public Task<List<Photo>> GetByCoworkingIdAsync(Guid coworkingId)
+		{
+			return _repository.GetByCoworkingIdAsync(coworkingId);
+		}
 
 		public Task AddAsync(Photo photo)
 		{

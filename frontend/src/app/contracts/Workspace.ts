@@ -3,4 +3,5 @@ export interface Workspace {
   name: string;
   description: string;
   availabilityUnit: string;
+  coworkingId: string;
 }

@@ -1,4 +1,3 @@
-<!-- src/app/booking/booking-confirmation/booking-confirmation.component.html -->
 <div class="overlay">
   <div class="confirmation-card" [ngClass]="{ 'error-state': isError }">
     <button class="close-btn" (click)="closeModal()">✕</button>
@@ -31,11 +30,12 @@
       }
     </div>
 
-    <button
-      class="submit-button"
-      (click)="showMyBookings ? goToMyBookings() : closeModal()"
+    <app-button
+      [fixedWidth]="true"
+      [link]="showMyBookings ? ['/my-bookings'] : null"
+      (onClick)="showMyBookings ? goToMyBookings() : closeModal()"
     >
       {{ buttonText }}
-    </button>
+    </app-button>
   </div>
 </div>

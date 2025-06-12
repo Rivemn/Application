@@ -3,12 +3,9 @@ import {
   loadPhotosByWorkspace,
   loadPhotosByWorkspaceSuccess,
   loadPhotosByWorkspaceFailure,
-  addPhoto,
-  addPhotoSuccess,
-  addPhotoFailure,
-  deletePhoto,
-  deletePhotoSuccess,
-  deletePhotoFailure,
+  loadPhotosByCoworking,
+  loadPhotosByCoworkingSuccess,
+  loadPhotosByCoworkingFailure,
 } from './photo.actions';
 import { PhotoState } from './photo.state';
 
@@ -37,35 +34,18 @@ export const photoReducer = createReducer(
     error,
   })),
 
-  on(addPhoto, (state) => ({
+  on(loadPhotosByCoworking, (state) => ({
     ...state,
     loading: true,
     error: null,
   })),
-  on(addPhotoSuccess, (state, { photo }) => ({
+  on(loadPhotosByCoworkingSuccess, (state, { photos }) => ({
     ...state,
-    photos: [...state.photos, photo],
+    photos: [...state.photos, ...photos],
     loading: false,
     error: null,
   })),
-  on(addPhotoFailure, (state, { error }) => ({
-    ...state,
-    loading: false,
-    error,
-  })),
-
-  on(deletePhoto, (state) => ({
-    ...state,
-    loading: true,
-    error: null,
-  })),
-  on(deletePhotoSuccess, (state, { id }) => ({
-    ...state,
-    photos: state.photos.filter((photo) => photo.id !== id),
-    loading: false,
-    error: null,
-  })),
-  on(deletePhotoFailure, (state, { error }) => ({
+  on(loadPhotosByCoworkingFailure, (state, { error }) => ({
     ...state,
     loading: false,
     error,

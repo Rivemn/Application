@@ -12,19 +12,12 @@ export class WorkspaceService {
 
   constructor(private http: HttpClient) {}
 
-  getAll(): Observable<Workspace[]> {
-    return this.http.get<Workspace[]>(this.baseUrl);
+  getByCoworkingId(coworkingId: string): Observable<Workspace[]> {
+    return this.http.get<Workspace[]>(
+      `${this.baseUrl}/by-coworking/${coworkingId}`
+    );
   }
-
   getById(id: string): Observable<Workspace> {
     return this.http.get<Workspace>(`${this.baseUrl}/${id}`);
-  }
-
-  create(request: WorkspaceRequest): Observable<string> {
-    return this.http.post<string>(this.baseUrl, request);
-  }
-
-  delete(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 }

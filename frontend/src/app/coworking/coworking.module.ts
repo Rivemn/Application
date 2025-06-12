@@ -15,23 +15,28 @@ import { AvailabilityEffects } from '../store/availability/availability.effects'
 
 import { workspaceReducer } from '../store/workspace/workspaces.reducer';
 import { CoworkingDetailsComponent } from './coworking-details/coworking-details.component';
+import { CoworkingListComponent } from './coworking-list/coworking-list.component';
+import { coworkingReducer } from '../store/coworking/coworking.reducer';
+import { CoworkingEffects } from '../store/coworking/coworking.effects';
+import { ButtonComponent } from '../shared/button/button.component';
 
 @NgModule({
-  declarations: [CoworkingDetailsComponent],
+  declarations: [CoworkingDetailsComponent, CoworkingListComponent],
   imports: [
     CommonModule,
     RouterModule,
-    StoreModule.forFeature('workspace', workspaceReducer),
     StoreModule.forFeature('amenity', amenityReducer),
     StoreModule.forFeature('photo', photoReducer),
-    StoreModule.forFeature('availability', availabilityReducer),
+    StoreModule.forFeature('coworking', coworkingReducer),
     EffectsModule.forFeature([
       WorkspaceEffects,
       AmenityEffects,
       PhotoEffects,
       AvailabilityEffects,
+      CoworkingEffects,
     ]),
+    ButtonComponent,
   ],
-  exports: [CoworkingDetailsComponent], // Export if used elsewhere
+  exports: [CoworkingDetailsComponent],
 })
 export class CoworkingModule {}

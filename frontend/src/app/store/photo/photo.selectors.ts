@@ -8,6 +8,16 @@ export const selectAllPhotos = createSelector(
   (state) => state.photos
 );
 
+export const selectPhotosByWorkspace = (workspaceId: string) =>
+  createSelector(selectAllPhotos, (photos) =>
+    photos.filter((photo) => photo.workspaceId === workspaceId)
+  );
+
+export const selectPhotosByCoworking = (coworkingId: string) =>
+  createSelector(selectAllPhotos, (photos) =>
+    photos.filter((photo) => photo.coworkingId === coworkingId)
+  );
+
 export const selectPhotoLoading = createSelector(
   selectPhotoState,
   (state) => state.loading
