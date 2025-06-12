@@ -24,6 +24,7 @@ import {
   loadBookingsByUserEmail,
   loadBookingsByUserEmailSuccess,
   loadBookingsByUserEmailFailure,
+  resetBooking,
 } from './booking.actions';
 import { BookingState } from './booking.state';
 
@@ -91,6 +92,7 @@ export const bookingReducer = createReducer(
     loading: false,
     error,
   })),
+  on(resetBooking, () => initialState),
 
   on(deleteBooking, (state) => ({ ...state, loading: true, error: null })),
   on(deleteBookingSuccess, (state, { id }) => ({

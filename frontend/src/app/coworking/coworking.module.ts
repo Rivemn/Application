@@ -18,16 +18,15 @@ import { CoworkingDetailsComponent } from './coworking-details/coworking-details
 import { CoworkingListComponent } from './coworking-list/coworking-list.component';
 import { coworkingReducer } from '../store/coworking/coworking.reducer';
 import { CoworkingEffects } from '../store/coworking/coworking.effects';
+import { ButtonComponent } from '../shared/button/button.component';
 
 @NgModule({
   declarations: [CoworkingDetailsComponent, CoworkingListComponent],
   imports: [
     CommonModule,
     RouterModule,
-
     StoreModule.forFeature('amenity', amenityReducer),
     StoreModule.forFeature('photo', photoReducer),
-
     StoreModule.forFeature('coworking', coworkingReducer),
     EffectsModule.forFeature([
       WorkspaceEffects,
@@ -36,6 +35,7 @@ import { CoworkingEffects } from '../store/coworking/coworking.effects';
       AvailabilityEffects,
       CoworkingEffects,
     ]),
+    ButtonComponent,
   ],
   exports: [CoworkingDetailsComponent],
 })

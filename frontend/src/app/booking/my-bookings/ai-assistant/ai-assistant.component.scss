@@ -1,18 +1,14 @@
 .ai-assistant-container {
+  width: 100%;
+  max-width: 100%; /* Critical to prevent overflow */
+  padding: 16px;
+
+  border-radius: var(--border-radius);
+
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  padding: 0;
   gap: 24px;
-  width: 1280px;
-  height: 89px;
-  flex: none;
-  order: 3;
-  align-self: stretch;
-  flex-grow: 0;
-  z-index: 3;
 }
-
 /* Example questions heading */
 .example-questions {
   width: 1280px;
@@ -128,7 +124,6 @@
   flex-grow: 0;
 }
 
-/* Send button */
 .send-button {
   display: flex;
   flex-direction: row;
@@ -144,16 +139,6 @@
   order: 1;
   flex-grow: 0;
   cursor: pointer;
-}
-
-/* Vector icon inside send button */
-.send-icon {
-  width: 24px;
-  height: 24px;
-  position: relative;
-  flex: none;
-  order: 0;
-  flex-grow: 0;
 }
 
 .send-icon::before {

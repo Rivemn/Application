@@ -1,0 +1,50 @@
+.button {
+  background: var(--primary-color);
+  color: var(--white);
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px; /* Space between icon and text */
+}
+
+.button--full-width {
+  width: 100%;
+  padding: 12px;
+}
+
+.button--fixed-width {
+  width: 200px;
+  height: 48px;
+}
+
+.button--icon {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+}
+
+.button--delete {
+  background: transparent;
+  border: 1px solid #f56e6e;
+  color: transparent;
+}
+
+.button:disabled {
+  background-color: #e9e8fd;
+  color: #a3a3c2;
+  cursor: not-allowed;
+}
+
+.button-icon {
+  width: 24px;
+  height: 24px;
+}

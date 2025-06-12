@@ -39,18 +39,18 @@ public class BookingAvailabilityUpdater : IBookingAvailabilityUpdater
 
 		// Начать бронирования, которые должны начаться
 		var startingBookings = await _dbContext.Bookings
-			.Where(b => b.Start <= now && b.Status == "Pending")
+			.Where(b => b.Start <= now && b.End > now && b.Status == "Pending")
 			.ToListAsync(cancellationToken);
 
 		foreach (var booking in startingBookings)
 		{
-			booking.Status = "InProgress"; // или "Occupied", если у вас такой статус есть
-
 			var aviability = await _dbContext.Availabilities
 				.FirstOrDefaultAsync(a => a.Id == booking.AvailabilityId, cancellationToken);
 
 			if (aviability != null && aviability.Quantity > 0)
 			{
+				booking.Status = "InProgress";
+
 				aviability.Quantity -= 1; // Занимаем комнату
 			}
 		}
