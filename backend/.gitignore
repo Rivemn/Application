@@ -1,0 +1,22 @@
+# .NET
+bin/
+obj/
+.vs/
+.vscode/
+*.user
+*.userprefs
+*.suo
+*.sln.docstates
+
+# NuGet
+packages/
+.nuget/
+NugetAudit.xml
+
+# Environment
+.env
+.env.local
+
+# Logs
+logs/
+*.log

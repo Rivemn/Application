@@ -1,0 +1,6 @@
+# Данные
+data/
+*.sql.backup
+
+# Логи
+logs/

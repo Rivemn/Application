@@ -1,0 +1,118 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: ${PROJECT_NAME}_postgres
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "${DB_PORT}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      args:
+        CONFIGURATION: ${BUILD_CONFIGURATION}
+    container_name: ${PROJECT_NAME}_backend
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
+      ASPNETCORE_URLS: http://+:${BACKEND_PORT}
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=${DB_NAME};Username=${DB_USER};Password=${DB_PASSWORD}"
+      ASPNETCORE_LOGGING__LOGLEVEL__DEFAULT: ${LOG_LEVEL}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - app_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${BACKEND_PORT}/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  frontend:
+    # ... (конфигурация frontend без изменений)
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NODE_ENV: ${NODE_ENV}
+        BACKEND_URL: ${BACKEND_URL}
+    container_name: ${PROJECT_NAME}_frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+    networks:
+      - app_network
+    restart: unless-stopped
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: ${PROJECT_NAME}_nginx
+    # Переменная ${DOMAIN} будет передана из .env в Dockerfile
+    environment:
+      - DOMAIN=${DOMAIN}
+    ports:
+      - "${NGINX_PORT}:80"
+      - "${NGINX_PORT_SSL}:443"
+    volumes:
+      # ВАЖНО: монтируем не конфиг, а ШАБЛОН. 
+      # Dockerfile (CMD) сам создаст из него /etc/nginx/nginx.conf
+      - ./nginx/nginx.prod.template.conf:/etc/nginx/templates/nginx.prod.template.conf:ro
+      - ./nginx/proxy_params:/etc/nginx/proxy_params:ro
+      # Тома для Certbot
+      - certbot_conf:/etc/letsencrypt
+      - certbot_www:/var/www/certbot
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - app_network
+    restart: unless-stopped
+
+  # НОВЫЙ СЕРВИС ДЛЯ АВТО-ОБНОВЛЕНИЯ СЕРТИФИКАТОВ
+  certbot:
+    image: certbot/certbot
+    container_name: ${PROJECT_NAME}_certbot
+    profiles: ["prod"]
+    volumes:
+      - certbot_conf:/etc/letsencrypt
+      - certbot_www:/var/www/certbot
+    # Команда на авто-обновление дважды в день
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    depends_on:
+      - nginx
+    networks:
+      - app_network
+
+volumes:
+  postgres_data:
+    driver: local
+  # НОВЫЕ ТОМА ДЛЯ CERTBOT
+  certbot_conf:
+    driver: local
+  certbot_www:
+    driver: local
+
+networks:
+  app_network:
+    driver: bridge

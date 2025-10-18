@@ -1,0 +1,7 @@
+# Сертификаты
+*.pem
+*.key
+*.crt
+
+# IDE
+.vscode/
