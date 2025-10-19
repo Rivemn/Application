@@ -1,0 +1,120 @@
+// Убедитесь, что путь к вашим переменным указан верно
+@use '../../variables' as *;
+
+// --- Основной контейнер хедера ---
+.app-header {
+  background-color: $bg-content;
+  border-bottom: 1px solid $border-color;
+  padding: $spacing-base 0; // 16px 0
+  width: 100%;
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+// --- Навигация (Левая часть) ---
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: $spacing-base * 1.5; // 24px
+}
+
+.header-nav-link {
+  // Выравнивание иконки и текста
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-base * 0.5; // 8px
+
+  // Стили текста
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
+  color: $text-secondary;
+  text-decoration: none;
+  transition: $transition-base;
+
+  // Стили для SVG иконок
+  svg {
+    // По умолчанию иконки серые, как текст
+    color: $text-secondary;
+    transition: $transition-base;
+  }
+
+  // Состояние при наведении
+  &:hover {
+    color: $text-primary;
+    text-decoration: none;
+    svg {
+      color: $text-primary; // Иконка тоже темнеет
+    }
+  }
+
+  // Состояние активной ссылки
+  &.active {
+    color: $primary;
+    svg {
+      color: $primary; // Иконка становится фиолетовой
+    }
+  }
+}
+
+// --- Действия (Правая часть) ---
+.header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; // всё к правому краю
+  gap: $spacing-base * 1.25; // немного меньше зазора
+  min-height: 40px; // выравнивание по высоте с кнопкой
+}
+
+// Этот селектор стилизует контент ВНУТРИ вашего app-button.
+// ::ng-deep нужен, чтобы "пробиться" через инкапсуляцию стилей компонента.
+app-button ::ng-deep .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: auto; // снимаем фиксированную высоту
+  padding: 6px 16px; // ↓ стало меньше по вертикали (раньше ~10px)
+  border-radius: $border-radius;
+  font-weight: $font-weight-medium;
+  font-size: $font-size-base;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.user-profile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px; // совпадает с кнопкой
+  padding: 0 $spacing-base; // визуально сбалансировано
+  border-radius: $border-radius;
+  gap: $spacing-base * 0.75; // 12px
+  cursor: pointer;
+  color: $text-primary;
+  font-weight: $font-weight-medium;
+  transition: $transition-base;
+
+  &:hover {
+    background-color: $bg-body;
+  }
+
+  .user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid $border-color;
+  }
+
+  svg {
+    color: $text-light;
+    transition: $transition-base;
+  }
+
+  &:hover svg {
+    color: $text-primary;
+  }
+}

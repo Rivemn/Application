@@ -1,0 +1,61 @@
+@use '../../../variables' as *; // Убедитесь, что путь к variables.scss верный
+
+.btn {
+  display: inline-block;
+  padding: ($spacing-base * 0.75) ($spacing-base * 1.5);
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
+  line-height: 1.25;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid transparent;
+  border-radius: $border-radius;
+  transition: $transition-base;
+
+  // (НОВОЕ) Стили для заблокированного состояния
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.btn-primary {
+  color: $text-on-primary;
+  background-color: $primary;
+
+  // (ИЗМЕНЕНО) Эффект наведения не работает, если кнопка заблокирована
+  &:hover:not(:disabled) {
+    background-color: $primary-dark;
+  }
+}
+
+.btn-success {
+  color: $text-on-primary;
+  background-color: $success;
+
+  &:hover:not(:disabled) {
+    background-color: $success-dark;
+  }
+}
+
+.btn-secondary {
+  color: $text-secondary;
+  background-color: $bg-content;
+  border: 1px solid $border-color;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+
+  &:hover:not(:disabled) {
+    color: $text-primary;
+    background-color: $bg-body;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $primary;
+    box-shadow: 0 0 0 2px rgba($primary, 0.25);
+  }
+}

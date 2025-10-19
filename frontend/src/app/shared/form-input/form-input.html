@@ -1,0 +1,28 @@
+<div class="form-group">
+  <label class="form-label" [class.form-label--required]="required">
+    {{ label }}
+  </label>
+
+  @if (type === 'textarea') {
+  <textarea
+    class="form-input"
+    [placeholder]="placeholder"
+    [value]="value"
+    (input)="onValueChange($event)"
+    [disabled]="disabled"
+  ></textarea>
+  } @else {
+  <input
+    [type]="type"
+    class="form-input"
+    [placeholder]="placeholder"
+    [value]="value"
+    (input)="onValueChange($event)"
+    [disabled]="disabled"
+  />
+  } @if (helpText) {
+  <p class="form-help-text">
+    {{ helpText }}
+  </p>
+  }
+</div>

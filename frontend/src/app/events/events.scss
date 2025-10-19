@@ -1,0 +1,85 @@
+@use '../../variables' as *;
+
+.discover-events-page {
+  padding: ($spacing-base * 2) 0;
+
+  .page-header {
+    margin-bottom: $spacing-base * 2;
+    h1 {
+      margin-bottom: $spacing-base * 0.5;
+    }
+  }
+
+  .search-bar {
+    position: relative;
+    margin-bottom: $spacing-base * 2.5;
+    max-width: 400px;
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: $text-light;
+      pointer-events: none; // Иконка не мешает клику на инпут
+    }
+
+    // Сдвигаем текст в инпуте, чтобы не налезал на иконку
+    ::ng-deep .form-input {
+      padding-left: 40px;
+    }
+  }
+}
+
+// Сетка для карточек
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: $spacing-base * 1.5;
+}
+
+// Стили для карточки
+.event-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; // Расталкивает контент и кнопку
+
+  h2 {
+    color: $text-primary;
+    margin-bottom: $spacing-base * 0.5;
+  }
+  p {
+    font-size: 0.95rem;
+  }
+}
+
+// Список деталей события (дата, время и т.д.)
+.event-details {
+  list-style: none;
+  padding: 0;
+  margin: ($spacing-base * 1.5) 0;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: $spacing-base * 0.75;
+    color: $text-secondary;
+    font-size: 0.9rem;
+
+    &:not(:last-child) {
+      margin-bottom: $spacing-base;
+    }
+
+    mat-icon {
+      font-size: 20px;
+      height: 20px;
+      width: 20px;
+      color: $text-light;
+    }
+  }
+}
+
+// Кнопка в карточке
+app-button ::ng-deep .btn {
+  width: 100%; // Кнопка на всю ширину карточки
+}

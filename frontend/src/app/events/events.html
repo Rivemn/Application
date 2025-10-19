@@ -1,0 +1,46 @@
+<div class="container discover-events-page">
+  <!-- Заголовок страницы -->
+  <header class="page-header">
+    <h1>Discover Events</h1>
+    <p>Find and join exciting events happening around you</p>
+  </header>
+
+  <!-- Поиск -->
+  <div class="search-bar">
+    <mat-icon class="search-icon">search</mat-icon>
+    <app-form-input placeholder="Search events..."></app-form-input>
+  </div>
+
+  <!-- Сетка с карточками событий -->
+  <div class="events-grid">
+    @for (event of events; track event.title) {
+    <div class="card event-card">
+      <div class="event-card-content">
+        <h2>{{ event.title }}</h2>
+        <p>{{ event.description }}</p>
+
+        <ul class="event-details">
+          <li>
+            <mat-icon>calendar_today</mat-icon>
+            <span>{{ event.date | date : 'MMM d, y' }}</span>
+          </li>
+          <li>
+            <mat-icon>schedule</mat-icon>
+            <span>{{ event.date | date : 'HH:mm' }}</span>
+          </li>
+          <li>
+            <mat-icon>location_on</mat-icon>
+            <span>{{ event.location }}</span>
+          </li>
+          <li>
+            <mat-icon>people</mat-icon>
+            <span>{{ event.participants }} / {{ event.capacity }} participants</span>
+          </li>
+        </ul>
+      </div>
+
+      <app-button color="success" label="Join Event"></app-button>
+    </div>
+    }
+  </div>
+</div>

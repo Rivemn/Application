@@ -1,0 +1,133 @@
+@use '../../../variables' as *; // Убедитесь, что путь верный
+
+// Все стили из my-events.component.scss, связанные с календарем,
+// переезжают сюда.
+.calendar-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-base * 1.5;
+}
+.month-navigation {
+  display: flex;
+  align-items: center;
+  gap: $spacing-base * 0.5;
+  .month-display {
+    font-size: 1.5rem;
+    font-weight: $font-weight-bold;
+    margin: 0;
+    min-width: 180px;
+    text-align: center;
+  }
+}
+.custom-calendar-container {
+  background-color: $bg-content;
+  border: 1px solid $border-color;
+  border-radius: $border-radius;
+  padding: $spacing-base * 1.5;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+// ... и все остальные стили для .month-view, .week-view, .day-cell, .event-chip ...
+.month-view {
+  .day-names {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    color: $text-secondary;
+    font-weight: $font-weight-medium;
+    margin-bottom: $spacing-base;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+  }
+  .days-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-auto-rows: 120px;
+    border-left: 1px solid $border-color;
+    border-top: 1px solid $border-color;
+  }
+  .day-cell {
+    border-right: 1px solid $border-color;
+    border-bottom: 1px solid $border-color;
+    padding: $spacing-base * 0.5;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: $bg-body;
+    }
+    .day-number {
+      font-weight: $font-weight-medium;
+    }
+    &.not-current-month {
+      color: $text-light;
+    }
+    &.today .day-number {
+      background-color: $primary;
+      color: $text-on-primary;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    &.selected {
+      box-shadow: inset 0 0 0 2px $primary;
+      background-color: transparent;
+    }
+  }
+}
+.week-view {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: $spacing-base;
+  .day-card {
+    border: 1px solid transparent;
+    border-radius: $border-radius;
+    padding: $spacing-base;
+    min-height: 120px;
+    cursor: pointer;
+    transition: $transition-base;
+    &:not(:last-child) {
+      border-right: 1px solid $border-color;
+    }
+    &.selected {
+      border: 1px solid $primary;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      border-radius: $border-radius;
+    }
+    &.today .day-number {
+      color: $primary;
+    }
+  }
+  .day-card-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: $spacing-base;
+    .day-name {
+      color: $text-secondary;
+      font-weight: $font-weight-medium;
+    }
+    .day-number {
+      font-weight: $font-weight-bold;
+    }
+  }
+  .day-card-body .no-events {
+    font-size: 0.875rem;
+    color: $text-light;
+  }
+}
+.event-chip {
+  background-color: lighten($primary, 40%);
+  color: $primary;
+  padding: 4px 8px;
+  font-size: 0.8rem;
+  font-weight: $font-weight-medium;
+  border-radius: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: $spacing-base * 0.5;
+}

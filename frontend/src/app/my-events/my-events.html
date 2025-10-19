@@ -1,0 +1,16 @@
+<div class="container my-events-page">
+  <!-- Заголовок страницы остается здесь, как вы и хотели -->
+  <header class="page-header">
+    <div class="header-text">
+      <h1>My Events</h1>
+      <p>View and manage your event calendar</p>
+    </div>
+    <a mat-flat-button color="primary" [routerLink]="['/create-event']">
+      <mat-icon>add</mat-icon>
+      <span>Create Event</span>
+    </a>
+  </header>
+
+  <!-- Используем наш новый, вынесенный CalendarComponent -->
+  <app-calendar [events]="events" (dateSelected)="onDateSelected($event)"> </app-calendar>
+</div>

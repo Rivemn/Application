@@ -1,0 +1,30 @@
+/* Использует .form-input из global.scss */
+@use '../../../variables' as *;
+.form-group {
+  margin-bottom: $spacing-base * 1.5;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: $spacing-base * 0.5;
+  font-weight: $font-weight-medium;
+  color: $text-primary;
+
+  &--required::after {
+    content: ' *';
+    color: #ef4444; // Красный
+  }
+}
+
+// Специфичные стили для textarea
+textarea.form-input {
+  min-height: 120px;
+  resize: vertical;
+  line-height: $line-height-base;
+}
+
+.form-help-text {
+  font-size: 0.875rem; // 14px
+  color: $text-secondary;
+  margin-top: $spacing-base * 0.25;
+}
