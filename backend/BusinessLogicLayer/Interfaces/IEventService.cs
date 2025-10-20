@@ -17,5 +17,7 @@ namespace BusinessLogicLayer.Interfaces
 
 		Task JoinEventAsync(Guid eventId, Guid userId);
 		Task LeaveEventAsync(Guid eventId, Guid userId);
+
+		Task<IEnumerable<Event>> GetMyEventsAsync(Guid userId);
 	}
 }

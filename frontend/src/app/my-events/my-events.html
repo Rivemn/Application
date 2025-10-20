@@ -1,16 +1,63 @@
 <div class="container my-events-page">
-  <!-- Заголовок страницы остается здесь, как вы и хотели -->
   <header class="page-header">
     <div class="header-text">
       <h1>My Events</h1>
       <p>View and manage your event calendar</p>
     </div>
-    <a mat-flat-button color="primary" [routerLink]="['/create-event']">
-      <mat-icon>add</mat-icon>
-      <span>Create Event</span>
-    </a>
   </header>
 
-  <!-- Используем наш новый, вынесенный CalendarComponent -->
-  <app-calendar [events]="events" (dateSelected)="onDateSelected($event)"> </app-calendar>
+  @if (isLoading) {
+  <div class="loading-state">
+    <p>Loading your events...</p>
+  </div>
+  } @else if (error) {
+  <div class="error-state">
+    <p>{{ error }}</p>
+  </div>
+  } @else {
+  <div class="calendar-and-agenda-container">
+    <div class="calendar-wrapper">
+      <!-- 
+        FIX: The binding is changed from [events]="allMyEvents" to [events]="calendarEvents".
+        This passes the correctly formatted data to the child component.
+      -->
+      <app-calendar [events]="calendarEvents" (dateSelected)="onDateSelected($event)">
+      </app-calendar>
+    </div>
+
+    <div class="agenda-wrapper">
+      <h2 class="agenda-title">Schedule for {{ selectedDate | date : 'fullDate' }}</h2>
+      <div class="agenda-events-list">
+        @for (event of eventsForSelectedDay; track event.id) {
+        <div class="agenda-item">
+          <div class="agenda-item-time">{{ event.start | date : 'HH:mm' }}</div>
+          <div class="agenda-item-details">
+            <h3 class="agenda-item-title">{{ event.title }}</h3>
+            <p class="agenda-item-location">{{ event.location }}</p>
+          </div>
+          <a class="agenda-item-link" [routerLink]="['/events', event.id]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </a>
+        </div>
+        } @empty {
+        <div class="empty-agenda">
+          <p>No events scheduled for this day.</p>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+  }
 </div>

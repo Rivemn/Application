@@ -1,32 +1,79 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { EventService } from '../services/EventService';
+import { EventDto } from '../models/EventDto';
+
+// This is the data structure your calendar component expects.
 interface CalendarEvent {
   date: Date;
   title: string;
 }
-interface CalendarDay {
-  date: Date;
-  isCurrentMonth: boolean; // Является ли день частью текущего месяца (для серого цвета)
-  isSelected: boolean;
-}
+
 @Component({
   selector: 'app-my-events',
   standalone: false,
   templateUrl: './my-events.html',
-  styleUrl: './my-events.scss',
-  encapsulation: ViewEncapsulation.None,
+  styleUrls: ['./my-events.scss'],
 })
-export class MyEvents {
-  // Компонент теперь отвечает только за данные
-  public events: CalendarEvent[] = [
-    { date: new Date('2025-10-08'), title: 'AI Conference' },
-    { date: new Date(), title: "Today's Meeting" },
-  ];
+export class MyEvents implements OnInit {
+  // Stores the original, unmodified data from the backend
+  public allMyEvents: EventDto[] = [];
 
-  constructor() {}
+  // This new array will hold the transformed data for the calendar
+  public calendarEvents: CalendarEvent[] = [];
 
-  // Обработчик события от дочернего календаря
+  // Stores events filtered for the currently selected day to display in the agenda
+  public eventsForSelectedDay: EventDto[] = [];
+  public selectedDate: Date = new Date();
+
+  public isLoading = true;
+  public error: string | null = null;
+
+  constructor(private eventService: EventService) {}
+
+  ngOnInit(): void {
+    this.selectedDate.setHours(0, 0, 0, 0);
+    this.loadMyEvents();
+  }
+
+  loadMyEvents(): void {
+    this.isLoading = true;
+    this.error = null;
+
+    this.eventService.getMyEvents().subscribe({
+      next: (data) => {
+        this.allMyEvents = data;
+
+        // Transform the backend data into the format the calendar needs.
+        // We map each EventDto to a CalendarEvent, renaming 'start' to 'date'.
+        this.calendarEvents = this.allMyEvents.map((event) => ({
+          title: event.title,
+          date: new Date(event.start), // Ensure 'start' is a Date object
+        }));
+
+        this.filterEventsForDate(this.selectedDate);
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Failed to load my events', err);
+        this.error = 'Could not load your events. Please try again.';
+        this.isLoading = false;
+      },
+    });
+  }
+
   public onDateSelected(date: Date): void {
-    console.log('Date selected in parent component:', date);
-    // Здесь вы можете реализовать логику загрузки событий для выбранной даты
+    this.selectedDate = date;
+    this.filterEventsForDate(date);
+  }
+
+  private filterEventsForDate(date: Date): void {
+    this.eventsForSelectedDay = this.allMyEvents.filter((event) => {
+      const eventDate = new Date(event.start);
+      return (
+        eventDate.getFullYear() === date.getFullYear() &&
+        eventDate.getMonth() === date.getMonth() &&
+        eventDate.getDate() === date.getDate()
+      );
+    });
   }
 }

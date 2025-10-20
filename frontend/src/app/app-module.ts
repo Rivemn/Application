@@ -24,8 +24,10 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { Calendar } from './shared/calendar/calendar';
-import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { Auth } from './auth/auth';
+import { AuthInterceptor } from './interceptors/AuthInterceptor';
 
 @NgModule({
   declarations: [
@@ -38,8 +40,10 @@ import { HttpClientModule } from '@angular/common/http';
     EventDetails,
     Header,
     Calendar,
+    Auth,
   ],
   imports: [
+    FormsModule,
     BrowserModule,
     AppRoutingModule,
     MatFormFieldModule,
@@ -53,7 +57,15 @@ import { HttpClientModule } from '@angular/common/http';
     ReactiveFormsModule,
     HttpClientModule,
   ],
-  providers: [provideBrowserGlobalErrorListeners(), provideZonelessChangeDetection()],
+  providers: [
+    provideBrowserGlobalErrorListeners(),
+    provideZonelessChangeDetection(),
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
+  ],
   bootstrap: [App],
 })
 export class AppModule {}

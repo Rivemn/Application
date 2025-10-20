@@ -1,8 +1,9 @@
 <header class="app-header">
   <div class="container header-container">
-    <!-- Левая часть: Навигация -->
+    <!-- Левая часть: Навигация (почти не изменилась) -->
     <nav class="header-nav">
       <a class="header-nav-link" routerLink="/events" routerLinkActive="active">
+        <!-- SVG иконка "Events" -->
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="20"
@@ -24,7 +25,10 @@
         <span>Events</span>
       </a>
 
+      <!-- Ссылка "My Events" показывается только залогиненным пользователям -->
+      @if (isAuthenticated) {
       <a class="header-nav-link" routerLink="/my-events" routerLinkActive="active">
+        <!-- SVG иконка "My Events" -->
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="20"
@@ -43,20 +47,27 @@
         </svg>
         <span>My Events</span>
       </a>
+      }
     </nav>
 
-    <!-- Правая часть: кнопки и профиль -->
+    <!-- Правая часть: Условный рендеринг -->
     <div class="header-actions">
-      <!-- Кнопка "Create Event" не показывается на странице /create-event -->
+      <!-- БЛОК ДЛЯ АВТОРИЗОВАННОГО ПОЛЬЗОВАТЕЛЯ -->
+      @if (isAuthenticated) {
+      <!-- Кнопка "Create Event" -->
       @if (!router.url.includes('/create-event')) {
-      <app-button [routerLink]="['/create-event']" color="primary" label="Create Event">
-      </app-button>
+      <app-button
+        [routerLink]="['/create-event']"
+        color="primary"
+        label="Create Event"
+      ></app-button>
       }
 
-      <!-- Профиль пользователя -->
-      <div class="user-profile">
+      <!-- Профиль пользователя с кнопкой выхода -->
+      <div class="user-profile" (click)="onLogout()" title="Log out">
         <img src="https://i.pravatar.cc/32" alt="User avatar" class="user-avatar" />
-        <span>eduard</span>
+        <span>{{ userName }}</span>
+        <!-- SVG иконка "Logout" -->
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="20"
@@ -73,6 +84,13 @@
           <line x1="21" y1="12" x2="9" y2="12"></line>
         </svg>
       </div>
+      } @else {
+      <!-- БЛОК ДЛЯ ГОСТЯ -->
+      <div class="guest-actions">
+        <a routerLink="/login" class="btn-link">Log In</a>
+        <app-button [routerLink]="['/register']" color="primary" label="Sign Up"></app-button>
+      </div>
+      }
     </div>
   </div>
 </header>

@@ -22,5 +22,15 @@ namespace DataAccessLayer.Repositories
 				.Include(e => e.Participants)
 				.FirstOrDefaultAsync(e => e.Id == id);
 		}
+
+		public async Task<IEnumerable<Event>> GetEventsForUserAsync(Guid userId)
+		{
+			return await _dbSet
+				.Include(e => e.Participants)
+				.Where(e =>
+					e.Participants.Any(p => p.UserId == userId)
+				)
+				.ToListAsync();
+		}
 	}
 }

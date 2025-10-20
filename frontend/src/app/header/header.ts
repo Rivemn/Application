@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { AuthService } from '../services/AuthService';
 
 @Component({
   selector: 'app-header',
@@ -8,12 +10,26 @@ import { Router } from '@angular/router';
   styleUrl: './header.scss',
 })
 export class Header {
-  constructor(public router: Router) {}
+  isAuthenticated = false;
+  userName: string | null = null;
+  private authSubscription!: Subscription;
 
-  // 3. (Опционально) Можно создать "геттер" для удобства,
-  //    который будет проверять, находимся ли мы на странице 'create-event'.
-  //    public router.url тоже будет работать в шаблоне.
-  public get isCreateEventPage(): boolean {
-    return this.router.url.includes('/create-event');
+  constructor(public router: Router, private authService: AuthService) {}
+
+  ngOnInit(): void {
+    this.authSubscription = this.authService.currentUser$.subscribe((user) => {
+      this.isAuthenticated = !!user;
+      this.userName = user ? user.fullName : null;
+    });
+  }
+
+  onLogout(): void {
+    this.authService.logout();
+  }
+
+  ngOnDestroy(): void {
+    if (this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
   }
 }

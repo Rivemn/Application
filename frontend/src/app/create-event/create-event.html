@@ -1,6 +1,7 @@
 <div class="create-event-page">
   <div class="container">
-    <a routerLink="/my-events" class="back-link">
+    <a (click)="onCancel()" class="back-link">
+      <!-- (click) вместо routerLink для гибкости -->
       <mat-icon>arrow_back</mat-icon>
       <span>Back</span>
     </a>
@@ -11,17 +12,14 @@
         <p>Fill in the details to create an amazing event</p>
       </div>
 
-      <!-- Привязываем форму к FormGroup в TypeScript -->
       <form class="event-form" [formGroup]="eventForm" (ngSubmit)="onSubmit()">
-        <!-- Event Title -->
+        <!-- Поля формы остаются без изменений -->
         <app-form-input
           label="Event Title"
           placeholder="e.g., Tech Conference 2025"
           [required]="true"
           formControlName="title"
         ></app-form-input>
-
-        <!-- Description -->
         <app-form-input
           label="Description"
           type="textarea"
@@ -29,8 +27,6 @@
           [required]="true"
           formControlName="description"
         ></app-form-input>
-
-        <!-- Date and Time Fields с Angular Material -->
         <div class="form-row">
           <mat-form-field appearance="outline">
             <mat-label>Date</mat-label>
@@ -44,31 +40,24 @@
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>
-
           <mat-form-field appearance="outline">
             <mat-label>Time</mat-label>
             <input matInput type="time" formControlName="time" placeholder="--:--" />
             <mat-icon matSuffix>schedule</mat-icon>
           </mat-form-field>
         </div>
-
-        <!-- Location -->
         <app-form-input
           label="Location"
           placeholder="e.g., Convention Center, San Francisco"
           [required]="true"
           formControlName="location"
         ></app-form-input>
-
-        <!-- Capacity -->
         <app-form-input
           label="Capacity (optional)"
           placeholder="Leave empty for unlimited"
           helpText="Maximum number of participants. Leave empty for unlimited capacity."
           formControlName="capacity"
         ></app-form-input>
-
-        <!-- Visibility Radio Buttons -->
         <div class="form-group">
           <label class="form-label">Visibility</label>
           <div class="radio-group">
@@ -83,14 +72,26 @@
           </div>
         </div>
 
-        <!-- Action Buttons -->
+        <!-- Блок для отображения ошибок -->
+        @if (errorMessage) {
+        <div class="form-error-message">
+          <p>{{ errorMessage }}</p>
+        </div>
+        }
+
+        <!-- Кнопки действий -->
         <div class="form-actions">
-          <app-button type="button" color="secondary" label="Cancel"></app-button>
+          <app-button
+            type="button"
+            color="secondary"
+            label="Cancel"
+            (click)="onCancel()"
+          ></app-button>
           <app-button
             type="submit"
             color="primary"
-            label="Create Event"
-            [disabled]="eventForm.invalid"
+            [label]="isLoading ? 'Creating...' : 'Create Event'"
+            [disabled]="eventForm.invalid || isLoading"
           ></app-button>
         </div>
       </form>

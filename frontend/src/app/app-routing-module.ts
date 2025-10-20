@@ -4,12 +4,15 @@ import { Events } from './events/events';
 import { MyEvents } from './my-events/my-events';
 import { CreateEvent } from './create-event/create-event';
 import { EventDetails } from './event-details/event-details';
+import { Auth } from './auth/auth';
 
 const routes: Routes = [
   { path: 'event-detail/:id', component: EventDetails },
   { path: 'events', component: Events },
   { path: 'create-event', component: CreateEvent },
   { path: 'my-events', component: MyEvents },
+  { path: 'login', component: Auth },
+  { path: 'register', component: Auth },
   { path: '', redirectTo: '/coworking-list', pathMatch: 'full' },
 ];
 

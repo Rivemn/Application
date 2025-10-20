@@ -106,5 +106,13 @@ namespace BusinessLogicLayer.Services
 			participantRepo.Remove(participationToRemove);
 			await _unitOfWork.CompleteAsync();
 		}
+
+		public Task<IEnumerable<Event>> GetMyEventsAsync(Guid userId)
+		{
+
+			var repo = (IEventRepository)_unitOfWork.Repository<Event>();
+
+			return repo.GetEventsForUserAsync(userId);
+		}
 	}
 }

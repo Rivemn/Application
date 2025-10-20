@@ -120,6 +120,21 @@ namespace WebAPI.Controllers
 			}
 		}
 
+		[HttpGet("my-events")]
+		public async Task<IActionResult> GetMyEvents()
+		{
+			var userId = GetCurrentUserId();
+			if (userId == null)
+			{
+				return Unauthorized();
+			}
+
+			var events = await _eventService.GetMyEventsAsync(userId.Value);
+
+			var dtos = _mapper.Map<IEnumerable<EventDto>>(events);
+			return Ok(dtos);
+		}
+
 		private Guid? GetCurrentUserId()
 		{
 			var userIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);

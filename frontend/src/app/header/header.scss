@@ -1,7 +1,6 @@
 // Убедитесь, что путь к вашим переменным указан верно
 @use '../../variables' as *;
 
-// --- Основной контейнер хедера ---
 .app-header {
   background-color: $bg-content;
   border-bottom: 1px solid $border-color;
@@ -15,68 +14,57 @@
   justify-content: space-between;
 }
 
-// --- Навигация (Левая часть) ---
 .header-nav {
   display: flex;
   align-items: center;
-  gap: $spacing-base * 1.5; // 24px
+  gap: $spacing-base * 1.5;
 }
 
 .header-nav-link {
-  // Выравнивание иконки и текста
   display: inline-flex;
   align-items: center;
-  gap: $spacing-base * 0.5; // 8px
-
-  // Стили текста
+  gap: $spacing-base * 0.5;
   font-size: $font-size-base;
   font-weight: $font-weight-medium;
   color: $text-secondary;
   text-decoration: none;
   transition: $transition-base;
 
-  // Стили для SVG иконок
   svg {
-    // По умолчанию иконки серые, как текст
     color: $text-secondary;
     transition: $transition-base;
   }
 
-  // Состояние при наведении
   &:hover {
     color: $text-primary;
     text-decoration: none;
     svg {
-      color: $text-primary; // Иконка тоже темнеет
+      color: $text-primary;
     }
   }
 
-  // Состояние активной ссылки
   &.active {
     color: $primary;
     svg {
-      color: $primary; // Иконка становится фиолетовой
+      color: $primary;
     }
   }
 }
 
-// --- Действия (Правая часть) ---
 .header-actions {
   display: flex;
   align-items: center;
-  justify-content: flex-end; // всё к правому краю
-  gap: $spacing-base * 1.25; // немного меньше зазора
-  min-height: 40px; // выравнивание по высоте с кнопкой
+  justify-content: flex-end;
+  gap: $spacing-base * 1.25;
+  min-height: 40px;
 }
 
-// Этот селектор стилизует контент ВНУТРИ вашего app-button.
-// ::ng-deep нужен, чтобы "пробиться" через инкапсуляцию стилей компонента.
 app-button ::ng-deep .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: auto; // снимаем фиксированную высоту
-  padding: 6px 16px; // ↓ стало меньше по вертикали (раньше ~10px)
+  height: auto;
+  padding: 6px 16px;
   border-radius: $border-radius;
   font-weight: $font-weight-medium;
   font-size: $font-size-base;
@@ -88,10 +76,10 @@ app-button ::ng-deep .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 40px; // совпадает с кнопкой
-  padding: 0 $spacing-base; // визуально сбалансировано
+  height: 40px;
+  padding: 0 $spacing-base;
   border-radius: $border-radius;
-  gap: $spacing-base * 0.75; // 12px
+  gap: $spacing-base * 0.75;
   cursor: pointer;
   color: $text-primary;
   font-weight: $font-weight-medium;
@@ -116,5 +104,22 @@ app-button ::ng-deep .btn {
 
   &:hover svg {
     color: $text-primary;
+  }
+}
+
+.guest-actions {
+  display: flex;
+  align-items: center;
+  gap: $spacing-base * 1.5;
+}
+
+.btn-link {
+  font-weight: $font-weight-medium;
+  color: $text-secondary;
+  text-decoration: none;
+  transition: $transition-base;
+
+  &:hover {
+    color: $primary;
   }
 }
