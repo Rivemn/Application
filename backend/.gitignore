@@ -1,22 +1,15 @@
-# .NET
+# Visual Studio files
+.vs/
+*.user
+*.suo
+
+# .NET compilation files
 bin/
 obj/
-.vs/
-.vscode/
-*.user
-*.userprefs
-*.suo
-*.sln.docstates
+*.xml
 
-# NuGet
-packages/
-.nuget/
-NugetAudit.xml
+# Migration files
+Migrations/
 
-# Environment
-.env
-.env.local
-
-# Logs
-logs/
-*.log
+# HTTP requests (e.g. for API tests in Visual Studio or Rider)
+*.http

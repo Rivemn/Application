@@ -25,6 +25,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { Calendar } from './shared/calendar/calendar';
 import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -41,15 +42,16 @@ import { ReactiveFormsModule } from '@angular/forms';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    MatFormFieldModule, // <-- сюда
+    MatFormFieldModule,
     MatInputModule,
-    NgxMaterialTimepickerModule, // <-- добавляем сюда
+    NgxMaterialTimepickerModule,
     BrowserAnimationsModule,
     MatDatepickerModule,
     MatNativeDateModule,
     MatButtonToggleModule,
     MatIconModule,
     ReactiveFormsModule,
+    HttpClientModule,
   ],
   providers: [provideBrowserGlobalErrorListeners(), provideZonelessChangeDetection()],
   bootstrap: [App],

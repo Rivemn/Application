@@ -22,11 +22,11 @@
         <ul class="event-details">
           <li>
             <mat-icon>calendar_today</mat-icon>
-            <span>{{ event.date | date : 'MMM d, y' }}</span>
+            <span>{{ event.start | date : 'MMM d, y' }}</span>
           </li>
           <li>
             <mat-icon>schedule</mat-icon>
-            <span>{{ event.date | date : 'HH:mm' }}</span>
+            <span>{{ event.start | date : 'HH:mm' }}</span>
           </li>
           <li>
             <mat-icon>location_on</mat-icon>
@@ -34,7 +34,7 @@
           </li>
           <li>
             <mat-icon>people</mat-icon>
-            <span>{{ event.participants }} / {{ event.capacity }} participants</span>
+            <span>{{ event.participantsCount }} / {{ event.capacity }} participants</span>
           </li>
         </ul>
       </div>
