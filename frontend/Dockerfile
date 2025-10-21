@@ -3,31 +3,33 @@ FROM node:20-alpine AS build
 
 WORKDIR /app
 COPY package*.json ./
+# Используем ci для более быстрой и надежной установки
 RUN npm ci
 
-ARG NODE_ENV=production
-ARG BACKEND_URL=http://localhost:5000
-
-ENV NODE_ENV=$NODE_ENV
-ENV BACKEND_URL=$BACKEND_URL
-
+# Копируем остальные файлы приложения
 COPY . .
+
+# Объявляем аргумент, который будет передан из docker-compose.yml
+# Значение по умолчанию полезно для отладки
+ARG BACKEND_URL=http://localhost/api
+
+# === КЛЮЧЕВОЙ ШАГ ===
+# Заменяем URL-заглушку в файле environment.ts на реальный URL из docker-compose
+RUN sed -i "s|apiUrl: '.*'|apiUrl: '${BACKEND_URL}'|g" ./src/environments/environment.ts
+
+# Собираем production-версию приложения
 RUN npm run build -- --configuration production
 
-# ===== Stage 2: Nginx serve =====
+# ===== Stage 2: Serve =====
 FROM nginx:alpine
 
-# 🎯 КОПИРУЕМ ИМЕННО ИЗ ПАПКИ /browser
+# Копируем готовую сборку из предыдущего этапа
+# Путь /frontend/browser/ взят из вашего старого Dockerfile
 COPY --from=build /app/dist/frontend/browser /usr/share/nginx/html
 
-# ✅ УСТАНАВЛИВАЕМ ПРАВИЛЬНЫЕ ПРАВА
-RUN chown -R nginx:nginx /usr/share/nginx/html
-
-# Настраиваем nginx для SPA
-RUN rm /etc/nginx/conf.d/default.conf
+# Копируем вашу конфигурацию Nginx
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# EXPOSE 80 не обязателен, но для ясности можно оставить
 EXPOSE 80
 
 CMD ["nginx", "-g", "daemon off;"]

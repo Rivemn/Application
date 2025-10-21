@@ -1,0 +1,10 @@
+@if (routerLink) {
+<a [routerLink]="routerLink" class="btn" [ngClass]="'btn-' + color">
+  {{ label }}
+</a>
+} @else {
+<!-- (ИЗМЕНЕНО) Добавлена привязка [disabled] -->
+<button [type]="type" class="btn" [ngClass]="'btn-' + color" [disabled]="disabled">
+  {{ label }}
+</button>
+}

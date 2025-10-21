@@ -1,0 +1,125 @@
+// Убедитесь, что путь к вашим переменным указан верно
+@use '../../variables' as *;
+
+.app-header {
+  background-color: $bg-content;
+  border-bottom: 1px solid $border-color;
+  padding: $spacing-base 0; // 16px 0
+  width: 100%;
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: $spacing-base * 1.5;
+}
+
+.header-nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-base * 0.5;
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
+  color: $text-secondary;
+  text-decoration: none;
+  transition: $transition-base;
+
+  svg {
+    color: $text-secondary;
+    transition: $transition-base;
+  }
+
+  &:hover {
+    color: $text-primary;
+    text-decoration: none;
+    svg {
+      color: $text-primary;
+    }
+  }
+
+  &.active {
+    color: $primary;
+    svg {
+      color: $primary;
+    }
+  }
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: $spacing-base * 1.25;
+  min-height: 40px;
+}
+
+app-button ::ng-deep .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: auto;
+  padding: 6px 16px;
+  border-radius: $border-radius;
+  font-weight: $font-weight-medium;
+  font-size: $font-size-base;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.user-profile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 $spacing-base;
+  border-radius: $border-radius;
+  gap: $spacing-base * 0.75;
+  cursor: pointer;
+  color: $text-primary;
+  font-weight: $font-weight-medium;
+  transition: $transition-base;
+
+  &:hover {
+    background-color: $bg-body;
+  }
+
+  .user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid $border-color;
+  }
+
+  svg {
+    color: $text-light;
+    transition: $transition-base;
+  }
+
+  &:hover svg {
+    color: $text-primary;
+  }
+}
+
+.guest-actions {
+  display: flex;
+  align-items: center;
+  gap: $spacing-base * 1.5;
+}
+
+.btn-link {
+  font-weight: $font-weight-medium;
+  color: $text-secondary;
+  text-decoration: none;
+  transition: $transition-base;
+
+  &:hover {
+    color: $primary;
+  }
+}

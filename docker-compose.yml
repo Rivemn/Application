@@ -8,8 +8,6 @@ services:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
-    ports:
-      - "${DB_PORT}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -34,20 +32,19 @@ services:
       ASPNETCORE_URLS: http://+:${BACKEND_PORT}
       ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=${DB_NAME};Username=${DB_USER};Password=${DB_PASSWORD}"
       ASPNETCORE_LOGGING__LOGLEVEL__DEFAULT: ${LOG_LEVEL}
+
+      JWT__KEY: ${JWT__KEY}
+      JWT__ISSUER: ${JWT__ISSUER}
+      JWT__AUDIENCE: ${JWT__AUDIENCE}
+      JWT__LIFETIME_MINUTES: ${JWT__LIFETIME_MINUTES}
     depends_on:
       postgres:
         condition: service_healthy
     networks:
       - app_network
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:${BACKEND_PORT}/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
 
   frontend:
-    # ... (конфигурация frontend без изменений)
     build:
       context: ./frontend
       dockerfile: Dockerfile
@@ -75,7 +72,7 @@ services:
       - "${NGINX_PORT}:80"
       - "${NGINX_PORT_SSL}:443"
     volumes:
-      # ВАЖНО: монтируем не конфиг, а ШАБЛОН. 
+      # ВАЖНО: монтируем не конфиг, а ШАБЛОН.
       # Dockerfile (CMD) сам создаст из него /etc/nginx/nginx.conf
       - ./nginx/nginx.prod.template.conf:/etc/nginx/templates/nginx.prod.template.conf:ro
       - ./nginx/proxy_params:/etc/nginx/proxy_params:ro

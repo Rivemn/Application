@@ -1,0 +1,35 @@
+<div class="calendar-container">
+  <div class="calendar-header">
+    <button (click)="previousMonth()" class="nav-button">&lt;</button>
+    <span class="month-year">{{ monthName }} {{ year }}</span>
+    <button (click)="nextMonth()" class="nav-button">&gt;</button>
+  </div>
+
+  <table class="calendar-grid">
+    <thead>
+      <tr>
+        @for (weekday of weekdays; track weekday) {
+        <th>{{ weekday }}</th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @for (week of weeks; track $index) {
+      <tr>
+        @for (day of week; track $index) {
+        <td
+          [class.is-today]="isToday(day)"
+          [class.is-selected]="isSelected(day)"
+          [class.has-event]="hasEvent(day)"
+          (click)="selectDay(day)"
+        >
+          @if (day) {
+          <span class="day-number">{{ day.getDate() }}</span>
+          }
+        </td>
+        }
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>

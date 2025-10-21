@@ -1,0 +1,79 @@
+<div class="container discover-events-page">
+  <header class="page-header">
+    <h1>Discover Events</h1>
+    <p>Find and join exciting events happening around you</p>
+  </header>
+
+  <div class="search-bar">
+    <mat-icon class="search-icon">search</mat-icon>
+    <app-form-input
+      placeholder="Search events by title..."
+      [(ngModel)]="searchTerm"
+      (ngModelChange)="onSearchChange()"
+    >
+    </app-form-input>
+  </div>
+
+  <div class="events-grid">
+    @for (event of events; track event.id) {
+    <div class="card event-card">
+      <div class="event-card-content">
+        <h2>{{ event.title }}</h2>
+        <p class="organizer-info">
+          <mat-icon>person</mat-icon>
+          <span
+            >Organized by: <strong>{{ event.organizerName }}</strong></span
+          >
+        </p>
+
+        <p>{{ event.description }}</p>
+
+        <ul class="event-details">
+          <li>
+            <mat-icon>calendar_today</mat-icon>
+            <span>{{ event.start | date : 'MMM d, y' }}</span>
+          </li>
+          <li>
+            <mat-icon>schedule</mat-icon>
+            <span>{{ event.start | date : 'HH:mm' }}</span>
+          </li>
+          <li>
+            <mat-icon>location_on</mat-icon>
+            <span>{{ event.location }}</span>
+          </li>
+          <li>
+            <mat-icon>people</mat-icon>
+            <span>{{ event.participantsCount }} / {{ event.capacity ?? '∞' }} participants</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="event-card-footer">
+        <div class="footer-actions">
+          @if (isOrganizer(event)) {
+          <app-button
+            label="Edit"
+            color="secondary"
+            [routerLink]="['/events', event.id, 'edit']"
+          ></app-button>
+          }
+        </div>
+
+        <div class="footer-participation">
+          @if (isParticipant(event)) {
+          <app-button label="Leave" color="danger" (click)="onLeaveEvent(event.id)"></app-button>
+          } @else {
+          <app-button
+            label="Join Event"
+            color="success"
+            (click)="onJoinEvent(event.id)"
+          ></app-button>
+          }
+        </div>
+      </div>
+    </div>
+    } @empty {
+    <p class="empty-state">No events match your search.</p>
+    }
+  </div>
+</div>

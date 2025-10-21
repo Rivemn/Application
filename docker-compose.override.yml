@@ -2,6 +2,9 @@
 version: "3.9"
 
 services:
+  postgres: # <-- Добавьте этот сервис
+    ports:
+      - "${DB_PORT}:5432" # <-- И его порт
   nginx:
     volumes:
       # 1. Подменяем конфиг на локальный

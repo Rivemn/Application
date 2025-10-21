@@ -1,1 +1,222 @@
-/* You can add global styles to this file, and also import other style files */
+@use './variables' as *;
+// Include theming for Angular Material with `mat.theme()`.
+// This Sass mixin will define CSS variables that are used for styling Angular Material
+// components according to the Material 3 design spec.
+// Learn more about theming and how to use it for your application's
+// custom components at https://material.angular.dev/guide/theming
+@use '@angular/material' as mat;
+
+html {
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$azure-palette,
+        tertiary: mat.$blue-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
+}
+
+body {
+  // Default the application to a light color theme. This can be changed to
+  // `dark` to enable the dark color theme, or to `light dark` to defer to the
+  // user's system settings.
+  color-scheme: light;
+
+  // Set a default background, font and text colors for the application using
+  // Angular Material's system-level CSS variables. Learn more about these
+  // variables at https://material.angular.dev/guide/system-variables
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+
+  // Reset the user agent margin.
+  margin: 0;
+}
+
+/* =========================================
+   2. БАЗОВЫЙ СБРОС И СТИЛИ (BASE & RESET)
+   ========================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 100%; // 1rem = 16px
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: $font-family-sans;
+  font-size: $font-size-base;
+  font-weight: $font-weight-normal;
+  line-height: $line-height-base;
+  color: $text-primary;
+  background-color: $bg-body;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: $primary;
+  text-decoration: none;
+  transition: $transition-base;
+
+  &:hover {
+    color: $primary-dark;
+    text-decoration: underline;
+  }
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* =========================================
+   3. ТИПОГРАФИКА (TYPOGRAPHY)
+   ========================================= */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-bottom: $spacing-base * 0.75;
+  font-weight: $font-weight-bold;
+  line-height: 1.2;
+}
+
+// "My Events", "Discover Events"
+h1 {
+  font-size: 2.25rem; // 36px
+}
+
+// "Tech Conference 2025"
+h2 {
+  font-size: 1.5rem; // 24px
+}
+
+// "Mon", "Tue" в календаре или другие подзаголовки
+h3 {
+  font-size: 1.125rem; // 18px
+}
+
+// "View and manage...", "Annual technology conference..."
+p {
+  margin-bottom: $spacing-base;
+  color: $text-secondary;
+}
+
+/* =========================================
+   4. ОБЩИЕ КЛАССЫ (UTILITIES)
+   ========================================= */
+
+// Контейнер для центрирования контента
+.container {
+  width: 100%;
+  max-width: $container-max-width;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: $spacing-base;
+  padding-right: $spacing-base;
+}
+
+/* =========================================
+   5. ГЛОБАЛЬНЫЕ КОМПОНЕНТЫ (COMPONENTS)
+   ========================================= */
+
+// --- Кнопки (Buttons) ---
+
+// Кнопки-переключатели "Month" / "Week"
+.btn-toggle-group {
+  display: inline-flex;
+  border: 1px solid $border-color;
+  border-radius: $border-radius;
+  overflow: hidden;
+
+  .btn-toggle {
+    background-color: $bg-content;
+    color: $text-secondary;
+    border: none;
+    border-radius: 0;
+    padding: ($spacing-base * 0.5) $spacing-base;
+
+    &:hover {
+      background-color: $bg-body;
+    }
+
+    &.active {
+      background-color: $primary;
+      color: $text-on-primary;
+    }
+
+    // Убираем двойную границу
+    &:not(:first-child) {
+      border-left: 1px solid $border-color;
+    }
+  }
+}
+
+// --- Карточки (Cards) ---
+.card {
+  background-color: $bg-content;
+  border: 1px solid $border-color;
+  border-radius: $border-radius;
+  padding: $spacing-base * 1.5; // 24px
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+}
+
+// --- Поля ввода (Forms) ---
+.form-input {
+  display: block;
+  width: 100%;
+  padding: ($spacing-base * 0.75) $spacing-base; // 12px 16px
+  font-size: $font-size-base;
+  font-family: $font-family-sans;
+  color: $text-primary;
+  background-color: $bg-content;
+  border: 1px solid $border-color;
+  border-radius: $border-radius;
+  transition: $transition-base;
+
+  &::placeholder {
+    color: $text-light;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $primary;
+    box-shadow: 0 0 0 2px rgba($primary, 0.25);
+  }
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}

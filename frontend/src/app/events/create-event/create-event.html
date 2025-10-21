@@ -1,0 +1,100 @@
+<div class="create-event-page">
+  <div class="container">
+    <a (click)="onCancel()" class="back-link">
+      <!-- (click) вместо routerLink для гибкости -->
+      <mat-icon>arrow_back</mat-icon>
+      <span>Back</span>
+    </a>
+
+    <div class="form-card">
+      <div class="form-header">
+        <h1>Create New Event</h1>
+        <p>Fill in the details to create an amazing event</p>
+      </div>
+
+      <form class="event-form" [formGroup]="eventForm" (ngSubmit)="onSubmit()">
+        <!-- Поля формы остаются без изменений -->
+        <app-form-input
+          label="Event Title"
+          placeholder="e.g., Tech Conference 2025"
+          [required]="true"
+          formControlName="title"
+        ></app-form-input>
+        <app-form-input
+          label="Description"
+          type="textarea"
+          placeholder="Describe what makes your event special..."
+          [required]="true"
+          formControlName="description"
+        ></app-form-input>
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Date</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker"
+              formControlName="date"
+              placeholder="dd.mm.yyyy"
+              readonly
+            />
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Time</mat-label>
+            <input matInput type="time" formControlName="time" placeholder="--:--" />
+            <mat-icon matSuffix>schedule</mat-icon>
+          </mat-form-field>
+        </div>
+        <app-form-input
+          label="Location"
+          placeholder="e.g., Convention Center, San Francisco"
+          [required]="true"
+          formControlName="location"
+        ></app-form-input>
+        <app-form-input
+          label="Capacity (optional)"
+          placeholder="Leave empty for unlimited"
+          helpText="Maximum number of participants. Leave empty for unlimited capacity."
+          formControlName="capacity"
+        ></app-form-input>
+        <div class="form-group">
+          <label class="form-label">Visibility</label>
+          <div class="radio-group">
+            <label class="radio-label">
+              <input type="radio" value="public" formControlName="visibility" />
+              <span>Public - Anyone can see and join this event</span>
+            </label>
+            <label class="radio-label">
+              <input type="radio" value="private" formControlName="visibility" />
+              <span>Private - Only invited people can see this event</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Блок для отображения ошибок -->
+        @if (errorMessage) {
+        <div class="form-error-message">
+          <p>{{ errorMessage }}</p>
+        </div>
+        }
+
+        <!-- Кнопки действий -->
+        <div class="form-actions">
+          <app-button
+            type="button"
+            color="secondary"
+            label="Cancel"
+            (click)="onCancel()"
+          ></app-button>
+          <app-button
+            type="submit"
+            color="primary"
+            [label]="isLoading ? 'Creating...' : 'Create Event'"
+            [disabled]="eventForm.invalid || isLoading"
+          ></app-button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

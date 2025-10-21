@@ -1,0 +1,71 @@
+@use '../../../variables' as *; // Убедитесь, что путь к variables.scss верный
+
+.btn {
+  display: inline-block;
+  padding: ($spacing-base * 0.75) ($spacing-base * 1.5);
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
+  line-height: 1.25;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid transparent;
+  border-radius: $border-radius;
+  transition: $transition-base;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.btn-primary {
+  color: $text-on-primary;
+  background-color: $primary;
+
+  &:hover:not(:disabled) {
+    background-color: $primary-dark;
+  }
+}
+
+.btn-success {
+  color: $text-on-primary;
+  background-color: $success;
+
+  &:hover:not(:disabled) {
+    background-color: $success-dark;
+  }
+}
+
+// (ИСПРАВЛЕНО) Убран лишний амперсанд '&'
+.btn-danger {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  color: #fff;
+
+  &:hover:not(:disabled) {
+    background-color: #bb2d3b;
+    border-color: #b02a37;
+  }
+}
+
+.btn-secondary {
+  color: $text-secondary;
+  background-color: $bg-content;
+  border: 1px solid $border-color;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+
+  &:hover:not(:disabled) {
+    color: $text-primary;
+    background-color: $bg-body;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $primary;
+    box-shadow: 0 0 0 2px rgba($primary, 0.25);
+  }
+}
