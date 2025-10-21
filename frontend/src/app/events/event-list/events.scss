@@ -1,4 +1,4 @@
-@use '../../variables' as *;
+@use '../../../variables' as *;
 
 .discover-events-page {
   padding: ($spacing-base * 2) 0;
@@ -21,39 +21,61 @@
       top: 50%;
       transform: translateY(-50%);
       color: $text-light;
-      pointer-events: none; // Иконка не мешает клику на инпут
+      pointer-events: none;
     }
 
-    // Сдвигаем текст в инпуте, чтобы не налезал на иконку
     ::ng-deep .form-input {
       padding-left: 40px;
     }
   }
 }
 
-// Сетка для карточек
 .events-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: $spacing-base * 1.5;
 }
 
-// Стили для карточки
 .event-card {
   display: flex;
   flex-direction: column;
-  justify-content: space-between; // Расталкивает контент и кнопку
+  height: 100%;
 
-  h2 {
-    color: $text-primary;
-    margin-bottom: $spacing-base * 0.5;
+  .event-card-content {
+    flex-grow: 1;
   }
-  p {
-    font-size: 0.95rem;
+
+  .organizer-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: $text-secondary;
+    margin-bottom: 1rem;
+
+    mat-icon {
+      font-size: 18px;
+      height: 18px;
+      width: 18px;
+    }
+
+    strong {
+      color: $text-primary;
+      font-weight: 500;
+    }
+  }
+
+  .event-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-top: 1px solid $border-color;
+    margin-top: auto;
+    gap: 1rem; // Добавляем отступ между блоками кнопок
   }
 }
 
-// Список деталей события (дата, время и т.д.)
 .event-details {
   list-style: none;
   padding: 0;
@@ -79,7 +101,15 @@
   }
 }
 
-// Кнопка в карточке
-app-button ::ng-deep .btn {
-  width: 100%; // Кнопка на всю ширину карточки
+// Стиль для красной кнопки
+// ::ng-deep позволяет стилизовать дочерний компонент
+app-button ::ng-deep .btn-danger {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  color: white;
+
+  &:hover:not(:disabled) {
+    background-color: #c82333;
+    border-color: #bd2130;
+  }
 }

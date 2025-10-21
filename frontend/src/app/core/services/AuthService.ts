@@ -1,21 +1,26 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject, tap } from 'rxjs';
+import { Observable, BehaviorSubject, tap, map } from 'rxjs';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
-import { AuthResponse } from '../models/auth/AuthResponse';
-import { LoginRequest } from '../models/auth/LoginRequest';
-import { RegisterRequest } from '../models/auth/RegisterRequest';
+import { AuthResponse } from '../../models/auth/AuthResponse';
+import { LoginRequest } from '../../models/auth/LoginRequest';
+import { RegisterRequest } from '../../models/auth/RegisterRequest';
+import { environment } from '../../../environments/environment';
+import { AuthResult } from '../../models/auth/AuthResult';
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:5028/api/Auth';
+  private apiUrl = `${environment.apiUrl}/Auth`;
 
-  // Создаем BehaviorSubject для хранения данных о текущем пользователе
   private currentUserSubject = new BehaviorSubject<DecodedToken | null>(null);
-  // Публичный Observable, на который смогут подписываться компоненты
   public currentUser$ = this.currentUserSubject.asObservable();
+
+  public get currentUserId(): string | null {
+    const user = this.currentUserSubject.value;
+    return user ? user.sub : null;
+  }
 
   constructor(private http: HttpClient, private router: Router) {
     this.loadInitialUser();
@@ -26,7 +31,6 @@ export class AuthService {
     if (token) {
       try {
         const decodedToken = jwtDecode<DecodedToken>(token);
-
         if (decodedToken.exp * 1000 > Date.now()) {
           this.currentUserSubject.next(decodedToken);
         } else {
@@ -40,15 +44,23 @@ export class AuthService {
   }
 
   register(data: RegisterRequest): Observable<AuthResponse> {
-    return this.http
-      .post<AuthResponse>(`${this.apiUrl}/register`, data)
-      .pipe(tap((response) => this.handleAuthentication(response.token)));
+    return this.http.post<AuthResponse>(`${this.apiUrl}/register`, data).pipe(
+      tap((response) => {
+        if (response.token) {
+          this.handleAuthentication(response.token);
+        }
+      })
+    );
   }
 
   login(data: LoginRequest): Observable<AuthResponse> {
-    return this.http
-      .post<AuthResponse>(`${this.apiUrl}/login`, data)
-      .pipe(tap((response) => this.handleAuthentication(response.token)));
+    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, data).pipe(
+      tap((response) => {
+        if (response.token) {
+          this.handleAuthentication(response.token);
+        }
+      })
+    );
   }
 
   logout(): void {
@@ -61,6 +73,8 @@ export class AuthService {
     localStorage.setItem('auth_token', token);
     const decodedToken = jwtDecode<DecodedToken>(token);
     this.currentUserSubject.next(decodedToken);
+    this.currentUserSubject.next(decodedToken);
+    setTimeout(() => document.dispatchEvent(new Event('user-updated')));
   }
 
   public getToken(): string | null {

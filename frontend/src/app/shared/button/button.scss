@@ -16,7 +16,6 @@
   border-radius: $border-radius;
   transition: $transition-base;
 
-  // (НОВОЕ) Стили для заблокированного состояния
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
@@ -27,7 +26,6 @@
   color: $text-on-primary;
   background-color: $primary;
 
-  // (ИЗМЕНЕНО) Эффект наведения не работает, если кнопка заблокирована
   &:hover:not(:disabled) {
     background-color: $primary-dark;
   }
@@ -39,6 +37,18 @@
 
   &:hover:not(:disabled) {
     background-color: $success-dark;
+  }
+}
+
+// (ИСПРАВЛЕНО) Убран лишний амперсанд '&'
+.btn-danger {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  color: #fff;
+
+  &:hover:not(:disabled) {
+    background-color: #bb2d3b;
+    border-color: #b02a37;
   }
 }
 

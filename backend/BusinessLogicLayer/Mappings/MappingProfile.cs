@@ -15,7 +15,11 @@ namespace BusinessLogicLayer.Mappings
 							.ForMember(
 								dest => dest.ParticipantsCount,
 								opt => opt.MapFrom(src => src.Participants.Count)
-							);
+							)
+							.ForMember(dest => dest.OrganizerId, opt => opt.MapFrom(src => src.OrganizerId))
+			                .ForMember(dest => dest.OrganizerName, opt => opt.MapFrom(src => src.Organizer.FullName))
+							.ForMember(dest => dest.ParticipantIds,opt => opt.MapFrom(src => src.Participants.Select(p => p.UserId.ToString()))
+				            ); 
 
 			CreateMap<CreateEventDto, Event>();
 			CreateMap<UpdateEventDto, Event>();

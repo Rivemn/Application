@@ -21,16 +21,25 @@ namespace WebAPI.Controllers
 		public async Task<IActionResult> Register([FromBody] RegisterRequestDto dto)
 		{
 			var result = await _authService.RegisterAsync(dto);
-			return Ok(result);
+
+			if (!result.Succeeded)
+				return BadRequest(new { Errors = result.Errors });
+
+			return Ok(result.Response);
 		}
 
 		[HttpPost("login")]
-		public async Task<IActionResult> Login([FromBody] LoginRequestDto dto)
+		public async Task<IActionResult> Login(LoginRequestDto dto)
 		{
 			var result = await _authService.LoginAsync(dto);
-			return Ok(result);
-		}
 
+			if (!result.Succeeded)
+			{
+				return Unauthorized(new { Errors = result.Errors });
+			}
+
+			return Ok(result.Response);
+		}
 		[Authorize]
 		[HttpGet("me")]
 		public IActionResult Me()

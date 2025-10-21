@@ -1,4 +1,4 @@
-@use '../../variables' as *;
+@use '../../../variables' as *;
 
 .my-events-page {
   padding-top: $spacing-base * 2;
@@ -102,4 +102,24 @@
   background-color: $bg-content;
   border: 1px dashed $border-color;
   border-radius: $border-radius;
+}
+// Add these styles to your existing my-events.scss file
+
+.calendar-and-agenda-container {
+  display: flex;
+  gap: 2rem; // Space between calendar and agenda
+  align-items: flex-start;
+}
+
+.calendar-wrapper {
+  // This is the key fix: it prevents the calendar from shrinking.
+  // It will take up 2/3 of the available space.
+  flex: 2;
+  min-width: 0; // A flexbox hack to allow shrinking if the screen is too small
+}
+
+.agenda-wrapper {
+  // The agenda will take up 1/3 of the space.
+  flex: 1;
+  min-width: 0;
 }

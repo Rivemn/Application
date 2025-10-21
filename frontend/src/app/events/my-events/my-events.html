@@ -17,10 +17,6 @@
   } @else {
   <div class="calendar-and-agenda-container">
     <div class="calendar-wrapper">
-      <!-- 
-        FIX: The binding is changed from [events]="allMyEvents" to [events]="calendarEvents".
-        This passes the correctly formatted data to the child component.
-      -->
       <app-calendar [events]="calendarEvents" (dateSelected)="onDateSelected($event)">
       </app-calendar>
     </div>
@@ -29,27 +25,45 @@
       <h2 class="agenda-title">Schedule for {{ selectedDate | date : 'fullDate' }}</h2>
       <div class="agenda-events-list">
         @for (event of eventsForSelectedDay; track event.id) {
+
         <div class="agenda-item">
           <div class="agenda-item-time">{{ event.start | date : 'HH:mm' }}</div>
+
           <div class="agenda-item-details">
             <h3 class="agenda-item-title">{{ event.title }}</h3>
             <p class="agenda-item-location">{{ event.location }}</p>
+
+            @if (isOrganizer(event)) {
+            <span class="organizer-badge">You are the organizer</span>
+            }
           </div>
-          <a class="agenda-item-link" [routerLink]="['/events', event.id]">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
-          </a>
+
+          <div class="agenda-item-actions">
+            @if (isOrganizer(event)) {
+            <app-button
+              label="Edit"
+              color="secondary"
+              [routerLink]="['/events', event.id, 'edit']"
+            ></app-button>
+            } @else {
+
+            <a class="agenda-item-link" [routerLink]="['/events', event.id]">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </a>
+            }
+          </div>
         </div>
         } @empty {
         <div class="empty-agenda">

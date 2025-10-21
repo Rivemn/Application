@@ -4,7 +4,7 @@ using BusinessLogicLayer.Interfaces;
 using DataAccessLayer.Entities;
 using DataAccessLayer.Interfaces;
 using Microsoft.Extensions.Configuration;
-using System.IdentityModel.Tokens.Jwt; 
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
@@ -13,63 +13,72 @@ namespace BusinessLogicLayer.Services
 {
 	public class AuthService : IAuthService
 	{
-		private readonly IUnitOfWork _unitOfWork; 
+		private readonly IUnitOfWork _unitOfWork;
 		private readonly IConfiguration _config;
 		private readonly IMapper _mapper;
 
-		public AuthService(IUnitOfWork unitOfWork, IConfiguration config, IMapper mapper) 
+		public AuthService(IUnitOfWork unitOfWork, IConfiguration config, IMapper mapper)
 		{
 			_unitOfWork = unitOfWork;
 			_config = config;
 			_mapper = mapper;
 		}
 
-		public async Task<AuthResponseDto> RegisterAsync(RegisterRequestDto request)
+		// (ИЗМЕНЕНО) Метод теперь возвращает AuthResultDto
+		public async Task<AuthResultDto> RegisterAsync(RegisterRequestDto request)
 		{
 			var userRepo = (IUserRepository)_unitOfWork.Repository<User>();
 
 			var existing = await userRepo.GetByEmailAsync(request.Email);
 			if (existing != null)
-				throw new InvalidOperationException("User already exists.");
+			{
+				// БЫЛО: throw new InvalidOperationException("User already exists.");
+				// СТАЛО: Возвращаем результат с ошибкой
+				return AuthResultDto.Failure("User with this email already exists.");
+			}
 
 			var user = new User
 			{
-				Id = Guid.NewGuid(), 
+				Id = Guid.NewGuid(),
 				Email = request.Email,
 				FullName = request.FullName,
 				PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password)
 			};
 
 			await userRepo.AddAsync(user);
-			await _unitOfWork.CompleteAsync(); 
+			await _unitOfWork.CompleteAsync();
 
 			var token = GenerateToken(user);
-
-			return new AuthResponseDto
+			var response = new AuthResponseDto
 			{
 				Token = token,
 				ExpiresAt = DateTime.UtcNow.AddMinutes(Convert.ToInt32(_config["Jwt:LifetimeMinutes"])),
 				Email = user.Email
 			};
+
+			// Возвращаем успешный результат, обернутый в AuthResultDto
+			return AuthResultDto.Success(response);
 		}
 
-		public async Task<AuthResponseDto> LoginAsync(LoginRequestDto request)
+		public async Task<AuthResultDto> LoginAsync(LoginRequestDto request)
 		{
-			// Получаем репозиторий из UnitOfWork
 			var userRepo = (IUserRepository)_unitOfWork.Repository<User>();
-
 			var user = await userRepo.GetByEmailAsync(request.Email);
+
 			if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
-				throw new UnauthorizedAccessException("Invalid credentials");
+			{
+				return AuthResultDto.Failure("Invalid credentials");
+			}
 
 			var token = GenerateToken(user);
-
-			return new AuthResponseDto
+			var response = new AuthResponseDto
 			{
 				Token = token,
 				ExpiresAt = DateTime.UtcNow.AddMinutes(Convert.ToInt32(_config["Jwt:LifetimeMinutes"])),
 				Email = user.Email
 			};
+
+			return AuthResultDto.Success(response);
 		}
 
 		private string GenerateToken(User user)
@@ -96,4 +105,3 @@ namespace BusinessLogicLayer.Services
 		}
 	}
 }
-

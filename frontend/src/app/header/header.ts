@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { AuthService } from '../services/AuthService';
+import { AuthService } from '../core/services/AuthService';
 
 @Component({
   selector: 'app-header',
@@ -14,12 +14,21 @@ export class Header {
   userName: string | null = null;
   private authSubscription!: Subscription;
 
-  constructor(public router: Router, private authService: AuthService) {}
+  constructor(
+    public router: Router,
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
-    this.authSubscription = this.authService.currentUser$.subscribe((user) => {
+    this.authSubscription = this.authService.currentUser$.subscribe((user: DecodedToken | null) => {
       this.isAuthenticated = !!user;
       this.userName = user ? user.fullName : null;
+
+      this.cdr.markForCheck();
+    });
+    document.addEventListener('user-updated', () => {
+      this.cdr.detectChanges();
     });
   }
 

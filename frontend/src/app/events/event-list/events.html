@@ -4,10 +4,8 @@
     <p>Find and join exciting events happening around you</p>
   </header>
 
-  <!-- Поиск -->
   <div class="search-bar">
     <mat-icon class="search-icon">search</mat-icon>
-
     <app-form-input
       placeholder="Search events by title..."
       [(ngModel)]="searchTerm"
@@ -17,12 +15,17 @@
   </div>
 
   <div class="events-grid">
-    <!-- Итерируемся по 'events', который теперь является фильтрованным списком -->
     @for (event of events; track event.id) {
-    <!-- track event.id -->
     <div class="card event-card">
       <div class="event-card-content">
         <h2>{{ event.title }}</h2>
+        <p class="organizer-info">
+          <mat-icon>person</mat-icon>
+          <span
+            >Organized by: <strong>{{ event.organizerName }}</strong></span
+          >
+        </p>
+
         <p>{{ event.description }}</p>
 
         <ul class="event-details">
@@ -40,16 +43,36 @@
           </li>
           <li>
             <mat-icon>people</mat-icon>
-
             <span>{{ event.participantsCount }} / {{ event.capacity ?? '∞' }} participants</span>
           </li>
         </ul>
       </div>
 
-      <app-button color="success" label="Join Event" (click)="onJoinEvent(event.id)"> </app-button>
+      <div class="event-card-footer">
+        <div class="footer-actions">
+          @if (isOrganizer(event)) {
+          <app-button
+            label="Edit"
+            color="secondary"
+            [routerLink]="['/events', event.id, 'edit']"
+          ></app-button>
+          }
+        </div>
+
+        <div class="footer-participation">
+          @if (isParticipant(event)) {
+          <app-button label="Leave" color="danger" (click)="onLeaveEvent(event.id)"></app-button>
+          } @else {
+          <app-button
+            label="Join Event"
+            color="success"
+            (click)="onJoinEvent(event.id)"
+          ></app-button>
+          }
+        </div>
+      </div>
     </div>
     } @empty {
-
     <p class="empty-state">No events match your search.</p>
     }
   </div>

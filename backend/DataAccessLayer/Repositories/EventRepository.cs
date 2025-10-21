@@ -13,6 +13,7 @@ namespace DataAccessLayer.Repositories
 		{
 			return await _dbSet
 				.Include(e => e.Participants)
+				.Include(e => e.Organizer)
 				.ToListAsync();
 		}
 
@@ -20,6 +21,7 @@ namespace DataAccessLayer.Repositories
 		{
 			return await _dbSet
 				.Include(e => e.Participants)
+				.Include(e => e.Organizer)
 				.FirstOrDefaultAsync(e => e.Id == id);
 		}
 
@@ -27,10 +29,13 @@ namespace DataAccessLayer.Repositories
 		{
 			return await _dbSet
 				.Include(e => e.Participants)
+				.Include(e => e.Organizer)
 				.Where(e =>
-					e.Participants.Any(p => p.UserId == userId)
+					e.Participants.Any(p => p.UserId == userId) || e.OrganizerId == userId
 				)
 				.ToListAsync();
 		}
+
 	}
 }
+

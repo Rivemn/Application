@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { AuthService } from '../services/AuthService';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '../core/services/AuthService';
 
 @Component({
   selector: 'app-auth',
@@ -13,13 +13,28 @@ export class Auth implements OnInit {
   isLoginView = true;
   loginForm!: FormGroup;
   registerForm!: FormGroup;
-
   isLoading = false;
   errorMessage: string | null = null;
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {}
+  // 2. Внедряем ActivatedRoute в конструктор
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router,
+    private cdr: ChangeDetectorRef,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
+    this.route.queryParams.subscribe((params) => {
+      if (params['mode'] === 'register') {
+        this.isLoginView = false;
+      } else {
+        this.isLoginView = true;
+      }
+      this.cdr.markForCheck();
+    });
+
     this.initLoginForm();
     this.initRegisterForm();
   }
@@ -48,44 +63,49 @@ export class Auth implements OnInit {
 
   toggleView(): void {
     this.isLoginView = !this.isLoginView;
-    this.errorMessage = null; // Сбрасываем ошибку при переключении
+    this.errorMessage = null;
+
+    const mode = this.isLoginView ? null : 'register';
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { mode: mode },
+      queryParamsHandling: 'merge',
+    });
   }
 
   onLoginSubmit(): void {
-    if (this.loginForm.invalid) {
-      return;
-    }
+    if (this.loginForm.invalid) return;
     this.isLoading = true;
     this.errorMessage = null;
 
     this.authService.login(this.loginForm.value).subscribe({
       next: () => {
         this.isLoading = false;
-        this.router.navigate(['/events']); // Перенаправляем на страницу ивентов после успеха
+        this.router.navigate(['/events']);
       },
       error: (err) => {
         this.isLoading = false;
-        this.errorMessage = err.error?.message || 'Invalid credentials. Please try again.';
+        this.errorMessage = err.error?.Errors?.[0] || 'Invalid credentials. Please try again.';
+        this.cdr.markForCheck();
       },
     });
   }
 
   onRegisterSubmit(): void {
-    if (this.registerForm.invalid) {
-      return;
-    }
+    if (this.registerForm.invalid) return;
     this.isLoading = true;
     this.errorMessage = null;
 
     this.authService.register(this.registerForm.value).subscribe({
       next: () => {
         this.isLoading = false;
-        this.router.navigate(['/events']); // Перенаправляем на страницу ивентов после успеха
+        this.router.navigate(['/events']);
       },
       error: (err) => {
         this.isLoading = false;
         this.errorMessage =
-          err.error?.message || 'Registration failed. The email may already be in use.';
+          err.error?.Errors?.[0] || 'Registration failed. The email may already be in use.';
+        this.cdr.markForCheck();
       },
     });
   }

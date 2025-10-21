@@ -7,4 +7,8 @@ export interface EventDto {
   location: string;
   capacity: number | null;
   participantsCount: number;
+  organizerId: string;
+  organizerName: string;
+
+  participantIds: string[];
 }

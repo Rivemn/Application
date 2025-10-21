@@ -43,17 +43,10 @@ export class FormInput implements ControlValueAccessor {
     this.disabled = isDisabled;
   }
 
-  /**
-   * (ИЗМЕНЕНО)
-   * Метод теперь принимает весь объект события (Event).
-   */
   public onValueChange(event: Event): void {
-    // Явно приводим тип target к HTMLInputElement
     const inputElement = event.target as HTMLInputElement;
-    // Безопасно получаем значение
     this.value = inputElement.value;
 
-    // Уведомляем Angular об изменениях
     this.onChange(this.value);
     this.onTouched();
   }

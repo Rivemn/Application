@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { EventService } from '../services/EventService';
-import { EventDto } from '../models/EventDto';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { EventService } from '../../core/services/EventService';
+import { EventDto } from '../../models/EventDto';
+import { AuthService } from '../../core/services/AuthService';
 
 // This is the data structure your calendar component expects.
 interface CalendarEvent {
@@ -13,25 +14,26 @@ interface CalendarEvent {
   standalone: false,
   templateUrl: './my-events.html',
   styleUrls: ['./my-events.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyEvents implements OnInit {
-  // Stores the original, unmodified data from the backend
   public allMyEvents: EventDto[] = [];
-
-  // This new array will hold the transformed data for the calendar
   public calendarEvents: CalendarEvent[] = [];
-
-  // Stores events filtered for the currently selected day to display in the agenda
   public eventsForSelectedDay: EventDto[] = [];
   public selectedDate: Date = new Date();
-
   public isLoading = true;
   public error: string | null = null;
+  public currentUserId: string | null = null;
 
-  constructor(private eventService: EventService) {}
+  constructor(
+    private eventService: EventService,
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.selectedDate.setHours(0, 0, 0, 0);
+    this.currentUserId = this.authService.currentUserId;
     this.loadMyEvents();
   }
 
@@ -42,21 +44,21 @@ export class MyEvents implements OnInit {
     this.eventService.getMyEvents().subscribe({
       next: (data) => {
         this.allMyEvents = data;
-
-        // Transform the backend data into the format the calendar needs.
-        // We map each EventDto to a CalendarEvent, renaming 'start' to 'date'.
         this.calendarEvents = this.allMyEvents.map((event) => ({
           title: event.title,
-          date: new Date(event.start), // Ensure 'start' is a Date object
+          date: new Date(event.start),
         }));
-
         this.filterEventsForDate(this.selectedDate);
         this.isLoading = false;
+
+        this.cdr.markForCheck();
       },
       error: (err) => {
         console.error('Failed to load my events', err);
         this.error = 'Could not load your events. Please try again.';
         this.isLoading = false;
+
+        this.cdr.markForCheck();
       },
     });
   }
@@ -75,5 +77,9 @@ export class MyEvents implements OnInit {
         eventDate.getDate() === date.getDate()
       );
     });
+  }
+
+  public isOrganizer(event: EventDto): boolean {
+    return this.currentUserId != null && event.organizerId === this.currentUserId;
   }
 }

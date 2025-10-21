@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CreateEventDto } from '../models/CreateEventDto';
+import { CreateEventDto } from '../../models/CreateEventDto';
 import { Router } from '@angular/router';
-import { EventService } from '../services/EventService';
+import { EventService } from '../../core/services/EventService';
 
 @Component({
   selector: 'app-create-event',

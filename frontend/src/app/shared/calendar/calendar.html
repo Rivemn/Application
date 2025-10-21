@@ -1,75 +1,35 @@
-<!-- Вся верстка календаря, включая контролы, переезжает сюда -->
-<div class="calendar-wrapper">
-  <!-- Контролы календаря -->
-  <div class="calendar-controls">
-    <div class="month-navigation">
-      <button mat-icon-button (click)="navigate(-1)">
-        <mat-icon>chevron_left</mat-icon>
-      </button>
-      <h2 class="month-display">{{ currentDate | date : 'MMMM y' }}</h2>
-      <button mat-icon-button (click)="navigate(1)">
-        <mat-icon>chevron_right</mat-icon>
-      </button>
-    </div>
-    <mat-button-toggle-group [value]="viewMode" (valueChange)="setViewMode($event)">
-      <mat-button-toggle value="month">Month</mat-button-toggle>
-      <mat-button-toggle value="week">Week</mat-button-toggle>
-    </mat-button-toggle-group>
+<div class="calendar-container">
+  <div class="calendar-header">
+    <button (click)="previousMonth()" class="nav-button">&lt;</button>
+    <span class="month-year">{{ monthName }} {{ year }}</span>
+    <button (click)="nextMonth()" class="nav-button">&gt;</button>
   </div>
 
-  <!-- Контейнер для видов -->
-  <div class="custom-calendar-container">
-    @if (viewMode === 'month') {
-    <!-- Вид "Месяц" -->
-    <div class="month-view">
-      <!-- ... (верстка month-view как раньше) ... -->
-      <div class="day-names">
-        @for (day of ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']; track day) {
-        <div>{{ day }}</div>
+  <table class="calendar-grid">
+    <thead>
+      <tr>
+        @for (weekday of weekdays; track weekday) {
+        <th>{{ weekday }}</th>
         }
-      </div>
-      <div class="days-grid">
-        @for (week of monthDays; track week) { @for (day of week; track day.date) {
-        <div
-          class="day-cell"
-          [class.not-current-month]="!day.isCurrentMonth"
-          [class.selected]="day.isSelected"
-          [class.today]="isToday(day.date)"
-          (click)="onDayClick(day)"
+      </tr>
+    </thead>
+    <tbody>
+      @for (week of weeks; track $index) {
+      <tr>
+        @for (day of week; track $index) {
+        <td
+          [class.is-today]="isToday(day)"
+          [class.is-selected]="isSelected(day)"
+          [class.has-event]="hasEvent(day)"
+          (click)="selectDay(day)"
         >
-          <span class="day-number">{{ day.date | date : 'd' }}</span>
-          @if (getEventForDate(day.date); as event) {
-          <div class="event-chip">{{ event.title }}</div>
+          @if (day) {
+          <span class="day-number">{{ day.getDate() }}</span>
           }
-        </div>
-        } }
-      </div>
-    </div>
-    } @else {
-    <!-- Вид "Неделя" -->
-    <div class="week-view">
-      <!-- ... (верстка week-view как раньше) ... -->
-      @for (day of weekDays; track day.date) {
-      <div
-        class="day-card"
-        [class.selected]="day.isSelected"
-        [class.today]="isToday(day.date)"
-        (click)="onDayClick(day)"
-      >
-        <div class="day-card-header">
-          <span class="day-name">{{ day.date | date : 'EEE' }}</span>
-          <span class="day-number">{{ day.date | date : 'd' }}</span>
-        </div>
-        <div class="day-card-body">
-          @if (getEventForDate(day.date); as event) {
-          <div class="event-chip">{{ event.date | date : 'HH:mm' }} - {{ event.title }}</div>
-          } @else {
-          <span class="no-events">No events</span>
-          }
-        </div>
-      </div>
+        </td>
+        }
+      </tr>
       }
-    </div>
-    }
-  </div>
+    </tbody>
+  </table>
 </div>

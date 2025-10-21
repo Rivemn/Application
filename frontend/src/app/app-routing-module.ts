@@ -1,19 +1,18 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { Events } from './events/events';
-import { MyEvents } from './my-events/my-events';
-import { CreateEvent } from './create-event/create-event';
-import { EventDetails } from './event-details/event-details';
+import { Events } from './events/event-list/events';
+import { MyEvents } from './events/my-events/my-events';
+import { CreateEvent } from './events/create-event/create-event';
 import { Auth } from './auth/auth';
 
 const routes: Routes = [
-  { path: 'event-detail/:id', component: EventDetails },
+  { path: '', redirectTo: '/events', pathMatch: 'full' },
   { path: 'events', component: Events },
   { path: 'create-event', component: CreateEvent },
   { path: 'my-events', component: MyEvents },
   { path: 'login', component: Auth },
   { path: 'register', component: Auth },
-  { path: '', redirectTo: '/coworking-list', pathMatch: 'full' },
+  { path: '**', redirectTo: '/events' },
 ];
 
 @NgModule({
