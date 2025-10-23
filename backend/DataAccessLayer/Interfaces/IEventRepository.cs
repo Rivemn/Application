@@ -7,7 +7,7 @@ namespace DataAccessLayer.Interfaces
 	{
 		Task<IEnumerable<Event>> GetAllWithParticipantsAsync();
 		Task<Event?> GetByIdWithParticipantsAsync(Guid id);
-
 		Task<IEnumerable<Event>> GetEventsForUserAsync(Guid userId);
+		Task<int> GetParticipantCountAsync(Guid eventId);
 	}
 }

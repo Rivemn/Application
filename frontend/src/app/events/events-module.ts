@@ -11,9 +11,10 @@ import { CreateEvent } from './create-event/create-event';
 import { MyEvents } from './my-events/my-events';
 import { SharedModule } from '../shared/shared-module';
 import { Events } from './event-list/events';
+import { EditEvent } from './edit-event/edit-event';
 
 @NgModule({
-  declarations: [Events, MyEvents, CreateEvent],
+  declarations: [Events, MyEvents, CreateEvent, EditEvent],
   imports: [
     SharedModule,
     FormsModule,

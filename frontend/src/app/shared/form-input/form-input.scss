@@ -1,5 +1,5 @@
-/* Использует .form-input из global.scss */
-@use '../../../variables' as *;
+@use 'variables' as *;
+
 .form-group {
   margin-bottom: $spacing-base * 1.5;
 }

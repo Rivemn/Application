@@ -11,8 +11,8 @@ namespace DataAccessLayer.Repositories
 
 		public async Task<IEnumerable<Event>> GetAllWithParticipantsAsync()
 		{
+
 			return await _dbSet
-				.Include(e => e.Participants)
 				.Include(e => e.Organizer)
 				.ToListAsync();
 		}
@@ -28,7 +28,6 @@ namespace DataAccessLayer.Repositories
 		public async Task<IEnumerable<Event>> GetEventsForUserAsync(Guid userId)
 		{
 			return await _dbSet
-				.Include(e => e.Participants)
 				.Include(e => e.Organizer)
 				.Where(e =>
 					e.Participants.Any(p => p.UserId == userId) || e.OrganizerId == userId
@@ -36,6 +35,10 @@ namespace DataAccessLayer.Repositories
 				.ToListAsync();
 		}
 
+		public async Task<int> GetParticipantCountAsync(Guid eventId)
+		{
+			return await _context.Set<EventParticipant>()
+								 .CountAsync(p => p.EventId == eventId);
+		}
 	}
 }
-

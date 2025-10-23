@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Auth } from './auth';
+import { EditEvent } from './edit-event';
 
-describe('Auth', () => {
-  let component: Auth;
-  let fixture: ComponentFixture<Auth>;
+describe('EditEvent', () => {
+  let component: EditEvent;
+  let fixture: ComponentFixture<EditEvent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [Auth]
+      declarations: [EditEvent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(Auth);
+    fixture = TestBed.createComponent(EditEvent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

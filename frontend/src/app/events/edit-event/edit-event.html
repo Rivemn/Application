@@ -7,18 +7,22 @@
 
     <div class="form-card">
       <div class="form-header">
-        <h1>Create New Event</h1>
-        <p>Fill in the details to create an amazing event</p>
+        <h1>Edit Event</h1>
+        <p>Update the details of your event</p>
       </div>
 
+      @if (isLoading && !eventData) {
+      <div class="loading-state">Loading event details...</div>
+      } @else if (eventData) {
+
       <app-event-form
-        submitButtonText="Create Event"
+        submitButtonText="Save Changes"
         [isLoading]="isLoading"
+        [initialData]="eventData"
         (formSubmit)="handleFormSubmit($event)"
         (formCancel)="onCancel()"
       ></app-event-form>
-
-      @if (errorMessage) {
+      } @if (errorMessage) {
       <div class="form-error-message">
         <p>{{ errorMessage }}</p>
       </div>

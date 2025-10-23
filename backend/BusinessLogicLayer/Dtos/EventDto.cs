@@ -11,6 +11,9 @@
 		public string Location { get; set; } = string.Empty;
 
 		public int? Capacity { get; set; }
+
+		public bool IsPublic { get; set; }
+
 		public int ParticipantsCount { get; set; }
 
 		public Guid OrganizerId { get; set; }

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { EventDto } from '../../models/EventDto';
 import { CreateEventDto } from '../../models/CreateEventDto';
 import { environment } from '../../../environments/environment';
+import { UpdateEventDto } from '../../models/UpdateEventDto';
 
 @Injectable({
   providedIn: 'root',
@@ -30,5 +31,9 @@ export class EventService {
   }
   createEvent(eventData: CreateEventDto): Observable<EventDto> {
     return this.http.post<EventDto>(this.apiUrl, eventData);
+  }
+
+  updateEvent(id: string, eventData: UpdateEventDto): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}`, eventData);
   }
 }

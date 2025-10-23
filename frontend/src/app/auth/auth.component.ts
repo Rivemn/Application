@@ -1,15 +1,15 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from '../core/services/AuthService';
+import { AuthService } from '../core/services/auth.service';
 
 @Component({
   selector: 'app-auth',
   standalone: false,
-  templateUrl: './auth.html',
-  styleUrl: './auth.scss',
+  templateUrl: './auth.component.html',
+  styleUrl: './auth.component.scss',
 })
-export class Auth implements OnInit {
+export class AuthComponent implements OnInit {
   isLoginView = true;
   loginForm!: FormGroup;
   registerForm!: FormGroup;

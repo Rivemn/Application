@@ -6,6 +6,8 @@ export interface EventDto {
   end: Date | null;
   location: string;
   capacity: number | null;
+  isPublic: boolean;
+
   participantsCount: number;
   organizerId: string;
   organizerName: string;

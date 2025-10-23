@@ -1,4 +1,7 @@
-﻿using BusinessLogicLayer.Interfaces;
+﻿using AutoMapper;
+using BusinessLogicLayer.Common;
+using BusinessLogicLayer.Dtos;
+using BusinessLogicLayer.Interfaces;
 using DataAccessLayer.Entities;
 using DataAccessLayer.Interfaces;
 
@@ -7,52 +10,108 @@ namespace BusinessLogicLayer.Services
 {
 	public class EventService : IEventService
 	{
-
 		private readonly IUnitOfWork _unitOfWork;
+		private readonly IMapper _mapper; 
 
-		public EventService(IUnitOfWork unitOfWork)
+
+		public EventService(IUnitOfWork unitOfWork, IMapper mapper)
 		{
 			_unitOfWork = unitOfWork;
+			_mapper = mapper; 
 		}
 
-		public async Task<Event> CreateAsync(Event ev)
+
+		public async Task<Result<EventDto>> CreateAsync(CreateEventDto dto, Guid organizerId)
 		{
-			await _unitOfWork.Repository<Event>().AddAsync(ev);
+			var entity = _mapper.Map<Event>(dto);
+			entity.OrganizerId = organizerId;
+
+			await _unitOfWork.Repository<Event>().AddAsync(entity);
 			await _unitOfWork.CompleteAsync();
-			return ev;
+
+
+			var createdDto = _mapper.Map<EventDto>(entity);
+
+			return Result.Success(createdDto);
 		}
 
-		public async Task DeleteAsync(Guid id)
+		public async Task<Result> DeleteAsync(Guid id, Guid currentUserId)
 		{
 			var repo = _unitOfWork.Repository<Event>();
+			var ev = await repo.GetByIdAsync(id); 
 
-			var ev = await repo.GetByIdAsync(id);
-			if (ev != null)
+			if (ev == null)
 			{
-				repo.Remove(ev);
-				await _unitOfWork.CompleteAsync();
+				// Подія не знайдена
+				return Result.Failure("Event not found.", EventErrorCodes.EventNotFound);
 			}
-		}
 
-		public Task<IEnumerable<Event>> GetAllAsync()
-		{
-			var repo = (IEventRepository)_unitOfWork.Repository<Event>();
-			return repo.GetAllWithParticipantsAsync();
-		}
+			// Перевірка прав: чи є поточний користувач організатором
+			if (ev.OrganizerId != currentUserId)
+			{
+				// Немає прав на видалення
+				return Result.Failure("You are not authorized to delete this event.", EventErrorCodes.Forbidden);
+			}
 
-		public Task<Event?> GetByIdAsync(Guid id)
-		{
-			var repo = (IEventRepository)_unitOfWork.Repository<Event>();
-			return repo.GetByIdWithParticipantsAsync(id);
-		}
-
-
-		public async Task UpdateAsync(Event ev)
-		{
-			_unitOfWork.Repository<Event>().Update(ev);
+			repo.Remove(ev);
 			await _unitOfWork.CompleteAsync();
+			return Result.Success(); // Успішне видалення
 		}
-		public async Task JoinEventAsync(Guid eventId, Guid userId)
+
+
+		public async Task<IEnumerable<EventDto>> GetAllAsync()
+		{
+			var repo = (IEventRepository)_unitOfWork.Repository<Event>();
+			var events = await repo.GetAllWithParticipantsAsync(); 
+																  
+			return _mapper.Map<IEnumerable<EventDto>>(events);
+		}
+
+		public async Task<EventDto?> GetByIdAsync(Guid id)
+		{
+			var repo = (IEventRepository)_unitOfWork.Repository<Event>();
+			var ev = await repo.GetByIdWithParticipantsAsync(id); 
+			if (ev == null) return null;
+
+			return _mapper.Map<EventDto>(ev);
+		}
+
+		public async Task<Result> UpdateAsync(Guid id, UpdateEventDto dto, Guid currentUserId)
+		{
+			var repo = _unitOfWork.Repository<Event>();
+			// Отримуємо сутність Event для оновлення
+			var entity = await repo.GetByIdAsync(id);
+
+			if (entity == null)
+			{
+				// Подія не знайдена
+				return Result.Failure("Event not found.", EventErrorCodes.EventNotFound);
+			}
+
+			// Перевірка прав: чи є поточний користувач організатором
+			if (entity.OrganizerId != currentUserId)
+			{
+				// Немає прав на оновлення
+				return Result.Failure("You are not authorized to update this event.", EventErrorCodes.Forbidden);
+			}
+
+			_mapper.Map(dto, entity); // Оновлюємо властивості сутності з DTO
+			repo.Update(entity); // Позначаємо сутність як змінену
+			await _unitOfWork.CompleteAsync();
+
+			return Result.Success(); // Успішне оновлення
+		}
+
+		public async Task<IEnumerable<EventDto>> GetMyEventsAsync(Guid userId)
+		{
+			var repo = (IEventRepository)_unitOfWork.Repository<Event>();
+			var events = await repo.GetEventsForUserAsync(userId); 
+
+			return _mapper.Map<IEnumerable<EventDto>>(events);
+		}
+
+
+		public async Task<Result> JoinEventAsync(Guid eventId, Guid userId)
 		{
 			var eventRepo = (IEventRepository)_unitOfWork.Repository<Event>();
 			var participantRepo = _unitOfWork.Repository<EventParticipant>();
@@ -60,13 +119,15 @@ namespace BusinessLogicLayer.Services
 			var eventToJoin = await eventRepo.GetByIdWithParticipantsAsync(eventId);
 			if (eventToJoin == null)
 			{
-				throw new KeyNotFoundException("Event not found.");
+
+				return Result.Failure("Event not found.", EventErrorCodes.EventNotFound);
 			}
 
 			if (eventToJoin.Capacity.HasValue &&
 				eventToJoin.Participants.Count >= eventToJoin.Capacity.Value)
 			{
-				throw new InvalidOperationException("Event is full.");
+
+				return Result.Failure("Event is full.", EventErrorCodes.EventFull);
 			}
 
 			var existingParticipation = await participantRepo.FindAsync(
@@ -75,7 +136,8 @@ namespace BusinessLogicLayer.Services
 
 			if (existingParticipation.Any())
 			{
-				throw new InvalidOperationException("You have already joined this event.");
+
+				return Result.Failure("You have already joined this event.", EventErrorCodes.AlreadyJoined);
 			}
 
 			var participation = new EventParticipant
@@ -86,9 +148,12 @@ namespace BusinessLogicLayer.Services
 
 			await participantRepo.AddAsync(participation);
 			await _unitOfWork.CompleteAsync();
+
+			return Result.Success();
 		}
 
-		public async Task LeaveEventAsync(Guid eventId, Guid userId)
+
+		public async Task<Result> LeaveEventAsync(Guid eventId, Guid userId)
 		{
 			var participantRepo = _unitOfWork.Repository<EventParticipant>();
 
@@ -100,19 +165,14 @@ namespace BusinessLogicLayer.Services
 
 			if (participationToRemove == null)
 			{
-				throw new KeyNotFoundException("You are not participating in this event.");
+
+				return Result.Failure("You are not participating in this event.", EventErrorCodes.NotParticipant);
 			}
 
 			participantRepo.Remove(participationToRemove);
 			await _unitOfWork.CompleteAsync();
-		}
 
-		public Task<IEnumerable<Event>> GetMyEventsAsync(Guid userId)
-		{
-
-			var repo = (IEventRepository)_unitOfWork.Repository<Event>();
-
-			return repo.GetEventsForUserAsync(userId);
+			return Result.Success();
 		}
 	}
 }

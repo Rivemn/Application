@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { EventService } from '../../core/services/EventService';
+import { EventService } from '../services/event.service';
 import { EventDto } from '../../models/EventDto';
-import { AuthService } from '../../core/services/AuthService';
+import { AuthService } from '../../core/services/auth.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -27,26 +27,22 @@ export class Events implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Подписываемся на изменения пользователя, чтобы всегда иметь актуальный ID
     this.authSubscription = this.authService.currentUser$.subscribe((user: DecodedToken | null) => {
       this.currentUserId = user ? user.sub : null;
-      // Загружаем события только после того, как получили информацию о пользователе
+
       this.loadEvents();
       this.cdr.markForCheck();
     });
   }
 
   ngOnDestroy(): void {
-    // Отписываемся при уничтожении компонента, чтобы избежать утечек памяти
     this.authSubscription?.unsubscribe();
   }
 
-  // Метод-помощник для проверки, является ли текущий пользователь организатором
   public isOrganizer(event: EventDto): boolean {
     return this.currentUserId != null && event.organizerId === this.currentUserId;
   }
 
-  // Метод-помощник для проверки, участвует ли текущий пользователь в событии
   public isParticipant(event: EventDto): boolean {
     if (!this.currentUserId || !event.participantIds) {
       return false;

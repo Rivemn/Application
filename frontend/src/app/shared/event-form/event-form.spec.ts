@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Header } from './header';
+import { EventForm } from './event-form';
 
-describe('Header', () => {
-  let component: Header;
-  let fixture: ComponentFixture<Header>;
+describe('EventForm', () => {
+  let component: EventForm;
+  let fixture: ComponentFixture<EventForm>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [Header]
+      declarations: [EventForm]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(Header);
+    fixture = TestBed.createComponent(EventForm);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

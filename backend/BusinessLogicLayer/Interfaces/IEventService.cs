@@ -1,4 +1,6 @@
-﻿using DataAccessLayer.Entities;
+﻿using BusinessLogicLayer.Common;
+using BusinessLogicLayer.Dtos;
+using DataAccessLayer.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,15 +11,14 @@ namespace BusinessLogicLayer.Interfaces
 {
 	public interface IEventService
 	{
-		Task<IEnumerable<Event>> GetAllAsync();
-		Task<Event?> GetByIdAsync(Guid id);
-		Task<Event> CreateAsync(Event ev);
-		Task UpdateAsync(Event ev);
-		Task DeleteAsync(Guid id);
 
-		Task JoinEventAsync(Guid eventId, Guid userId);
-		Task LeaveEventAsync(Guid eventId, Guid userId);
-
-		Task<IEnumerable<Event>> GetMyEventsAsync(Guid userId);
+		Task<Result<EventDto>> CreateAsync(CreateEventDto dto, Guid organizerId);
+		Task<Result> DeleteAsync(Guid id, Guid currentUserId);
+		Task<IEnumerable<EventDto>> GetAllAsync(); 
+		Task<EventDto?> GetByIdAsync(Guid id); 
+		Task<Result> UpdateAsync(Guid id, UpdateEventDto dto, Guid currentUserId); 
+		Task<Result> JoinEventAsync(Guid eventId, Guid userId);
+		Task<Result> LeaveEventAsync(Guid eventId, Guid userId);
+		Task<IEnumerable<EventDto>> GetMyEventsAsync(Guid userId);
 	}
 }

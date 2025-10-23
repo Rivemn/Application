@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BusinessLogicLayer.Common;
 using BusinessLogicLayer.Dtos;
 using BusinessLogicLayer.Interfaces;
 using DataAccessLayer.Entities;
@@ -43,83 +44,111 @@ namespace WebAPI.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Create([FromBody] CreateEventDto dto)
 		{
-			var organizerIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-			if (string.IsNullOrEmpty(organizerIdStr))
+			var organizerId = GetCurrentUserId();
+			if (organizerId == null)
 			{
-				return Unauthorized("User ID not found in token.");
+				return Unauthorized("User ID not found in token."); // 401 Unauthorized
 			}
 
-			var organizerId = Guid.Parse(organizerIdStr);
+			var result = await _eventService.CreateAsync(dto, organizerId.Value);
 
-			var entity = _mapper.Map<Event>(dto);
+			if (!result.Succeeded || result.Data == null)
+			{
+				// Якщо сервіс повернув помилку (наприклад, валідація DTO провалилася в сервісі)
+				return BadRequest(new { Errors = result.Errors }); // 400 Bad Request
+			}
 
-			entity.OrganizerId = organizerId;
-
-
-			var created = await _eventService.CreateAsync(entity);
-
-			return CreatedAtAction(nameof(Get), new { id = created.Id }, _mapper.Map<EventDto>(created));
+			// 201 Created з посиланням на створений ресурс та самим ресурсом
+			return CreatedAtAction(nameof(Get), new { id = result.Data.Id }, result.Data);
 		}
+
+
 		[HttpPut("{id:guid}")]
 		public async Task<IActionResult> Update(Guid id, [FromBody] UpdateEventDto dto)
 		{
-			var entity = await _eventService.GetByIdAsync(id);
-			if (entity == null)
+			var currentUserId = GetCurrentUserId();
+			if (currentUserId == null) return Unauthorized(); // 401 Unauthorized
+
+			var result = await _eventService.UpdateAsync(id, dto, currentUserId.Value);
+
+			if (!result.Succeeded)
 			{
-				return NotFound();
+				return result.ErrorCode switch
+				{
+					EventErrorCodes.EventNotFound => NotFound(new { Errors = result.Errors }), // 404 Not Found
+					EventErrorCodes.Forbidden => Forbid(), // 403 Forbidden
+					_ => BadRequest(new { Errors = result.Errors }) // 400 Bad Request
+				};
 			}
 
-			_mapper.Map(dto, entity);
-
-			await _eventService.UpdateAsync(entity);
-			return NoContent();
+			return NoContent(); // 204 No Content
 		}
+
+
 		[HttpDelete("{id:guid}")]
 		public async Task<IActionResult> Delete(Guid id)
 		{
-			await _eventService.DeleteAsync(id);
+			var currentUserId = GetCurrentUserId();
+			if (currentUserId == null) return Unauthorized(); // 401 Unauthorized
+
+			var result = await _eventService.DeleteAsync(id, currentUserId.Value);
+
+			if (!result.Succeeded)
+			{
+				return result.ErrorCode switch
+				{
+					EventErrorCodes.EventNotFound => NotFound(new { Errors = result.Errors }), // 404 Not Found
+					EventErrorCodes.Forbidden => Forbid(), // 403 Forbidden
+					_ => BadRequest(new { Errors = result.Errors }) // 400 Bad Request
+				};
+			}
+
 			return NoContent();
 		}
-		[HttpPost("{id:guid}/join")] 
+		[HttpPost("{id:guid}/join")]
 		public async Task<IActionResult> JoinEvent(Guid id)
 		{
 			var userId = GetCurrentUserId();
 			if (userId == null) return Unauthorized();
 
-			try
-			{
-				await _eventService.JoinEventAsync(id, userId.Value);
+			var result = await _eventService.JoinEventAsync(id, userId.Value);
 
-				return Ok(new { message = "Successfully joined event." });
-			}
-			catch (KeyNotFoundException ex)
+			if (!result.Succeeded)
 			{
-				return NotFound(new { error = ex.Message });
+
+				return result.ErrorCode switch
+				{
+					EventErrorCodes.EventNotFound => NotFound(new { Errors = result.Errors }),
+					EventErrorCodes.EventFull => Conflict(new { Errors = result.Errors }),
+					EventErrorCodes.AlreadyJoined => Conflict(new { Errors = result.Errors }),
+					_ => BadRequest(new { Errors = result.Errors }) 
+				};
 			}
-			catch (InvalidOperationException ex)
-			{
-				return BadRequest(new { error = ex.Message });
-			}
+
+			return Ok(new { message = "Successfully joined event." }); 
 		}
+
 
 		[HttpDelete("{id:guid}/leave")]
 		public async Task<IActionResult> LeaveEvent(Guid id)
 		{
 			var userId = GetCurrentUserId();
-			if (userId == null) return Unauthorized();
+			if (userId == null) return Unauthorized(); 
 
-			try
+			var result = await _eventService.LeaveEventAsync(id, userId.Value);
+
+			if (!result.Succeeded)
 			{
-				await _eventService.LeaveEventAsync(id, userId.Value);
-				return NoContent();
+				return result.ErrorCode switch
+				{
+
+					EventErrorCodes.NotParticipant => NotFound(new { Errors = result.Errors }),
+					_ => BadRequest(new { Errors = result.Errors })
+				};
 			}
-			catch (KeyNotFoundException ex)
-			{
-				return NotFound(new { error = ex.Message });
-			}
+
+			return NoContent();
 		}
-
 		[HttpGet("my-events")]
 		public async Task<IActionResult> GetMyEvents()
 		{

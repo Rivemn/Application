@@ -1,15 +1,15 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { AuthService } from '../core/services/AuthService';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-header',
   standalone: false,
-  templateUrl: './header.html',
-  styleUrl: './header.scss',
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.scss'],
 })
-export class Header {
+export class HeaderComponent {
   isAuthenticated = false;
   userName: string | null = null;
   private authSubscription!: Subscription;

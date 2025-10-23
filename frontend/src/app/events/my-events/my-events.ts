@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { EventService } from '../../core/services/EventService';
+import { EventService } from '../services/event.service';
 import { EventDto } from '../../models/EventDto';
-import { AuthService } from '../../core/services/AuthService';
+import { AuthService } from '../../core/services/auth.service';
 
 // This is the data structure your calendar component expects.
 interface CalendarEvent {

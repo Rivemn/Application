@@ -1,0 +1,153 @@
+<!-- Этот HTML почти идентичен вашему create-event.html, -->
+<!-- но обернут в <form> и использует локальные методы -->
+<form class="event-form" [formGroup]="eventForm" (ngSubmit)="onFormSubmit()">
+  <div>
+    <app-form-input
+      label="Event Title"
+      placeholder="e.g., Tech Conference 2025"
+      [required]="true"
+      formControlName="title"
+    ></app-form-input>
+    <!-- Повідомлення про помилки для Title -->
+    @if (title?.invalid && (title?.dirty || title?.touched)) {
+    <div class="field-error-message">
+      @if (title?.hasError('required')) {
+      <span>Title is required.</span>
+      } @if (title?.hasError('maxlength')) {
+      <span>Title cannot exceed 200 characters.</span>
+      }
+    </div>
+    }
+  </div>
+
+  <!-- Description -->
+  <div>
+    <app-form-input
+      label="Description"
+      type="textarea"
+      placeholder="Describe what makes your event special..."
+      [required]="true"
+      formControlName="description"
+    ></app-form-input>
+    <!-- Повідомлення про помилки для Description -->
+    @if (description?.invalid && (description?.dirty || description?.touched)) {
+    <div class="field-error-message">
+      @if (description?.hasError('required')) {
+      <span>Description is required.</span>
+      }
+    </div>
+    }
+  </div>
+
+  <!-- Date & Time Row -->
+  <div class="form-row">
+    <mat-form-field appearance="outline">
+      <mat-label>Date</mat-label>
+      <input
+        matInput
+        [matDatepicker]="picker"
+        formControlName="date"
+        placeholder="dd.mm.yyyy"
+        readonly
+        [min]="minDate"
+      />
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-error>
+        @if (date?.hasError('required')) {
+        <span>Date is required.</span>
+        } @if (date?.hasError('matDatepickerMin')) {
+        <span>Date cannot be in the past.</span>
+        } @if ( !date?.hasError('required') && eventForm.hasError('dateTimeInPast') &&
+        (date?.touched || time?.touched) ) {
+        <span>Selected date and time cannot be in the past.</span>
+        }
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Time</mat-label>
+      <input matInput type="time" formControlName="time" placeholder="--:--" />
+      <mat-icon matSuffix>schedule</mat-icon>
+      <mat-error>
+        @if (date?.hasError('required')) {
+        <span>Date is required.</span>
+        } @if (date?.hasError('matDatepickerMin')) {
+        <span>Date cannot be in the past.</span>
+        } @if ( !date?.hasError('required') && eventForm.hasError('dateTimeInPast') &&
+        (date?.touched || time?.touched) ) {
+        <span>Selected date and time cannot be in the past.</span>
+        }
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+  <div>
+    <app-form-input
+      label="Location"
+      placeholder="e.g., Convention Center, San Francisco"
+      [required]="true"
+      formControlName="location"
+    ></app-form-input>
+
+    @if (location?.invalid && (location?.dirty || location?.touched)) {
+    <div class="field-error-message">
+      @if (location?.hasError('required')) {
+      <span>Location is required.</span>
+      } @if (location?.hasError('maxlength')) {
+      <span>Location cannot exceed 300 characters.</span>
+      }
+    </div>
+    }
+  </div>
+
+  <!-- Capacity -->
+  <div>
+    <app-form-input
+      label="Capacity (optional)"
+      placeholder="Leave empty for unlimited"
+      helpText="Maximum number of participants. Leave empty for unlimited capacity."
+      formControlName="capacity"
+      type="number"
+      min="1"
+    ></app-form-input>
+    @if (capacity?.invalid && (capacity?.dirty || capacity?.touched)) {
+    <div class="field-error-message">
+      @if (capacity?.hasError('min')) {
+      <span>Capacity must be a positive number.</span>
+      }
+    </div>
+    }
+  </div>
+
+  <!-- Visibility (зазвичай не потребує валідації помилок тут) -->
+  <div class="form-group">
+    <label class="form-label">Visibility</label>
+    <div class="radio-group">
+      <label class="radio-label">
+        <input type="radio" value="public" formControlName="visibility" />
+        <span>Public - Anyone can see and join this event</span>
+      </label>
+      <label class="radio-label">
+        <input type="radio" value="private" formControlName="visibility" />
+        <span>Private - Only invited people can see this event</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Кнопки дій тепер використовують @Output -->
+  <div class="form-actions">
+    <app-button
+      type="button"
+      color="secondary"
+      label="Cancel"
+      (click)="onCancelClick()"
+    ></app-button>
+    <app-button
+      type="submit"
+      color="primary"
+      [label]="isLoading ? 'Processing...' : submitButtonText"
+      [disabled]="eventForm.invalid || isLoading"
+    ></app-button>
+  </div>
+</form>

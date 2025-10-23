@@ -1,104 +1,149 @@
-@use '../../../variables' as *; // Убедитесь, что путь верный
+@use 'variables' as *;
 
-:host {
-  display: block;
-  width: 100%;
-}
-
-.calendar-container {
-  background-color: #fff;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+.calendar {
+  background-color: $bg-content;
+  border: 1px solid $border-color;
+  border-radius: $border-radius;
+  padding: $spacing-base * 1.5;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+  overflow: hidden; // Запобігає виходу контенту за межі
 }
 
 .calendar-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  justify-content: space-between;
+  margin-bottom: $spacing-base * 1.5;
+  padding-bottom: $spacing-base;
+  border-bottom: 1px solid $border-color;
+}
 
-  .month-year {
-    font-size: 1.25rem;
-    font-weight: 600;
+.month-year {
+  font-size: 1.125rem; // 18px
+  font-weight: $font-weight-medium;
+  flex-grow: 1; // Займає вільний простір
+  text-align: center;
+  margin: 0 $spacing-base;
+}
+
+.nav-button,
+.today-button {
+  // Додаємо today-button до спільних стилів
+  background: none;
+  border: none;
+  padding: $spacing-base * 0.5;
+  cursor: pointer;
+  color: $text-secondary;
+  border-radius: $border-radius * 0.5;
+  display: inline-flex; // Для вирівнювання іконки
+  align-items: center;
+  justify-content: center;
+  transition: $transition-base;
+
+  &:hover {
+    background-color: rgba($primary, 0.1);
+    color: $primary;
   }
 
-  .nav-button {
-    background: none;
-    border: 1px solid #e2e8f0;
-    border-radius: 50%;
-    width: 32px;
-    height: 32px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #4a5568;
-    transition: background-color 0.2s, color 0.2s;
-
-    &:hover {
-      background-color: #f7fafc;
-      color: #2d3748;
-    }
+  mat-icon {
+    font-size: 1.5rem; // Розмір іконки стрілок
+    line-height: 1;
   }
 }
 
+// === НОВІ СТИЛІ ДЛЯ КНОПКИ TODAY ===
+.today-button {
+  margin-left: $spacing-base; // Відступ від стрілки
+  font-size: 0.875rem; // 14px
+  font-weight: $font-weight-medium;
+  padding: ($spacing-base * 0.5) $spacing-base;
+  border: 1px solid $border-color;
+  &:hover {
+    border-color: $primary;
+  }
+}
+// ==================================
+
 .calendar-grid {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed; /* Prevents columns from resizing based on content */
+  display: grid;
+  grid-template-columns: repeat(7, 1fr); // 7 колонок однакової ширини
+  gap: 1px; // Тонкі лінії між комірками
+  background-color: $border-color; // Колір ліній
+  border: 1px solid $border-color; // Рамка навколо сітки
+}
 
-  th {
-    text-align: center;
-    font-weight: 500;
-    font-size: 0.75rem;
-    color: #718096;
-    padding-bottom: 10px;
+.weekday,
+.day-cell {
+  background-color: $bg-content;
+  text-align: center;
+  padding: $spacing-base * 0.75;
+  font-size: 0.875rem; // 14px
+  position: relative; // Для позиціонування індикатора подій
+}
+
+.weekday {
+  font-weight: $font-weight-medium;
+  color: $text-secondary;
+  padding-bottom: $spacing-base * 0.5;
+}
+
+.day-cell {
+  min-height: 80px; // Мінімальна висота комірки дня
+  color: $text-secondary; // Колір днів не поточного місяця
+  cursor: default; // Стандартний курсор
+
+  &.current-month {
+    color: $text-primary; // Колір днів поточного місяця
+    cursor: pointer; // Курсор-палець
+    &:hover {
+      background-color: $bg-body; // Легке підсвічування при наведенні
+    }
   }
 
-  td {
-    text-align: center;
-    padding: 4px;
-    height: 60px; /* Give cells a fixed height */
-    vertical-align: middle;
-    border-radius: 50%;
-    position: relative;
-    cursor: pointer;
-    transition: background-color 0.2s;
-
+  &.today {
     .day-number {
-      z-index: 1;
-      position: relative;
-    }
-
-    &.is-today {
-      color: #3b82f6;
-      font-weight: 700;
-    }
-
-    &.is-selected {
-      background-color: #3b82f6;
-      color: #fff;
-    }
-
-    &:hover:not(.is-selected) {
-      background-color: #f1f5f9;
-    }
-
-    &.has-event::after {
-      content: '';
-      position: absolute;
-      bottom: 8px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 5px;
-      height: 5px;
+      background-color: $primary;
+      color: $text-on-primary;
       border-radius: 50%;
-      background-color: #3b82f6;
-    }
-
-    &.is-selected.has-event::after {
-      background-color: #fff;
+      width: 24px;
+      height: 24px;
+      line-height: 24px;
+      display: inline-block;
+      font-weight: $font-weight-medium;
     }
   }
+
+  &.selected {
+    background-color: rgba($primary, 0.1);
+    box-shadow: inset 0 0 0 2px $primary; // Рамка для вибраного дня
+    .day-number {
+      font-weight: $font-weight-bold;
+    }
+  }
+
+  // === НОВИЙ СТИЛЬ ДЛЯ ІНДИКАТОРА ===
+  .event-indicator {
+    position: absolute;
+    bottom: 6px; // Розташування знизу комірки
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    background-color: $success; // Колір індикатора (можна змінити)
+    border-radius: 50%;
+  }
+  // Додатково: трохи зменшимо номер дня, щоб він не накладався на крапку
+  .day-number {
+    display: block; // Щоб крапка була під номером
+    margin-bottom: 8px; // Відступ між номером та можливою крапкою
+  }
+  // ===============================
+}
+
+// Стилі для стану завантаження та помилки (можна додати)
+.loading-indicator,
+.error-message {
+  padding: $spacing-base * 2;
+  text-align: center;
+  color: $text-secondary;
 }

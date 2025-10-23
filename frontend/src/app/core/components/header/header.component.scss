@@ -1,5 +1,4 @@
-// Убедитесь, что путь к вашим переменным указан верно
-@use '../../variables' as *;
+@use 'variables' as *;
 
 .app-header {
   background-color: $bg-content;
