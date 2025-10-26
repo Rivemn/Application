@@ -11,7 +11,8 @@ import { MatDatepicker, MatDatepickerModule } from '@angular/material/datepicker
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
-
+import { MatChipsModule } from '@angular/material/chips';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 @NgModule({
   declarations: [Button, FormInput, Calendar, EventForm],
   imports: [
@@ -25,6 +26,8 @@ import { MatIconModule } from '@angular/material/icon';
     MatDatepickerModule,
     MatNativeDateModule,
     MatIconModule,
+    MatChipsModule,
+    MatAutocompleteModule,
   ],
   exports: [Button, FormInput, Calendar, EventForm, CommonModule, FormsModule, RouterModule],
 })

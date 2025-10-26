@@ -6,4 +6,5 @@ export interface UpdateEventDto {
   location: string;
   capacity: number | null;
   isPublic: boolean;
+  tagNames: string[];
 }

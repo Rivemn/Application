@@ -1,8 +1,6 @@
 ﻿using BusinessLogicLayer.Interfaces;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
 using BusinessLogicLayer.Dtos;
 
 namespace WebAPI.Controllers

@@ -1,3 +1,4 @@
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -6,11 +7,22 @@ import {
   Input,
   Output,
 } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
+import {
+  FormGroup,
+  FormBuilder,
+  Validators,
+  AbstractControl,
+  FormArray,
+  FormControl,
+  ValidationErrors,
+  ValidatorFn,
+} from '@angular/forms';
 import { EventDto } from '../../models/EventDto';
 import { EventFormData } from '../../models/EventFormData';
 import { dateTimeInFutureValidator } from '../Validators/date-time.validator';
-import { debounceTime, merge, Subscription, tap } from 'rxjs';
+import { debounceTime, merge, Observable, Subscription, tap } from 'rxjs';
+import { MatChipInputEvent } from '@angular/material/chips';
+import { TagDto } from '../../models/TagDto';
 @Component({
   selector: 'app-event-form',
   standalone: false,
@@ -22,40 +34,56 @@ export class EventForm {
   eventForm!: FormGroup;
   public readonly minDate: Date;
 
+  // --- Властивості для тегів ---
+  separatorKeysCodes: number[] = [ENTER]; // Клавіші для додавання тегу
+  tagCtrl = new FormControl(''); // Окремий FormControl для поля вводу тегів
+  selectedTags: string[] = []; // Список введених/вибраних імен тегів
+  maxTags = 5; // Максимальна кількість тегів
+  // ВИДАЛЕНО: filteredTags, allTags
+  // --------------------------------
+
   @Input() initialData: EventDto | null = null;
   @Input() isLoading = false;
   @Input() submitButtonText = 'Submit';
-  private statusChangesSubscription: Subscription | undefined;
+
   @Output() formSubmit = new EventEmitter<EventFormData>();
   @Output() formCancel = new EventEmitter<void>();
 
-  private valueChangesSubscription: Subscription | undefined; // Для відписки
+  // ВИДАЛЕНО: @ViewChild('tagInput') - більше не потрібен для очищення автодоповнення
+
+  private statusChangesSubscription: Subscription | undefined;
+  // ВИДАЛЕНО: private tagService = inject(TagService);
 
   constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef) {
     this.minDate = new Date();
-    // Обнуляємо години/хвилини для minDate, щоб сьогоднішній день був доступний
     this.minDate.setHours(0, 0, 0, 0);
+    // ВИДАЛЕНО: Налаштування filteredTags
   }
 
   ngOnInit(): void {
+    // ВИДАЛЕНО: loadAllTags();
     this.initForm();
     if (this.initialData) {
       this.populateForm(this.initialData);
     }
 
-    // Залишаємо підписку на statusChanges, вона все ще корисна для оновлення
-    // при зміні валідності (наприклад, коли dateTimeInFutureValidator спрацьовує)
-    const controls = Object.values(this.eventForm.controls);
-    this.statusChangesSubscription = merge(
-      this.eventForm.statusChanges,
-      ...controls.map((control) => control.statusChanges)
-    )
+    const controlsToWatch = [
+      'title',
+      'description',
+      'date',
+      'time',
+      'location',
+      'capacity',
+      'tags',
+    ]; // Додаємо 'tags' FormArray
+    const controlStatusChanges = controlsToWatch
+      .map((name) => this.eventForm.get(name)?.statusChanges)
+      .filter((obs): obs is Observable<any> => !!obs);
+
+    this.statusChangesSubscription = merge(this.eventForm.statusChanges, ...controlStatusChanges)
       .pipe(
         debounceTime(0),
-        tap(() => {
-          this.cdr.markForCheck();
-          // console.log('Status changed, markForCheck called.'); // Можна залишити для відладки
-        })
+        tap(() => this.cdr.markForCheck())
       )
       .subscribe();
   }
@@ -64,7 +92,6 @@ export class EventForm {
     this.statusChangesSubscription?.unsubscribe();
   }
 
-  // Гетери для доступу до контролів у шаблоні
   get title(): AbstractControl | null {
     return this.eventForm.get('title');
   }
@@ -84,27 +111,28 @@ export class EventForm {
     return this.eventForm.get('capacity');
   }
 
-  // Ініціалізація форми з валідаторами
+  get tagsArray(): FormArray | null {
+    return this.eventForm.get('tags') as FormArray | null;
+  }
+
   private initForm(): void {
     this.eventForm = this.fb.group(
       {
         title: ['', [Validators.required, Validators.maxLength(200)]],
-        description: ['', Validators.required],
-        date: [null, Validators.required],
+        description: ['', [Validators.required]],
+        date: ['', Validators.required],
         time: ['', Validators.required],
         location: ['', [Validators.required, Validators.maxLength(300)]],
-        // Валідатор min(1) для capacity
         capacity: ['', [Validators.min(1)]],
         visibility: ['public', Validators.required],
+        tags: this.fb.array([], [this.maxTagsValidator(this.maxTags)]),
       },
       {
-        // Застосовуємо кастомний валідатор до FormGroup
         validators: dateTimeInFutureValidator(),
       }
     );
   }
 
-  // Заповнення форми початковими даними (при редагуванні)
   private populateForm(event: EventDto): void {
     const startDate = new Date(event.start);
     this.eventForm.patchValue({
@@ -116,20 +144,25 @@ export class EventForm {
       capacity: event.capacity,
       visibility: event.isPublic ? 'public' : 'private',
     });
-    // Після заповнення форми повідомляємо Angular
+
+    if (event.tags && event.tags.length > 0) {
+      this.selectedTags = event.tags.map((tag: TagDto) => tag.name);
+
+      this.updateTagsFormArray();
+    }
+
     this.cdr.markForCheck();
   }
 
-  // Обробка відправки форми
   onFormSubmit(): void {
+    // Перевіряємо валідність основної форми та FormArray тегів
     if (this.eventForm.invalid) {
-      this.eventForm.markAllAsTouched(); // Позначаємо ВСІ поля як touched
-      // Повідомляємо Angular, щоб помилки відобразились
+      this.eventForm.markAllAsTouched();
+      // Опціонально: встановити фокус на перше невалідние поле
       this.cdr.markForCheck();
       return;
     }
-
-    // Готуємо дані для відправки родителю
+    // ... підготовка formData ...
     const formValue = this.eventForm.value;
     const startDate = new Date(formValue.date);
     const [hours, minutes] = formValue.time.split(':');
@@ -139,19 +172,94 @@ export class EventForm {
       title: formValue.title,
       description: formValue.description,
       start: startDate.toISOString(),
-      end: null, // Логіку для End Date можна додати пізніше
+      end: null,
       location: formValue.location,
-      // Перетворюємо capacity на число або null
       capacity: formValue.capacity ? parseInt(formValue.capacity, 10) : null,
       isPublic: formValue.visibility === 'public',
+      tagNames: this.selectedTags, // <-- Надсилаємо список імен
     };
-
-    // Відправляємо подію родителю
     this.formSubmit.emit(formData);
   }
 
-  // Обробка натискання кнопки "Cancel"
   onCancelClick(): void {
     this.formCancel.emit();
+  }
+  triggerUpdate(): void {
+    this.cdr.markForCheck();
+  }
+
+  // --- Методи для роботи з тегами (Chips) ---
+
+  // СПРОЩЕНО: Обробляє тільки введення вручну
+  addTag(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+
+    // Перевіряємо, чи є значення, чи тег вже додано і чи не перевищено ліміт
+    if (
+      value &&
+      !this.selectedTags.some((t) => t.toLowerCase() === value.toLowerCase()) &&
+      this.selectedTags.length < this.maxTags
+    ) {
+      this.selectedTags.push(value); // Додаємо до списку
+      this.updateTagsFormArray(); // Синхронізуємо FormArray
+    }
+
+    // Очищуємо поле вводу
+    event.chipInput!.clear();
+    // Скидаємо значення FormControl (для автодоповнення, якщо воно було)
+    this.tagCtrl.setValue(null);
+  }
+
+  // Видалення тегу (залишається без змін)
+  removeTag(tag: string): void {
+    const index = this.selectedTags.indexOf(tag);
+    if (index >= 0) {
+      this.selectedTags.splice(index, 1);
+      this.updateTagsFormArray();
+    }
+  }
+
+  // Синхронізує FormArray з selectedTags (залишається без змін)
+  private updateTagsFormArray(): void {
+    const tagsFormArray = this.tagsArray; // Використовуємо гетер
+    if (tagsFormArray) {
+      tagsFormArray.clear();
+      this.selectedTags.forEach((tag) => tagsFormArray.push(this.fb.control(tag)));
+      tagsFormArray.updateValueAndValidity(); // Оновлюємо статус валідності
+      this.cdr.markForCheck(); // Повідомляємо про зміни
+    }
+  }
+
+  // Кастомний валідатор для максимальної кількості тегів (залишається без змін)
+  private maxTagsValidator(max: number): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      // Перевіряємо, чи control дійсно є FormArray
+      if (!(control instanceof FormArray)) {
+        return null; // Або кинути помилку, якщо очікується тільки FormArray
+      }
+      return control.length > max
+        ? { maxTagsExceeded: { max: max, actual: control.length } }
+        : null;
+    };
+  }
+  onTagKeyDown(event: KeyboardEvent, input: HTMLInputElement): void {
+    const key = event.key;
+
+    if (key === ',' || key === '‚' || key === '„') {
+      event.preventDefault();
+
+      const value = input.value.trim();
+      if (
+        value &&
+        !this.selectedTags.some((t) => t.toLowerCase() === value.toLowerCase()) &&
+        this.selectedTags.length < this.maxTags
+      ) {
+        this.selectedTags.push(value);
+        this.updateTagsFormArray();
+      }
+
+      input.value = '';
+      this.tagCtrl.setValue(null);
+    }
   }
 }

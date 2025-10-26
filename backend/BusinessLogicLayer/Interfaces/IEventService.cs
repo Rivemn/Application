@@ -14,8 +14,8 @@ namespace BusinessLogicLayer.Interfaces
 
 		Task<Result<EventDto>> CreateAsync(CreateEventDto dto, Guid organizerId);
 		Task<Result> DeleteAsync(Guid id, Guid currentUserId);
-		Task<IEnumerable<EventDto>> GetAllAsync(); 
-		Task<EventDto?> GetByIdAsync(Guid id); 
+		Task<IEnumerable<EventDto>> GetAllAsync(List<Guid>? tagIds = null);
+		Task<EventDto?> GetByIdAsync(Guid id);
 		Task<Result> UpdateAsync(Guid id, UpdateEventDto dto, Guid currentUserId); 
 		Task<Result> JoinEventAsync(Guid eventId, Guid userId);
 		Task<Result> LeaveEventAsync(Guid eventId, Guid userId);

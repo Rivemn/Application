@@ -113,3 +113,30 @@ app-button ::ng-deep .btn-danger {
     border-color: #bd2130;
   }
 }
+
+.chip-list-field {
+  width: 100%; // Займає всю ширину
+
+  // Стилізація самих чіпсів
+  .mat-mdc-chip-set {
+    margin-bottom: $spacing-base * 0.5;
+  }
+  .mat-mdc-chip {
+    background-color: rgba($primary, 0.1);
+    color: $primary;
+    font-weight: $font-weight-medium;
+  }
+  .mat-mdc-chip .mat-mdc-chip-remove {
+    // Стиль для іконки видалення
+    color: $primary;
+    opacity: 0.7;
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  // Стилізація поля вводу всередині mat-form-field
+  input[matInput] {
+    margin-top: $spacing-base * 0.5; // Невеликий відступ зверху
+  }
+}

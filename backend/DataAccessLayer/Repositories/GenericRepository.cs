@@ -15,10 +15,12 @@ namespace DataAccessLayer.Repositories
             _context = context;
             _dbSet = _context.Set<T>();
         }
+
 		public async Task<T?> GetByIdAsync(object id)
 		{
 			return await _dbSet.FindAsync(id);
 		}
+
 		public async Task<IEnumerable<T>> GetAllAsync()
         {
             return await _dbSet.ToListAsync();

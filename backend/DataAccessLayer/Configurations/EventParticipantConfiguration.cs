@@ -17,13 +17,13 @@ public class EventParticipantConfiguration : IEntityTypeConfiguration<EventParti
 			.HasOne(ep => ep.User)
 			.WithMany(u => u.EventParticipations)
 			.HasForeignKey(ep => ep.UserId)
-			.OnDelete(DeleteBehavior.Cascade); // При удалении пользователя, удаляем его участие
+			.OnDelete(DeleteBehavior.Cascade); 
 
-		// 3. Связь с Event
+
 		builder
 			.HasOne(ep => ep.Event)
 			.WithMany(e => e.Participants)
 			.HasForeignKey(ep => ep.EventId)
-			.OnDelete(DeleteBehavior.Cascade); // При удалении события, удаляем всех участников
+			.OnDelete(DeleteBehavior.Cascade); 
 	}
 }

@@ -12,6 +12,7 @@ import { MyEvents } from './my-events/my-events';
 import { SharedModule } from '../shared/shared-module';
 import { Events } from './event-list/events';
 import { EditEvent } from './edit-event/edit-event';
+import { MatChipListbox, MatChipOption } from '@angular/material/chips';
 
 @NgModule({
   declarations: [Events, MyEvents, CreateEvent, EditEvent],
@@ -25,6 +26,8 @@ import { EditEvent } from './edit-event/edit-event';
     MatInputModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatChipListbox,
+    MatChipOption,
   ],
 })
 export class EventsModule {}

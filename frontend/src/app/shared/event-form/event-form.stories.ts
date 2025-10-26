@@ -7,64 +7,105 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatNativeDateModule } from '@angular/material/core';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
 import { Button } from '../button/button';
 import { FormInput } from '../form-input/form-input';
 import { EventForm } from './event-form';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatChipsModule } from '@angular/material/chips';
+import { CommonModule } from '@angular/common';
+import { EventDto } from '../../models/EventDto';
+
+// Тестові дані для режиму редагування
+const initialEventData: EventDto = {
+  id: 'test-id-123',
+  title: 'Existing Event Title',
+  description: 'This is the description from initial data.',
+  start: new Date(2025, 10, 15, 14, 30),
+  end: null,
+  location: 'Online',
+  capacity: 50,
+  participantsCount: 10,
+  organizerId: 'org-id-456',
+  organizerName: 'Organizer Name',
+  isPublic: false,
+  participantIds: [],
+  tags: [],
+};
 
 const meta: Meta<EventForm> = {
-  title: 'Forms/EventForm',
+  title: 'Shared/EventForm',
   component: EventForm,
+
   decorators: [
     moduleMetadata({
-      declarations: [FormInput, Button],
       imports: [
+        CommonModule,
         ReactiveFormsModule,
         MatFormFieldModule,
         MatInputModule,
         MatDatepickerModule,
         MatNativeDateModule,
         MatIconModule,
-        BrowserAnimationsModule,
+        MatChipsModule,
+        MatAutocompleteModule,
       ],
+      declarations: [EventForm, Button, FormInput],
+      providers: [provideAnimations()],
     }),
   ],
-  parameters: {
-    layout: 'padded',
+
+  argTypes: {
+    initialData: { control: 'object' },
+    isLoading: { control: 'boolean' },
+    submitButtonText: { control: 'text' },
+    formSubmit: { action: 'formSubmit' }, // <-- Цього достатньо
+    formCancel: { action: 'formCancel' }, // <-- Цього достатньо
   },
+  // --- ВИПРАВЛЕНО: Видалено виклики action() з args ---
+  args: {
+    isLoading: false,
+    initialData: null,
+    // formSubmit: action('formSubmit'), // <-- Видалено
+    // formCancel: action('formCancel'), // <-- Видалено
+  },
+  // ------------------------------------------------
 };
 
 export default meta;
 type Story = StoryObj<EventForm>;
 
-// Базовая история с пустой формой
-export const Default: Story = {
+export const CreateMode: Story = {
   args: {
     submitButtonText: 'Create Event',
-    isLoading: false,
   },
 };
 
-// История с загрузкой
-export const Loading: Story = {
+export const EditMode: Story = {
   args: {
-    submitButtonText: 'Creating Event...',
-    isLoading: true,
+    initialData: initialEventData, // Тепер ці дані валідні
+    submitButtonText: 'Save Changes',
   },
 };
 
-// История с предзаполненными данными для редактирования
+export const LoadingState: Story = {
+  args: {
+    isLoading: true,
+    submitButtonText: 'Processing...',
+  },
+};
+
 export const WithInitialData: Story = {
   args: {
     submitButtonText: 'Update Event',
     isLoading: false,
     initialData: {
+      // Додаємо 'tags'
       id: '1',
       title: 'Tech Conference 2025',
-      description:
-        'Annual technology conference featuring the latest innovations in software development.',
+      description: 'Annual technology conference...',
       start: new Date('2025-03-20T14:00:00.000Z'),
-      end: new Date('2025-03-20T16:00:00.000Z'),
+      end: null,
       location: 'Convention Center, San Francisco',
       isPublic: true,
       organizerId: 'user1',
@@ -72,41 +113,22 @@ export const WithInitialData: Story = {
       participantsCount: 0,
       organizerName: '',
       participantIds: [],
+      tags: [], // <-- ВИПРАВЛЕНО
     },
   },
 };
 
-// История с ошибками валидации
-export const WithValidationErrors: Story = {
-  args: {
-    submitButtonText: 'Create Event',
-    isLoading: false,
-  },
-  play: async ({ canvasElement, fixture }) => {
-    // Эта функция выполнится после рендера компонента
-    // Можно добавить логику для демонстрации ошибок валидации
-    const form = canvasElement.querySelector('form');
-    const submitButton = canvasElement.querySelector('button[type="submit"]') as HTMLButtonElement;
-
-    if (submitButton) {
-      submitButton.click(); // Вызовет валидацию формы
-    }
-  },
-};
-
-// История с приватным событием
-// История с приватным событием
 export const PrivateEvent: Story = {
   args: {
     submitButtonText: 'Create Private Event',
-
     isLoading: false,
     initialData: {
+      // Додаємо 'tags'
       id: '2',
       title: 'Private Team Meeting',
-      description: 'Quarterly planning meeting for the development team.',
+      description: 'Quarterly planning meeting...',
       start: new Date('2025-03-20T14:00:00.000Z'),
-      end: new Date('2025-03-20T16:00:00.000Z'),
+      end: null,
       location: 'Conference Room A',
       capacity: 20,
       isPublic: false,
@@ -114,6 +136,7 @@ export const PrivateEvent: Story = {
       participantsCount: 0,
       organizerName: '',
       participantIds: [],
+      tags: [], // <-- ВИПРАВЛЕНО
     },
   },
 };

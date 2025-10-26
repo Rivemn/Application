@@ -34,5 +34,7 @@ namespace DataAccessLayer.Entities
 		public User Organizer { get; set; } = null!;
 
 		public ICollection<EventParticipant> Participants { get; set; } = new List<EventParticipant>();
+
+		public ICollection<EventTag> EventTags { get; set; } = new List<EventTag>();
 	}
 }

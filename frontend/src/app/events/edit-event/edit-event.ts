@@ -17,6 +17,7 @@ export class EditEvent {
   private eventId!: string;
   eventData: EventDto | null = null;
 
+  private returnUrl: string = '/my-events';
   constructor(
     private eventService: EventService,
     private router: Router,
@@ -61,18 +62,17 @@ export class EditEvent {
       next: () => {
         this.isLoading = false;
         alert('Event updated successfully!');
-        this.router.navigate(['/my-events']);
+        this.router.navigate([this.returnUrl]);
       },
       error: (err) => {
         this.isLoading = false;
         this.errorMessage = err.error?.error || 'An unexpected error occurred.';
         console.error('Event update failed', err);
-        // Здесь можно добавить cdr.markForCheck(), если используете OnPush
       },
     });
   }
 
   onCancel(): void {
-    this.router.navigate(['/my-events']);
+    this.router.navigate([this.returnUrl]);
   }
 }

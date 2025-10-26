@@ -44,6 +44,7 @@
               label="Edit"
               color="secondary"
               [routerLink]="['/events', event.id, 'edit']"
+              [queryParams]="{ returnUrl: '/my-events' }"
             ></app-button>
             } @else {
 

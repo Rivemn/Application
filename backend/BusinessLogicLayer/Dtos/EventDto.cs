@@ -20,5 +20,7 @@
 		public string OrganizerName { get; set; } = string.Empty;
 
 		public List<string> ParticipantIds { get; set; } = new();
+
+		public List<TagDto> Tags { get; set; } = new();
 	}
 }

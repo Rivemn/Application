@@ -26,6 +26,13 @@ namespace WebAPI.Validators
 			RuleFor(x => x.Capacity)
 				.GreaterThan(0).WithMessage("Capacity must be a positive number.")
 				.When(x => x.Capacity.HasValue);
+
+			RuleFor(x => x.TagNames)
+				.Must(tags => tags == null || tags.Count <= 5)
+				.WithMessage("An event cannot have more than 5 tags.");
+
+			RuleForEach(x => x.TagNames)
+				.MaximumLength(15).WithMessage("Tag name must not exceed 15 characters.");
 		}
 	}
 }

@@ -37,6 +37,7 @@
     "@ngrx/entity": "^20.1.0",
     "@ngrx/store": "^20.1.0",
     "@ngrx/store-devtools": "^20.1.0",
+    "@storybook/addon-actions": "^9.0.8",
     "angular-material-event-calendar": "^0.1.4",
     "jwt-decode": "^4.0.0",
     "luxon": "^3.7.2",

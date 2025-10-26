@@ -19,12 +19,12 @@ interface CalendarDay {
   styleUrl: './calendar.scss',
 })
 export class Calendar {
-  @Input() events: CalendarEvent[] = []; // Список подій
-  @Output() dateSelected = new EventEmitter<Date>(); // Подія при виборі дати
+  @Input() events: CalendarEvent[] = [];
+  @Output() dateSelected = new EventEmitter<Date>();
 
-  public currentDate: Date = new Date(); // Поточна дата для відображення місяця
-  public selectedDate: Date = new Date(); // Вибрана дата
-  public daysInMonth: CalendarDay[] = []; // Масив днів для відображення
+  public currentDate: Date = new Date();
+  public selectedDate: Date = new Date();
+  public daysInMonth: CalendarDay[] = [];
   public monthNames = [
     'January',
     'February',
@@ -42,12 +42,10 @@ export class Calendar {
   public weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   ngOnInit(): void {
-    // Встановлюємо вибрану дату на початок дня (без часу)
     this.selectedDate.setHours(0, 0, 0, 0);
     this.generateCalendar();
   }
 
-  // Відстежуємо зміни у вхідному масиві подій
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['events'] && !changes['events'].firstChange) {
       this.generateCalendar();
@@ -62,23 +60,22 @@ export class Calendar {
     const firstDayOfMonth = new Date(year, month, 1);
     const lastDayOfMonth = new Date(year, month + 1, 0);
 
-    const firstDayWeekday = firstDayOfMonth.getDay(); // 0 = Sun, 1 = Mon, ...
+    const firstDayWeekday = firstDayOfMonth.getDay();
     const totalDays = lastDayOfMonth.getDate();
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    // Додаємо дні попереднього місяця
     for (let i = 0; i < firstDayWeekday; i++) {
       const date = new Date(year, month, 1 - (firstDayWeekday - i));
-      date.setHours(0, 0, 0, 0); // Нормалізуємо дату
+      date.setHours(0, 0, 0, 0);
       this.daysInMonth.push({
         date: date,
         dayOfMonth: date.getDate(),
         isCurrentMonth: false,
         isToday: false,
         isSelected: false,
-        hasEvents: this.isEventDay(date), // Перевіряємо наявність подій
+        hasEvents: this.isEventDay(date),
       });
     }
 
@@ -110,7 +107,6 @@ export class Calendar {
         hasEvents: this.isEventDay(date),
       });
     }
-    console.log('Calendar generated for:', this.currentDate.toDateString(), this.daysInMonth); // Додано для відладки
   }
 
   prevMonth(): void {
