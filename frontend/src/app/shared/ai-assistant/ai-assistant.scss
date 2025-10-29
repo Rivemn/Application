@@ -1,0 +1,80 @@
+@use 'variables' as *; // Переконайтеся, що @use 'variables' as *; глобально доступний
+
+:host {
+  display: block;
+  background-color: $bg-content;
+  border: 1px solid $border-color;
+  border-radius: $border-radius * 1.5;
+  padding: $spacing-base * 1.5;
+  box-shadow: $shadow-sm;
+}
+
+h3 {
+  font-size: 1.125rem;
+  font-weight: $font-weight-medium;
+  color: $text-primary;
+  margin: 0 0 ($spacing-base * 0.25) 0;
+  display: flex;
+  align-items: center;
+  gap: $spacing-base * 0.5;
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  color: $text-secondary;
+  margin: 0 0 ($spacing-base * 1.5) 0;
+}
+
+.input-group {
+  display: flex;
+  gap: $spacing-base * 0.5;
+  // --- ВИПРАВЛЕНО: Вирівнювання по центру ---
+  align-items: center;
+}
+// ----------------------------------------------------
+
+app-form-input {
+  flex-grow: 1;
+
+  ::ng-deep .form-group {
+    margin-bottom: 0;
+  }
+  // --- ДОДАНО: Ховаємо label, щоб прибрати червону зірочку ---
+  ::ng-deep .form-label {
+    display: none;
+  }
+  // --------------------------------------------------------
+}
+
+// Спіннер (якщо label="...")
+app-button ::ng-deep .spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 1s ease-in-out infinite;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.answer-container {
+  margin-top: $spacing-base * 1.5;
+  padding: $spacing-base;
+  background-color: $bg-body;
+  border-radius: $border-radius;
+  border: 1px solid $border-color;
+  color: $text-secondary;
+  font-size: 0.875rem;
+
+  p {
+    margin: 0;
+    white-space: pre-wrap;
+  }
+}

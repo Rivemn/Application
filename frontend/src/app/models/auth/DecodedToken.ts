@@ -3,4 +3,5 @@ interface DecodedToken {
   email: string;
   fullName: string;
   exp: number;
+  iat?: number;
 }

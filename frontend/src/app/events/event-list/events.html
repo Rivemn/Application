@@ -45,6 +45,13 @@
             <mat-icon>people</mat-icon>
             <span>{{ event.participantsCount }} / {{ event.capacity ?? '∞' }} participants</span>
           </li>
+          @if (event.tags && event.tags.length > 0) {
+          <mat-chip-listbox aria-label="Event Tags" class="event-tags agenda-tags">
+            @for(tag of event.tags; track tag.id) {
+            <mat-chip-option disabled>{{ tag.name }}</mat-chip-option>
+            }
+          </mat-chip-listbox>
+          }
         </ul>
       </div>
 
@@ -55,6 +62,7 @@
             label="Edit"
             color="secondary"
             [routerLink]="['/events', event.id, 'edit']"
+            [queryParams]="{ returnUrl: '/events' }"
           ></app-button>
           }
         </div>

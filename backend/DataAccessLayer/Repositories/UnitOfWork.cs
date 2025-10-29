@@ -1,12 +1,8 @@
 ﻿using DataAccessLayer.Data;
 using DataAccessLayer.Entities;
 using DataAccessLayer.Interfaces;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace DataAccessLayer.Repositories
 {
@@ -41,6 +37,10 @@ namespace DataAccessLayer.Repositories
 				else if (typeof(T) == typeof(Event))
 				{
 					repositoryInstance = new EventRepository(_context);
+				}
+				else if (typeof(T) == typeof(Tag))
+				{
+					repositoryInstance = new TagRepository(_context);
 				}
 				else
 				{

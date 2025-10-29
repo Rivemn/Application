@@ -1,0 +1,31 @@
+<div class="ai-assistant-container">
+  <h3>
+    <span class="icon"></span>
+    AI Assistant
+  </h3>
+  <p class="subtitle">Ask questions about your events.</p>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="input-group">
+      <app-form-input
+        placeholder="e.g., 'What are my tech events?'"
+        formControlName="question"
+        [required]="true"
+        [label]="''"
+      ></app-form-input>
+
+      <app-button
+        type="submit"
+        [label]="isLoading() ? '...' : 'Ask'"
+        color="primary"
+        [disabled]="isLoading() || form.invalid"
+      ></app-button>
+    </div>
+  </form>
+
+  @if (answer()) {
+  <div class="answer-container">
+    <p [innerText]="answer()"></p>
+  </div>
+  }
+</div>

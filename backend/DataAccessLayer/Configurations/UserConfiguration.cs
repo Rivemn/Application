@@ -8,11 +8,17 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 {
 	public void Configure(EntityTypeBuilder<User> builder)
 	{
-		// Связь "Один-ко-многим": User (Organizer) -> Event
-		    builder
+		builder
 			.HasMany(u => u.OrganizedEvents)
 			.WithOne(e => e.Organizer)
 			.HasForeignKey(e => e.OrganizerId)
-			.OnDelete(DeleteBehavior.Restrict); // Запрещаем удаление пользователя, если у него есть события
+			.OnDelete(DeleteBehavior.Restrict);
+
+		builder.Property(u => u.RefreshToken)
+			   .HasMaxLength(150)
+			   .IsRequired(false);
+
+		builder.Property(u => u.RefreshTokenExpiryTime)
+			   .IsRequired(false);
 	}
 }

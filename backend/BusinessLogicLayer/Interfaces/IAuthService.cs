@@ -1,4 +1,5 @@
-﻿using BusinessLogicLayer.Dtos;
+﻿using BusinessLogicLayer.Common;
+using BusinessLogicLayer.Dtos.Auth;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,8 @@ namespace BusinessLogicLayer.Interfaces
 {
 	public interface IAuthService
 	{
-		Task<AuthResultDto> RegisterAsync(RegisterRequestDto request);
-		Task<AuthResultDto> LoginAsync(LoginRequestDto request);
+		Task<Result<AuthResponseDto>> RegisterAsync(RegisterRequestDto request);
+		Task<Result<AuthResponseDto>> LoginAsync(LoginRequestDto request);
+		Task<Result<AuthResponseDto>> RefreshTokenAsync(RefreshTokenRequestDto request, string accessToken);
 	}
 }

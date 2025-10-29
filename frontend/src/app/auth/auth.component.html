@@ -1,0 +1,88 @@
+<div class="auth-container">
+  <div class="card auth-card">
+    @if ({ isLoading: isLoading$ | async, error: errorMessage$ | async }; as vm) { @if (isLoginView)
+    {
+    <header class="auth-header">
+      <h1>Welcome Back!</h1>
+      <p>Sign in to continue to your events.</p>
+    </header>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()">
+      <app-form-input
+        label="Email Address"
+        type="email"
+        placeholder="you@example.com"
+        formControlName="email"
+        [required]="true"
+      ></app-form-input>
+
+      <app-form-input
+        label="Password"
+        type="password"
+        placeholder="Enter your password"
+        formControlName="password"
+        [required]="true"
+      ></app-form-input>
+
+      <app-button
+        type="submit"
+        label="Sign In"
+        [disabled]="loginForm.invalid || (vm.isLoading ?? false)"
+      ></app-button>
+    </form>
+
+    <p class="toggle-view">
+      Don't have an account?
+      <a (click)="toggleView()">Sign up</a>
+    </p>
+
+    } @else {
+    <header class="auth-header">
+      <h1>Create an Account</h1>
+      <p>Join our community to start creating and joining events.</p>
+    </header>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onRegisterSubmit()">
+      <app-form-input
+        label="Full Name"
+        type="text"
+        placeholder="John Doe"
+        formControlName="fullName"
+        [required]="true"
+      ></app-form-input>
+
+      <app-form-input
+        label="Email Address"
+        type="email"
+        placeholder="you@example.com"
+        formControlName="email"
+        [required]="true"
+      ></app-form-input>
+
+      <app-form-input
+        label="Password"
+        type="password"
+        placeholder="Create a strong password"
+        formControlName="password"
+        [required]="true"
+        helpText="Minimum 8 characters, with one uppercase, one lowercase, and one number."
+      ></app-form-input>
+
+      <app-button
+        type="submit"
+        label="Create Account"
+        [disabled]="registerForm.invalid || (vm.isLoading ?? false)"
+      ></app-button>
+    </form>
+
+    <p class="toggle-view">
+      Already have an account?
+      <a (click)="toggleView()">Sign in</a>
+    </p>
+    } @if (vm.error) {
+    <div class="error-message">
+      <p>{{ vm.error }}</p>
+    </div>
+    } }
+  </div>
+</div>

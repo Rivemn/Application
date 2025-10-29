@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using BusinessLogicLayer.Dtos;
+using BusinessLogicLayer.Dtos.Auth;
 
 namespace WebAPI.Validators
 {

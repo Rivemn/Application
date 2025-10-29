@@ -1,35 +1,39 @@
-<div class="calendar-container">
+<div class="calendar">
   <div class="calendar-header">
-    <button (click)="previousMonth()" class="nav-button">&lt;</button>
-    <span class="month-year">{{ monthName }} {{ year }}</span>
-    <button (click)="nextMonth()" class="nav-button">&gt;</button>
+    <button class="nav-button" (click)="prevMonth()">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+    <span class="month-year">
+      {{ monthNames[currentDate.getMonth()] }} {{ currentDate.getFullYear() }}
+    </span>
+    <button class="nav-button" (click)="nextMonth()">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+    <button class="today-button" (click)="goToToday()">Today</button>
   </div>
 
-  <table class="calendar-grid">
-    <thead>
-      <tr>
-        @for (weekday of weekdays; track weekday) {
-        <th>{{ weekday }}</th>
-        }
-      </tr>
-    </thead>
-    <tbody>
-      @for (week of weeks; track $index) {
-      <tr>
-        @for (day of week; track $index) {
-        <td
-          [class.is-today]="isToday(day)"
-          [class.is-selected]="isSelected(day)"
-          [class.has-event]="hasEvent(day)"
-          (click)="selectDay(day)"
-        >
-          @if (day) {
-          <span class="day-number">{{ day.getDate() }}</span>
-          }
-        </td>
-        }
-      </tr>
+  <div class="calendar-grid">
+    <!-- === ВИПРАВЛЕНО: Використовуємо @for замість *ngFor === -->
+    @for (day of weekDays; track day) {
+    <div class="weekday">{{ day }}</div>
+    }
+    <!-- =============================================== -->
+
+    @for (day of daysInMonth; track day.date) {
+    <div
+      class="day-cell"
+      [class.current-month]="day.isCurrentMonth"
+      [class.today]="day.isToday"
+      [class.selected]="day.isSelected"
+      [class.has-events]="day.hasEvents"
+      (click)="day.isCurrentMonth && selectDate(day.date)"
+    >
+      <span class="day-number">{{ day.dayOfMonth }}</span>
+      @if (day.hasEvents && day.isCurrentMonth) {
+      <div class="event-indicator"></div>
       }
-    </tbody>
-  </table>
+    </div>
+    }
+    <!-- ============================================================== -->
+  </div>
 </div>

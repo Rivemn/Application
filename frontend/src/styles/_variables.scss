@@ -1,0 +1,42 @@
+$primary: #6366f1; // Основной фиолетово-синий (кнопки "Create Event", активные элементы)
+$primary-dark: #4f46e5; // Для :hover состояния
+$success: #10b981; // Зеленый (кнопки "Join Event")
+$success-dark: #059669; // Для :hover состояния
+$warning: #ffc107; // Жовтий
+$danger: #dc3545; // Червоний - ДОДАЙТЕ ЦЕЙ РЯДОК (або аналогічний)
+$info: #0dcaf0; // Блакитний
+// Текст (Text)
+$text-primary: #1f2937; // Почти черный (заголовки, основной текст)
+$text-secondary: #6b728d; // Серый (подзаголовки, описания)
+$text-light: #9ca3af; // Светло-серый (иконки, плейсхолдеры)
+$text-on-primary: #ffffff; // Текст на цветных кнопках (белый)
+
+// Фон (Background)
+$bg-body: #f9fafb; // Очень светло-серый фон страницы
+$bg-content: #ffffff; // Белый фон для карточек, хедера, календаря
+
+// Границы (Borders)
+$border-color: #e5e7eb; // Стандартный цвет границы
+
+// --- Типографика (Typography)---
+$font-family-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
+  sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+$font-size-base: 1rem; // 16px
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-bold: 700;
+$line-height-base: 1.5;
+
+// --- Макет (Layout) ---
+$border-radius: 0.5rem; // 8px (видно на кнопках, карточках, полях)
+$spacing-base: 1rem; // 16px (базовый отступ)
+$container-max-width: 1280px; // Максимальная ширина контейнера
+$transition-base: all 0.2s ease-in-out; // Плавные переходы
+
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+
+// Стандартна тінь (для карток)
+$shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+
+// Велика тінь (для модальних вікон, випадаючих списків)
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
