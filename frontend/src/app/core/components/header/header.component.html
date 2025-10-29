@@ -26,7 +26,7 @@
       </a>
 
       <!-- Ссылка "My Events" показывается только залогиненным пользователям -->
-      @if (isAuthenticated) {
+      @if (isAuthenticated$ | async) {
       <a class="header-nav-link" routerLink="/my-events" routerLinkActive="active">
         <!-- SVG иконка "My Events" -->
         <svg
@@ -53,7 +53,7 @@
     <!-- Правая часть: Условный рендеринг -->
     <div class="header-actions">
       <!-- БЛОК ДЛЯ АВТОРИЗОВАННОГО ПОЛЬЗОВАТЕЛЯ -->
-      @if (isAuthenticated) {
+      @if (isAuthenticated$ | async) {
       <!-- Кнопка "Create Event" -->
       @if (!router.url.includes('/create-event')) {
       <app-button
@@ -63,11 +63,9 @@
       ></app-button>
       }
 
-      <!-- Профиль пользователя с кнопкой выхода -->
       <div class="user-profile" (click)="onLogout()" title="Log out">
         <img src="https://i.pravatar.cc/32" alt="User avatar" class="user-avatar" />
-        <span>{{ userName }}</span>
-        <!-- SVG иконка "Logout" -->
+        <span>{{ userName$ | async }}</span>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="20"

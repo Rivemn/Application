@@ -1,38 +1,39 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from '../core/services/auth.service';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import * as AuthActions from '../store/auth/auth.actions';
+import { Router, ActivatedRoute } from '@angular/router';
+import { selectIsLoading, selectAuthError } from '../store/auth/auth.selectors';
+import { AuthState } from '../store/auth/auth.state';
 
 @Component({
   selector: 'app-auth',
   standalone: false,
   templateUrl: './auth.component.html',
-  styleUrl: './auth.component.scss',
+  styleUrls: ['./auth.component.scss'],
 })
 export class AuthComponent implements OnInit {
   isLoginView = true;
   loginForm!: FormGroup;
   registerForm!: FormGroup;
-  isLoading = false;
-  errorMessage: string | null = null;
 
-  // 2. Внедряем ActivatedRoute в конструктор
+  isLoading$: Observable<boolean>;
+  errorMessage$: Observable<string | null>;
+
   constructor(
     private fb: FormBuilder,
-    private authService: AuthService,
     private router: Router,
-    private cdr: ChangeDetectorRef,
-    private route: ActivatedRoute
-  ) {}
+    private route: ActivatedRoute,
+    private store: Store<AuthState>
+  ) {
+    this.isLoading$ = this.store.select(selectIsLoading);
+    this.errorMessage$ = this.store.select(selectAuthError);
+  }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
-      if (params['mode'] === 'register') {
-        this.isLoginView = false;
-      } else {
-        this.isLoginView = true;
-      }
-      this.cdr.markForCheck();
+      this.isLoginView = params['mode'] !== 'register';
     });
 
     this.initLoginForm();
@@ -55,6 +56,7 @@ export class AuthComponent implements OnInit {
         [
           Validators.required,
           Validators.minLength(8),
+          // Додаємо валідатор (як у вашому коді)
           Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/),
         ],
       ],
@@ -63,8 +65,6 @@ export class AuthComponent implements OnInit {
 
   toggleView(): void {
     this.isLoginView = !this.isLoginView;
-    this.errorMessage = null;
-
     const mode = this.isLoginView ? null : 'register';
     this.router.navigate([], {
       relativeTo: this.route,
@@ -75,38 +75,13 @@ export class AuthComponent implements OnInit {
 
   onLoginSubmit(): void {
     if (this.loginForm.invalid) return;
-    this.isLoading = true;
-    this.errorMessage = null;
-
-    this.authService.login(this.loginForm.value).subscribe({
-      next: () => {
-        this.isLoading = false;
-        this.router.navigate(['/events']);
-      },
-      error: (err) => {
-        this.isLoading = false;
-        this.errorMessage = err.error?.Errors?.[0] || 'Invalid credentials. Please try again.';
-        this.cdr.markForCheck();
-      },
-    });
+    // --- ВИПРАВЛЕНО: 'data' на 'credentials' ---
+    this.store.dispatch(AuthActions.login({ credentials: this.loginForm.value }));
   }
 
   onRegisterSubmit(): void {
     if (this.registerForm.invalid) return;
-    this.isLoading = true;
-    this.errorMessage = null;
-
-    this.authService.register(this.registerForm.value).subscribe({
-      next: () => {
-        this.isLoading = false;
-        this.router.navigate(['/events']);
-      },
-      error: (err) => {
-        this.isLoading = false;
-        this.errorMessage =
-          err.error?.Errors?.[0] || 'Registration failed. The email may already be in use.';
-        this.cdr.markForCheck();
-      },
-    });
+    // --- ВИПРАВЛЕНО: 'data' на 'registerData' ---
+    this.store.dispatch(AuthActions.register({ registerData: this.registerForm.value }));
   }
 }

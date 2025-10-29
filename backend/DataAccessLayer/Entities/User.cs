@@ -17,5 +17,8 @@ namespace DataAccessLayer.Entities
 		public ICollection<Event> OrganizedEvents { get; set; } = new List<Event>();
 
 		public ICollection<EventParticipant> EventParticipations { get; set; } = new List<EventParticipant>();
+
+		public string? RefreshToken { get; set; } = string.Empty;
+		public DateTime? RefreshTokenExpiryTime { get; set; }
 	}
 }

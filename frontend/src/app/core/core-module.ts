@@ -10,6 +10,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { AuthComponent } from '../auth/auth.component';
 import { BrowserModule } from '@angular/platform-browser';
+import { AuthModule } from '../auth/auth-module';
 
 @NgModule({
   declarations: [HeaderComponent],
@@ -24,10 +25,10 @@ import { BrowserModule } from '@angular/platform-browser';
   imports: [
     HttpClientModule,
     SharedModule,
-    BrowserModule,
     CommonModule,
     ReactiveFormsModule,
     RouterModule,
+    AuthModule,
   ],
   exports: [HeaderComponent],
 })

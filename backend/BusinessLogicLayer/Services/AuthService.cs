@@ -1,13 +1,15 @@
 ﻿using AutoMapper;
+using BusinessLogicLayer.Common;
 using BusinessLogicLayer.Dtos;
 using BusinessLogicLayer.Interfaces;
 using DataAccessLayer.Entities;
 using DataAccessLayer.Interfaces;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
-using Microsoft.IdentityModel.Tokens;
 
 namespace BusinessLogicLayer.Services
 {
@@ -24,84 +26,136 @@ namespace BusinessLogicLayer.Services
 			_mapper = mapper;
 		}
 
-		// (ИЗМЕНЕНО) Метод теперь возвращает AuthResultDto
-		public async Task<AuthResultDto> RegisterAsync(RegisterRequestDto request)
+		public async Task<Result<AuthResponseDto>> RegisterAsync(RegisterRequestDto request)
 		{
 			var userRepo = (IUserRepository)_unitOfWork.Repository<User>();
-
 			var existing = await userRepo.GetByEmailAsync(request.Email);
 			if (existing != null)
-			{
-				// БЫЛО: throw new InvalidOperationException("User already exists.");
-				// СТАЛО: Возвращаем результат с ошибкой
-				return AuthResultDto.Failure("User with this email already exists.");
-			}
+				return Result.Failure<AuthResponseDto>("User already exists.");
 
 			var user = new User
 			{
-				Id = Guid.NewGuid(),
 				Email = request.Email,
 				FullName = request.FullName,
 				PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password)
 			};
-
 			await userRepo.AddAsync(user);
+
+			var accessToken = GenerateAccessToken(user);
+			var refreshToken = GenerateRefreshToken();
+
+			user.RefreshToken = refreshToken;
+			user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+
 			await _unitOfWork.CompleteAsync();
 
-			var token = GenerateToken(user);
-			var response = new AuthResponseDto
+			return Result.Success(new AuthResponseDto // Використовуємо Result.Success
 			{
-				Token = token,
-				ExpiresAt = DateTime.UtcNow.AddMinutes(Convert.ToInt32(_config["Jwt:LifetimeMinutes"])),
-				Email = user.Email
-			};
-
-			// Возвращаем успешный результат, обернутый в AuthResultDto
-			return AuthResultDto.Success(response);
+				AccessToken = new JwtSecurityTokenHandler().WriteToken(accessToken),
+				ExpiresAt = accessToken.ValidTo,
+				Email = user.Email,
+				RefreshToken = refreshToken
+			});
 		}
 
-		public async Task<AuthResultDto> LoginAsync(LoginRequestDto request)
+		public async Task<Result<AuthResponseDto>> LoginAsync(LoginRequestDto request)
 		{
 			var userRepo = (IUserRepository)_unitOfWork.Repository<User>();
 			var user = await userRepo.GetByEmailAsync(request.Email);
 
 			if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
 			{
-				return AuthResultDto.Failure("Invalid credentials");
+				return Result.Failure<AuthResponseDto>("Invalid credentials", "INVALID_CREDENTIALS");
 			}
 
-			var token = GenerateToken(user);
-			var response = new AuthResponseDto
-			{
-				Token = token,
-				ExpiresAt = DateTime.UtcNow.AddMinutes(Convert.ToInt32(_config["Jwt:LifetimeMinutes"])),
-				Email = user.Email
-			};
+			var accessToken = GenerateAccessToken(user);
+			var refreshToken = GenerateRefreshToken();
 
-			return AuthResultDto.Success(response);
+			user.RefreshToken = refreshToken;
+			user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+
+			userRepo.Update(user);
+			await _unitOfWork.CompleteAsync();
+
+			return Result.Success(new AuthResponseDto
+			{
+				AccessToken = new JwtSecurityTokenHandler().WriteToken(accessToken),
+				ExpiresAt = accessToken.ValidTo,
+				Email = user.Email,
+				RefreshToken = refreshToken
+			});
 		}
 
-		private string GenerateToken(User user)
+		public async Task<Result<AuthResponseDto>> RefreshTokenAsync(RefreshTokenRequestDto request, string email)
 		{
-			var key = Encoding.UTF8.GetBytes(_config["Jwt:Key"]);
-			var claims = new List<Claim>
+			var userRepo = (IUserRepository)_unitOfWork.Repository<User>();
+
+			// 1. Знаходимо користувача по email
+			var user = await userRepo.GetByEmailAsync(email);
+			if (user == null)
 			{
+				return Result.Failure<AuthResponseDto>("User not found.");
+			}
+
+			// 2. Перевіряємо рефреш-токен
+			if (user.RefreshToken != request.RefreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
+			{
+				user.RefreshToken = null;
+				userRepo.Update(user);
+				await _unitOfWork.CompleteAsync();
+
+				return Result.Failure<AuthResponseDto>("Invalid or expired refresh token.");
+			}
+
+			// 3. Генеруємо нову пару токенів
+			var newAccessToken = GenerateAccessToken(user);
+			var newRefreshToken = GenerateRefreshToken();
+
+			user.RefreshToken = newRefreshToken;
+			user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+			userRepo.Update(user);
+			await _unitOfWork.CompleteAsync();
+
+			// 4. Повертаємо успішний результат
+			return Result.Success(new AuthResponseDto
+			{
+				AccessToken = new JwtSecurityTokenHandler().WriteToken(newAccessToken),
+				ExpiresAt = newAccessToken.ValidTo,
+				Email = user.Email,
+				RefreshToken = newRefreshToken
+			});
+		}
+
+
+		private JwtSecurityToken GenerateAccessToken(User user)
+		{
+			var key = Encoding.UTF8.GetBytes(_config["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key is not configured"));
+			var claims = new List<Claim>
+            {
 				new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+				new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
 				new Claim(JwtRegisteredClaimNames.Email, user.Email),
 				new Claim("fullName", user.FullName ?? "")
-			};
+            };
 
 			var creds = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256);
 
-			var token = new JwtSecurityToken(
+			return new JwtSecurityToken(
 				issuer: _config["Jwt:Issuer"],
 				audience: _config["Jwt:Audience"],
 				claims: claims,
-				expires: DateTime.UtcNow.AddMinutes(Convert.ToInt32(_config["Jwt:LifetimeMinutes"])),
+				expires: DateTime.UtcNow.AddMinutes(Convert.ToDouble(_config["Jwt:LifetimeMinutes"] ?? "60")),
 				signingCredentials: creds
 			);
+		}
 
-			return new JwtSecurityTokenHandler().WriteToken(token);
+		// Метод GenerateRefreshToken
+		private string GenerateRefreshToken()
+		{
+			var randomNumber = new byte[64];
+			using var rng = RandomNumberGenerator.Create();
+			rng.GetBytes(randomNumber);
+			return Convert.ToBase64String(randomNumber);
 		}
 	}
 }

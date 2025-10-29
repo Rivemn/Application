@@ -2,8 +2,11 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@
 import { EventService } from '../services/event.service';
 import { EventDto } from '../../models/EventDto';
 import { AuthService } from '../../core/services/auth.service';
+import { Store } from '@ngrx/store';
+import { Subscription } from 'rxjs';
+import { selectCurrentUser } from '../../store/auth/auth.selectors';
+import { AuthState } from '../../store/auth/auth.state';
 
-// This is the data structure your calendar component expects.
 interface CalendarEvent {
   date: Date;
   title: string;
@@ -25,16 +28,30 @@ export class MyEvents implements OnInit {
   public error: string | null = null;
   public currentUserId: string | null = null;
 
+  private authSubscription: Subscription | undefined;
+
   constructor(
     private eventService: EventService,
-    private authService: AuthService,
-    private cdr: ChangeDetectorRef
+
+    private cdr: ChangeDetectorRef,
+    private store: Store<AuthState>
   ) {}
 
   ngOnInit(): void {
     this.selectedDate.setHours(0, 0, 0, 0);
-    this.currentUserId = this.authService.currentUserId;
+
+    this.authSubscription = this.store
+      .select(selectCurrentUser)
+      .subscribe((user: DecodedToken | null) => {
+        this.currentUserId = user ? user.sub : null;
+      });
+    // ---------------------------------------------
+
     this.loadMyEvents();
+  }
+
+  ngOnDestroy(): void {
+    this.authSubscription?.unsubscribe();
   }
 
   loadMyEvents(): void {
@@ -50,14 +67,12 @@ export class MyEvents implements OnInit {
         }));
         this.filterEventsForDate(this.selectedDate);
         this.isLoading = false;
-
         this.cdr.markForCheck();
       },
       error: (err) => {
         console.error('Failed to load my events', err);
         this.error = 'Could not load your events. Please try again.';
         this.isLoading = false;
-
         this.cdr.markForCheck();
       },
     });
@@ -78,7 +93,6 @@ export class MyEvents implements OnInit {
       );
     });
   }
-
   public isOrganizer(event: EventDto): boolean {
     return this.currentUserId != null && event.organizerId === this.currentUserId;
   }

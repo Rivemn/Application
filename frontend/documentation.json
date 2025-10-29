@@ -3,13 +3,23 @@
     "interfaces": [
         {
             "name": "AuthResponse",
-            "id": "interface-AuthResponse-1d5665a40b01a5b96a9cdd2c696b23d8762bb9135578914124b81e9cc9d6f85e998d8a92264c968403278771541b2c21f19aca86efcb18dbe85911198cd04f5b",
+            "id": "interface-AuthResponse-facd6ce2dd137a3f426faf893e1810ef2dbe1cb725b8f741bff7f6e65745a9bc9df43ee2d6dca37807608bfe77e1f5e493d9a1d67754a36f718382b70234e28b",
             "file": "src/app/models/auth/AuthResponse.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
-            "sourceCode": "export interface AuthResponse {\r\n  token: string;\r\n  expiresAt: Date;\r\n  email: string;\r\n}\r\n",
+            "sourceCode": "export interface AuthResponse {\r\n  accessToken: string;\r\n  expiresAt: string | number;\r\n  email: string;\r\n  refreshToken?: string;\r\n}\r\n",
             "properties": [
+                {
+                    "name": "accessToken",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 2
+                },
                 {
                     "name": "email",
                     "deprecated": false,
@@ -24,21 +34,21 @@
                     "name": "expiresAt",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "Date",
+                    "type": "string | number",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
                     "line": 3
                 },
                 {
-                    "name": "token",
+                    "name": "refreshToken",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "string",
                     "indexKey": "",
-                    "optional": false,
+                    "optional": true,
                     "description": "",
-                    "line": 2
+                    "line": 5
                 }
             ],
             "indexSignatures": [],
@@ -92,13 +102,78 @@
             "extends": []
         },
         {
+            "name": "AuthState",
+            "id": "interface-AuthState-b7f48e75f475bfb6c46547c90abc3ce7dfe1591fe8a231b3a8c231ce88a69188caa1a55984d5dff25af9e6a1023ab52d22c32d14646aaca6320fa7b596749186",
+            "file": "src/app/store/auth/auth.state.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "export interface AuthState {\r\n  user: {\r\n    email: string;\r\n    fullName: string;\r\n  } | null;\r\n  accessToken: string | null;\r\n  refreshToken: string | null;\r\n  loading: boolean;\r\n  error: string | null;\r\n}\r\n",
+            "properties": [
+                {
+                    "name": "accessToken",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string | null",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 6
+                },
+                {
+                    "name": "error",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string | null",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 9
+                },
+                {
+                    "name": "loading",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "boolean",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 8
+                },
+                {
+                    "name": "refreshToken",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string | null",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 7
+                },
+                {
+                    "name": "user",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "literal type | null",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 2
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 172,
+            "methods": [],
+            "extends": []
+        },
+        {
             "name": "CalendarDay",
-            "id": "interface-CalendarDay-3723be7193f636a257b312480a7d94eb388f824e4b08c9b75a7e16766aadd6751d44aa102482e2ff2e4f9e2c4243673c362cfa44a48319a42c5fda060363f541",
+            "id": "interface-CalendarDay-b3887eb771ad85be47ab9fbe49d4cb0dd958773e18e87a4f39fd20f9b02a55c1e1cb7c9383edd4299424181de058a3cff596c3d299c8ca7661262075c0c18cde",
             "file": "src/app/shared/calendar/calendar.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
-            "sourceCode": "import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';\r\nexport interface CalendarEvent {\r\n  date: Date;\r\n  title: string;\r\n}\r\n\r\ninterface CalendarDay {\r\n  date: Date;\r\n  dayOfMonth: number;\r\n  isCurrentMonth: boolean;\r\n  isToday: boolean;\r\n  isSelected: boolean;\r\n  hasEvents: boolean;\r\n}\r\n@Component({\r\n  selector: 'app-calendar',\r\n  standalone: false,\r\n  templateUrl: './calendar.html',\r\n  styleUrl: './calendar.scss',\r\n})\r\nexport class Calendar {\r\n  @Input() events: CalendarEvent[] = []; // Список подій\r\n  @Output() dateSelected = new EventEmitter<Date>(); // Подія при виборі дати\r\n\r\n  public currentDate: Date = new Date(); // Поточна дата для відображення місяця\r\n  public selectedDate: Date = new Date(); // Вибрана дата\r\n  public daysInMonth: CalendarDay[] = []; // Масив днів для відображення\r\n  public monthNames = [\r\n    'January',\r\n    'February',\r\n    'March',\r\n    'April',\r\n    'May',\r\n    'June',\r\n    'July',\r\n    'August',\r\n    'September',\r\n    'October',\r\n    'November',\r\n    'December',\r\n  ];\r\n  public weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];\r\n\r\n  ngOnInit(): void {\r\n    // Встановлюємо вибрану дату на початок дня (без часу)\r\n    this.selectedDate.setHours(0, 0, 0, 0);\r\n    this.generateCalendar();\r\n  }\r\n\r\n  // Відстежуємо зміни у вхідному масиві подій\r\n  ngOnChanges(changes: SimpleChanges): void {\r\n    if (changes['events'] && !changes['events'].firstChange) {\r\n      this.generateCalendar();\r\n    }\r\n  }\r\n\r\n  generateCalendar(): void {\r\n    this.daysInMonth = [];\r\n    const year = this.currentDate.getFullYear();\r\n    const month = this.currentDate.getMonth();\r\n\r\n    const firstDayOfMonth = new Date(year, month, 1);\r\n    const lastDayOfMonth = new Date(year, month + 1, 0);\r\n\r\n    const firstDayWeekday = firstDayOfMonth.getDay(); // 0 = Sun, 1 = Mon, ...\r\n    const totalDays = lastDayOfMonth.getDate();\r\n\r\n    const today = new Date();\r\n    today.setHours(0, 0, 0, 0);\r\n\r\n    // Додаємо дні попереднього місяця\r\n    for (let i = 0; i < firstDayWeekday; i++) {\r\n      const date = new Date(year, month, 1 - (firstDayWeekday - i));\r\n      date.setHours(0, 0, 0, 0); // Нормалізуємо дату\r\n      this.daysInMonth.push({\r\n        date: date,\r\n        dayOfMonth: date.getDate(),\r\n        isCurrentMonth: false,\r\n        isToday: false,\r\n        isSelected: false,\r\n        hasEvents: this.isEventDay(date), // Перевіряємо наявність подій\r\n      });\r\n    }\r\n\r\n    for (let i = 1; i <= totalDays; i++) {\r\n      const date = new Date(year, month, i);\r\n      date.setHours(0, 0, 0, 0);\r\n      const isSelectedDay = date.getTime() === this.selectedDate.getTime();\r\n      this.daysInMonth.push({\r\n        date: date,\r\n        dayOfMonth: i,\r\n        isCurrentMonth: true,\r\n        isToday: date.getTime() === today.getTime(),\r\n        isSelected: isSelectedDay,\r\n        hasEvents: this.isEventDay(date),\r\n      });\r\n    }\r\n\r\n    const gridsize = this.daysInMonth.length > 35 ? 42 : 35;\r\n    const remainingDays = gridsize - this.daysInMonth.length;\r\n    for (let i = 1; i <= remainingDays; i++) {\r\n      const date = new Date(year, month + 1, i);\r\n      date.setHours(0, 0, 0, 0);\r\n      this.daysInMonth.push({\r\n        date: date,\r\n        dayOfMonth: i,\r\n        isCurrentMonth: false,\r\n        isToday: false,\r\n        isSelected: false,\r\n        hasEvents: this.isEventDay(date),\r\n      });\r\n    }\r\n    console.log('Calendar generated for:', this.currentDate.toDateString(), this.daysInMonth); // Додано для відладки\r\n  }\r\n\r\n  prevMonth(): void {\r\n    this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() - 1, 1);\r\n    this.generateCalendar();\r\n  }\r\n\r\n  nextMonth(): void {\r\n    this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, 1);\r\n    this.generateCalendar();\r\n  }\r\n\r\n  goToToday(): void {\r\n    this.currentDate = new Date();\r\n    const today = new Date();\r\n    today.setHours(0, 0, 0, 0);\r\n    this.selectDate(today);\r\n  }\r\n\r\n  selectDate(date: Date): void {\r\n    this.selectedDate = new Date(date);\r\n    this.selectedDate.setHours(0, 0, 0, 0);\r\n    this.dateSelected.emit(this.selectedDate);\r\n\r\n    this.generateCalendar();\r\n  }\r\n\r\n  isEventDay(date: Date): boolean {\r\n    const targetTime = date.getTime();\r\n    return this.events.some((event) => {\r\n      const eventDate = new Date(event.date);\r\n      eventDate.setHours(0, 0, 0, 0);\r\n      return eventDate.getTime() === targetTime;\r\n    });\r\n  }\r\n}\r\n",
+            "sourceCode": "import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';\r\nexport interface CalendarEvent {\r\n  date: Date;\r\n  title: string;\r\n}\r\n\r\ninterface CalendarDay {\r\n  date: Date;\r\n  dayOfMonth: number;\r\n  isCurrentMonth: boolean;\r\n  isToday: boolean;\r\n  isSelected: boolean;\r\n  hasEvents: boolean;\r\n}\r\n@Component({\r\n  selector: 'app-calendar',\r\n  standalone: false,\r\n  templateUrl: './calendar.html',\r\n  styleUrl: './calendar.scss',\r\n})\r\nexport class Calendar {\r\n  @Input() events: CalendarEvent[] = [];\r\n  @Output() dateSelected = new EventEmitter<Date>();\r\n\r\n  public currentDate: Date = new Date();\r\n  public selectedDate: Date = new Date();\r\n  public daysInMonth: CalendarDay[] = [];\r\n  public monthNames = [\r\n    'January',\r\n    'February',\r\n    'March',\r\n    'April',\r\n    'May',\r\n    'June',\r\n    'July',\r\n    'August',\r\n    'September',\r\n    'October',\r\n    'November',\r\n    'December',\r\n  ];\r\n  public weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];\r\n\r\n  ngOnInit(): void {\r\n    this.selectedDate.setHours(0, 0, 0, 0);\r\n    this.generateCalendar();\r\n  }\r\n\r\n  ngOnChanges(changes: SimpleChanges): void {\r\n    if (changes['events'] && !changes['events'].firstChange) {\r\n      this.generateCalendar();\r\n    }\r\n  }\r\n\r\n  generateCalendar(): void {\r\n    this.daysInMonth = [];\r\n    const year = this.currentDate.getFullYear();\r\n    const month = this.currentDate.getMonth();\r\n\r\n    const firstDayOfMonth = new Date(year, month, 1);\r\n    const lastDayOfMonth = new Date(year, month + 1, 0);\r\n\r\n    const firstDayWeekday = firstDayOfMonth.getDay();\r\n    const totalDays = lastDayOfMonth.getDate();\r\n\r\n    const today = new Date();\r\n    today.setHours(0, 0, 0, 0);\r\n\r\n    for (let i = 0; i < firstDayWeekday; i++) {\r\n      const date = new Date(year, month, 1 - (firstDayWeekday - i));\r\n      date.setHours(0, 0, 0, 0);\r\n      this.daysInMonth.push({\r\n        date: date,\r\n        dayOfMonth: date.getDate(),\r\n        isCurrentMonth: false,\r\n        isToday: false,\r\n        isSelected: false,\r\n        hasEvents: this.isEventDay(date),\r\n      });\r\n    }\r\n\r\n    for (let i = 1; i <= totalDays; i++) {\r\n      const date = new Date(year, month, i);\r\n      date.setHours(0, 0, 0, 0);\r\n      const isSelectedDay = date.getTime() === this.selectedDate.getTime();\r\n      this.daysInMonth.push({\r\n        date: date,\r\n        dayOfMonth: i,\r\n        isCurrentMonth: true,\r\n        isToday: date.getTime() === today.getTime(),\r\n        isSelected: isSelectedDay,\r\n        hasEvents: this.isEventDay(date),\r\n      });\r\n    }\r\n\r\n    const gridsize = this.daysInMonth.length > 35 ? 42 : 35;\r\n    const remainingDays = gridsize - this.daysInMonth.length;\r\n    for (let i = 1; i <= remainingDays; i++) {\r\n      const date = new Date(year, month + 1, i);\r\n      date.setHours(0, 0, 0, 0);\r\n      this.daysInMonth.push({\r\n        date: date,\r\n        dayOfMonth: i,\r\n        isCurrentMonth: false,\r\n        isToday: false,\r\n        isSelected: false,\r\n        hasEvents: this.isEventDay(date),\r\n      });\r\n    }\r\n  }\r\n\r\n  prevMonth(): void {\r\n    this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() - 1, 1);\r\n    this.generateCalendar();\r\n  }\r\n\r\n  nextMonth(): void {\r\n    this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, 1);\r\n    this.generateCalendar();\r\n  }\r\n\r\n  goToToday(): void {\r\n    this.currentDate = new Date();\r\n    const today = new Date();\r\n    today.setHours(0, 0, 0, 0);\r\n    this.selectDate(today);\r\n  }\r\n\r\n  selectDate(date: Date): void {\r\n    this.selectedDate = new Date(date);\r\n    this.selectedDate.setHours(0, 0, 0, 0);\r\n    this.dateSelected.emit(this.selectedDate);\r\n\r\n    this.generateCalendar();\r\n  }\r\n\r\n  isEventDay(date: Date): boolean {\r\n    const targetTime = date.getTime();\r\n    return this.events.some((event) => {\r\n      const eventDate = new Date(event.date);\r\n      eventDate.setHours(0, 0, 0, 0);\r\n      return eventDate.getTime() === targetTime;\r\n    });\r\n  }\r\n}\r\n",
             "properties": [
                 {
                     "name": "date",
@@ -203,12 +278,12 @@
         },
         {
             "name": "CalendarEvent",
-            "id": "interface-CalendarEvent-3723be7193f636a257b312480a7d94eb388f824e4b08c9b75a7e16766aadd6751d44aa102482e2ff2e4f9e2c4243673c362cfa44a48319a42c5fda060363f541-1",
+            "id": "interface-CalendarEvent-b3887eb771ad85be47ab9fbe49d4cb0dd958773e18e87a4f39fd20f9b02a55c1e1cb7c9383edd4299424181de058a3cff596c3d299c8ca7661262075c0c18cde-1",
             "file": "src/app/shared/calendar/calendar.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
-            "sourceCode": "import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';\r\nexport interface CalendarEvent {\r\n  date: Date;\r\n  title: string;\r\n}\r\n\r\ninterface CalendarDay {\r\n  date: Date;\r\n  dayOfMonth: number;\r\n  isCurrentMonth: boolean;\r\n  isToday: boolean;\r\n  isSelected: boolean;\r\n  hasEvents: boolean;\r\n}\r\n@Component({\r\n  selector: 'app-calendar',\r\n  standalone: false,\r\n  templateUrl: './calendar.html',\r\n  styleUrl: './calendar.scss',\r\n})\r\nexport class Calendar {\r\n  @Input() events: CalendarEvent[] = []; // Список подій\r\n  @Output() dateSelected = new EventEmitter<Date>(); // Подія при виборі дати\r\n\r\n  public currentDate: Date = new Date(); // Поточна дата для відображення місяця\r\n  public selectedDate: Date = new Date(); // Вибрана дата\r\n  public daysInMonth: CalendarDay[] = []; // Масив днів для відображення\r\n  public monthNames = [\r\n    'January',\r\n    'February',\r\n    'March',\r\n    'April',\r\n    'May',\r\n    'June',\r\n    'July',\r\n    'August',\r\n    'September',\r\n    'October',\r\n    'November',\r\n    'December',\r\n  ];\r\n  public weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];\r\n\r\n  ngOnInit(): void {\r\n    // Встановлюємо вибрану дату на початок дня (без часу)\r\n    this.selectedDate.setHours(0, 0, 0, 0);\r\n    this.generateCalendar();\r\n  }\r\n\r\n  // Відстежуємо зміни у вхідному масиві подій\r\n  ngOnChanges(changes: SimpleChanges): void {\r\n    if (changes['events'] && !changes['events'].firstChange) {\r\n      this.generateCalendar();\r\n    }\r\n  }\r\n\r\n  generateCalendar(): void {\r\n    this.daysInMonth = [];\r\n    const year = this.currentDate.getFullYear();\r\n    const month = this.currentDate.getMonth();\r\n\r\n    const firstDayOfMonth = new Date(year, month, 1);\r\n    const lastDayOfMonth = new Date(year, month + 1, 0);\r\n\r\n    const firstDayWeekday = firstDayOfMonth.getDay(); // 0 = Sun, 1 = Mon, ...\r\n    const totalDays = lastDayOfMonth.getDate();\r\n\r\n    const today = new Date();\r\n    today.setHours(0, 0, 0, 0);\r\n\r\n    // Додаємо дні попереднього місяця\r\n    for (let i = 0; i < firstDayWeekday; i++) {\r\n      const date = new Date(year, month, 1 - (firstDayWeekday - i));\r\n      date.setHours(0, 0, 0, 0); // Нормалізуємо дату\r\n      this.daysInMonth.push({\r\n        date: date,\r\n        dayOfMonth: date.getDate(),\r\n        isCurrentMonth: false,\r\n        isToday: false,\r\n        isSelected: false,\r\n        hasEvents: this.isEventDay(date), // Перевіряємо наявність подій\r\n      });\r\n    }\r\n\r\n    for (let i = 1; i <= totalDays; i++) {\r\n      const date = new Date(year, month, i);\r\n      date.setHours(0, 0, 0, 0);\r\n      const isSelectedDay = date.getTime() === this.selectedDate.getTime();\r\n      this.daysInMonth.push({\r\n        date: date,\r\n        dayOfMonth: i,\r\n        isCurrentMonth: true,\r\n        isToday: date.getTime() === today.getTime(),\r\n        isSelected: isSelectedDay,\r\n        hasEvents: this.isEventDay(date),\r\n      });\r\n    }\r\n\r\n    const gridsize = this.daysInMonth.length > 35 ? 42 : 35;\r\n    const remainingDays = gridsize - this.daysInMonth.length;\r\n    for (let i = 1; i <= remainingDays; i++) {\r\n      const date = new Date(year, month + 1, i);\r\n      date.setHours(0, 0, 0, 0);\r\n      this.daysInMonth.push({\r\n        date: date,\r\n        dayOfMonth: i,\r\n        isCurrentMonth: false,\r\n        isToday: false,\r\n        isSelected: false,\r\n        hasEvents: this.isEventDay(date),\r\n      });\r\n    }\r\n    console.log('Calendar generated for:', this.currentDate.toDateString(), this.daysInMonth); // Додано для відладки\r\n  }\r\n\r\n  prevMonth(): void {\r\n    this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() - 1, 1);\r\n    this.generateCalendar();\r\n  }\r\n\r\n  nextMonth(): void {\r\n    this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, 1);\r\n    this.generateCalendar();\r\n  }\r\n\r\n  goToToday(): void {\r\n    this.currentDate = new Date();\r\n    const today = new Date();\r\n    today.setHours(0, 0, 0, 0);\r\n    this.selectDate(today);\r\n  }\r\n\r\n  selectDate(date: Date): void {\r\n    this.selectedDate = new Date(date);\r\n    this.selectedDate.setHours(0, 0, 0, 0);\r\n    this.dateSelected.emit(this.selectedDate);\r\n\r\n    this.generateCalendar();\r\n  }\r\n\r\n  isEventDay(date: Date): boolean {\r\n    const targetTime = date.getTime();\r\n    return this.events.some((event) => {\r\n      const eventDate = new Date(event.date);\r\n      eventDate.setHours(0, 0, 0, 0);\r\n      return eventDate.getTime() === targetTime;\r\n    });\r\n  }\r\n}\r\n",
+            "sourceCode": "import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';\r\nexport interface CalendarEvent {\r\n  date: Date;\r\n  title: string;\r\n}\r\n\r\ninterface CalendarDay {\r\n  date: Date;\r\n  dayOfMonth: number;\r\n  isCurrentMonth: boolean;\r\n  isToday: boolean;\r\n  isSelected: boolean;\r\n  hasEvents: boolean;\r\n}\r\n@Component({\r\n  selector: 'app-calendar',\r\n  standalone: false,\r\n  templateUrl: './calendar.html',\r\n  styleUrl: './calendar.scss',\r\n})\r\nexport class Calendar {\r\n  @Input() events: CalendarEvent[] = [];\r\n  @Output() dateSelected = new EventEmitter<Date>();\r\n\r\n  public currentDate: Date = new Date();\r\n  public selectedDate: Date = new Date();\r\n  public daysInMonth: CalendarDay[] = [];\r\n  public monthNames = [\r\n    'January',\r\n    'February',\r\n    'March',\r\n    'April',\r\n    'May',\r\n    'June',\r\n    'July',\r\n    'August',\r\n    'September',\r\n    'October',\r\n    'November',\r\n    'December',\r\n  ];\r\n  public weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];\r\n\r\n  ngOnInit(): void {\r\n    this.selectedDate.setHours(0, 0, 0, 0);\r\n    this.generateCalendar();\r\n  }\r\n\r\n  ngOnChanges(changes: SimpleChanges): void {\r\n    if (changes['events'] && !changes['events'].firstChange) {\r\n      this.generateCalendar();\r\n    }\r\n  }\r\n\r\n  generateCalendar(): void {\r\n    this.daysInMonth = [];\r\n    const year = this.currentDate.getFullYear();\r\n    const month = this.currentDate.getMonth();\r\n\r\n    const firstDayOfMonth = new Date(year, month, 1);\r\n    const lastDayOfMonth = new Date(year, month + 1, 0);\r\n\r\n    const firstDayWeekday = firstDayOfMonth.getDay();\r\n    const totalDays = lastDayOfMonth.getDate();\r\n\r\n    const today = new Date();\r\n    today.setHours(0, 0, 0, 0);\r\n\r\n    for (let i = 0; i < firstDayWeekday; i++) {\r\n      const date = new Date(year, month, 1 - (firstDayWeekday - i));\r\n      date.setHours(0, 0, 0, 0);\r\n      this.daysInMonth.push({\r\n        date: date,\r\n        dayOfMonth: date.getDate(),\r\n        isCurrentMonth: false,\r\n        isToday: false,\r\n        isSelected: false,\r\n        hasEvents: this.isEventDay(date),\r\n      });\r\n    }\r\n\r\n    for (let i = 1; i <= totalDays; i++) {\r\n      const date = new Date(year, month, i);\r\n      date.setHours(0, 0, 0, 0);\r\n      const isSelectedDay = date.getTime() === this.selectedDate.getTime();\r\n      this.daysInMonth.push({\r\n        date: date,\r\n        dayOfMonth: i,\r\n        isCurrentMonth: true,\r\n        isToday: date.getTime() === today.getTime(),\r\n        isSelected: isSelectedDay,\r\n        hasEvents: this.isEventDay(date),\r\n      });\r\n    }\r\n\r\n    const gridsize = this.daysInMonth.length > 35 ? 42 : 35;\r\n    const remainingDays = gridsize - this.daysInMonth.length;\r\n    for (let i = 1; i <= remainingDays; i++) {\r\n      const date = new Date(year, month + 1, i);\r\n      date.setHours(0, 0, 0, 0);\r\n      this.daysInMonth.push({\r\n        date: date,\r\n        dayOfMonth: i,\r\n        isCurrentMonth: false,\r\n        isToday: false,\r\n        isSelected: false,\r\n        hasEvents: this.isEventDay(date),\r\n      });\r\n    }\r\n  }\r\n\r\n  prevMonth(): void {\r\n    this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() - 1, 1);\r\n    this.generateCalendar();\r\n  }\r\n\r\n  nextMonth(): void {\r\n    this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, 1);\r\n    this.generateCalendar();\r\n  }\r\n\r\n  goToToday(): void {\r\n    this.currentDate = new Date();\r\n    const today = new Date();\r\n    today.setHours(0, 0, 0, 0);\r\n    this.selectDate(today);\r\n  }\r\n\r\n  selectDate(date: Date): void {\r\n    this.selectedDate = new Date(date);\r\n    this.selectedDate.setHours(0, 0, 0, 0);\r\n    this.dateSelected.emit(this.selectedDate);\r\n\r\n    this.generateCalendar();\r\n  }\r\n\r\n  isEventDay(date: Date): boolean {\r\n    const targetTime = date.getTime();\r\n    return this.events.some((event) => {\r\n      const eventDate = new Date(event.date);\r\n      eventDate.setHours(0, 0, 0, 0);\r\n      return eventDate.getTime() === targetTime;\r\n    });\r\n  }\r\n}\r\n",
             "properties": [
                 {
                     "name": "date",
@@ -336,12 +411,12 @@
         },
         {
             "name": "DecodedToken",
-            "id": "interface-DecodedToken-db419732d1a621e95089f4833d55c8098bbc8ed315b3974090f2f5717ddf99704279a7c814b2b562dab9bc4fdaab12a07da814f5182dad2b8cb2f61c283989db",
+            "id": "interface-DecodedToken-3c5d0af422f031630305da644d498d53bcb4da94731b456947fd9c5b49a747aa46a56991fcea7a4a636b8a1d8f3de96db78f87750e45f0f538cf35e472bfbb0d",
             "file": "src/app/models/auth/DecodedToken.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
-            "sourceCode": "interface DecodedToken {\r\n  sub: string;\r\n  email: string;\r\n  fullName: string;\r\n  exp: number;\r\n}\r\n",
+            "sourceCode": "interface DecodedToken {\r\n  sub: string;\r\n  email: string;\r\n  fullName: string;\r\n  exp: number;\r\n  iat?: number;\r\n}\r\n",
             "properties": [
                 {
                     "name": "email",
@@ -372,6 +447,16 @@
                     "optional": false,
                     "description": "",
                     "line": 4
+                },
+                {
+                    "name": "iat",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "number",
+                    "indexKey": "",
+                    "optional": true,
+                    "description": "",
+                    "line": 6
                 },
                 {
                     "name": "sub",
@@ -842,8 +927,182 @@
     ],
     "injectables": [
         {
+            "name": "AuthEffects",
+            "id": "injectable-AuthEffects-2578c83f3b7ea8b5285be3ce0d63b9c05250cb884f30dae0595f1ac2b34164f9cf19515915dfa5c50c54a1379fb0fd8c552af948f8d7f4a1cc5c69c20d77d22b",
+            "file": "src/app/store/auth/auth.effects.ts",
+            "properties": [
+                {
+                    "name": "authSuccess$",
+                    "defaultValue": "createEffect(\r\n    () =>\r\n      this.actions$.pipe(\r\n        ofType(AuthActions.loginSuccess, AuthActions.registerSuccess),\r\n        tap(({ response }) => {\r\n          // authService already stores token in earlier version; если нет — сохраняем тут\r\n          if (response && (response as any).accessToken) {\r\n            this.authService.handleAuthentication(response.accessToken, response.expiresAt);\r\n\r\n            // schedule refresh: convert expiry (ISO or numeric) -> ms; мы ожидаем response.expiresAt as ISO or epoch\r\n            // предполагаем response.expiresAt это unix timestamp ms или Date string\r\n            const expiresAt = (response as any).expiresAt;\r\n            // Если expiresAt приходит как строка Date — преобразуем к timestamp\r\n            const expMs =\r\n              typeof expiresAt === 'number'\r\n                ? expiresAt\r\n                : Date.parse(expiresAt) || Date.now() + 60 * 60 * 1000;\r\n            // диспатчим экшен scheduleRefresh\r\n            this.store.dispatch(AuthActions.scheduleRefresh({ expiresAt: expMs }));\r\n          }\r\n        })\r\n      ),\r\n    { dispatch: false }\r\n  )",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 46
+                },
+                {
+                    "name": "login$",
+                    "defaultValue": "createEffect(() =>\r\n    this.actions$.pipe(\r\n      ofType(AuthActions.login),\r\n      mergeMap(({ data }) =>\r\n        this.authService.login(data).pipe(\r\n          map((response) => AuthActions.loginSuccess({ response })),\r\n          catchError((err) =>\r\n            rxOf(AuthActions.loginFailure({ error: err.error?.Errors?.[0] || 'Login failed' }))\r\n          )\r\n        )\r\n      )\r\n    )\r\n  )",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 14
+                },
+                {
+                    "name": "logout$",
+                    "defaultValue": "createEffect(\r\n    () =>\r\n      this.actions$.pipe(\r\n        ofType(AuthActions.logout),\r\n        tap(() => {\r\n          this.authService.logout();\r\n          this.router.navigate(['/login']);\r\n        })\r\n      ),\r\n    { dispatch: false }\r\n  )",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 145
+                },
+                {
+                    "name": "refreshFailure$",
+                    "defaultValue": "createEffect(\r\n    () =>\r\n      this.actions$.pipe(\r\n        ofType(AuthActions.refreshTokenFailure),\r\n        tap(() => {\r\n          // если обновление не удалось — логаутим\r\n          this.store.dispatch(AuthActions.logout());\r\n        })\r\n      ),\r\n    { dispatch: false }\r\n  )",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 132
+                },
+                {
+                    "name": "refreshSuccess$",
+                    "defaultValue": "createEffect(\r\n    () =>\r\n      this.actions$.pipe(\r\n        ofType(AuthActions.refreshTokenSuccess),\r\n        tap(({ response }) => {\r\n          // сохраним токен\r\n          if (response && (response as any).accessToken) {\r\n            this.authService.handleAuthentication((response as any).accessToken);\r\n            // schedule next\r\n            const expiresAt = (response as any).expiresAt;\r\n            const expMs =\r\n              typeof expiresAt === 'number'\r\n                ? expiresAt\r\n                : Date.parse(expiresAt) || Date.now() + 60 * 60 * 1000;\r\n            this.store.dispatch(AuthActions.scheduleRefresh({ expiresAt: expMs }));\r\n          }\r\n        })\r\n      ),\r\n    { dispatch: false }\r\n  )",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 110
+                },
+                {
+                    "name": "refreshToken$",
+                    "defaultValue": "createEffect(() =>\r\n    this.actions$.pipe(\r\n      ofType(AuthActions.refreshToken),\r\n      // берем refresh token из AuthService (он хранит в localStorage), или можно использовать селектор\r\n      switchMap(() => {\r\n        const refreshToken = this.authService.getRefreshToken(); // реализуй в сервисе\r\n        const accessToken = this.authService.getToken();\r\n        if (!refreshToken || !accessToken) {\r\n          return rxOf(\r\n            AuthActions.refreshTokenFailure({ error: 'No refresh/access token available' })\r\n          );\r\n        }\r\n        return this.authService.refresh({ refreshToken }, accessToken).pipe(\r\n          map((response) => AuthActions.refreshTokenSuccess({ response })),\r\n          catchError((err) =>\r\n            rxOf(\r\n              AuthActions.refreshTokenFailure({ error: err.error?.Errors?.[0] || 'Refresh failed' })\r\n            )\r\n          )\r\n        );\r\n      })\r\n    )\r\n  )",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 85
+                },
+                {
+                    "name": "register$",
+                    "defaultValue": "createEffect(() =>\r\n    this.actions$.pipe(\r\n      ofType(AuthActions.register),\r\n      mergeMap(({ data }) =>\r\n        this.authService.register(data).pipe(\r\n          map((response) => AuthActions.registerSuccess({ response })),\r\n          catchError((err) =>\r\n            rxOf(\r\n              AuthActions.registerFailure({ error: err.error?.Errors?.[0] || 'Register failed' })\r\n            )\r\n          )\r\n        )\r\n      )\r\n    )\r\n  )",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 29
+                },
+                {
+                    "name": "scheduleRefresh$",
+                    "defaultValue": "createEffect(() =>\r\n    this.actions$.pipe(\r\n      ofType(AuthActions.scheduleRefresh),\r\n      switchMap(({ expiresAt }) => {\r\n        // запускаем таймер, который сработает за 30 сек до expiresAt\r\n        const now = Date.now();\r\n        const msUntil = Math.max(0, expiresAt - now - 30_000); // 30s before expiry\r\n        return timer(msUntil).pipe(map(() => AuthActions.refreshToken()));\r\n      })\r\n    )\r\n  )",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 72
+                }
+            ],
+            "methods": [],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "description": "",
+            "rawdescription": "\n",
+            "sourceCode": "import { Injectable } from '@angular/core';\r\nimport { Actions, createEffect, ofType } from '@ngrx/effects';\r\nimport * as AuthActions from './auth.actions';\r\nimport { AuthService } from '../../core/services/auth.service';\r\nimport { catchError, map, mergeMap, tap, switchMap, delayWhen } from 'rxjs/operators';\r\nimport { Router } from '@angular/router';\r\nimport { timer, of as rxOf } from 'rxjs';\r\nimport { Store } from '@ngrx/store';\r\nimport { AuthState } from './auth.state';\r\n\r\n@Injectable()\r\nexport class AuthEffects {\r\n  // login => call API => loginSuccess | loginFailure\r\n  login$ = createEffect(() =>\r\n    this.actions$.pipe(\r\n      ofType(AuthActions.login),\r\n      mergeMap(({ data }) =>\r\n        this.authService.login(data).pipe(\r\n          map((response) => AuthActions.loginSuccess({ response })),\r\n          catchError((err) =>\r\n            rxOf(AuthActions.loginFailure({ error: err.error?.Errors?.[0] || 'Login failed' }))\r\n          )\r\n        )\r\n      )\r\n    )\r\n  );\r\n\r\n  // register => call API => registerSuccess | registerFailure\r\n  register$ = createEffect(() =>\r\n    this.actions$.pipe(\r\n      ofType(AuthActions.register),\r\n      mergeMap(({ data }) =>\r\n        this.authService.register(data).pipe(\r\n          map((response) => AuthActions.registerSuccess({ response })),\r\n          catchError((err) =>\r\n            rxOf(\r\n              AuthActions.registerFailure({ error: err.error?.Errors?.[0] || 'Register failed' })\r\n            )\r\n          )\r\n        )\r\n      )\r\n    )\r\n  );\r\n\r\n  // on loginSuccess / registerSuccess: persist token and schedule refresh\r\n  authSuccess$ = createEffect(\r\n    () =>\r\n      this.actions$.pipe(\r\n        ofType(AuthActions.loginSuccess, AuthActions.registerSuccess),\r\n        tap(({ response }) => {\r\n          // authService already stores token in earlier version; если нет — сохраняем тут\r\n          if (response && (response as any).accessToken) {\r\n            this.authService.handleAuthentication(response.accessToken, response.expiresAt);\r\n\r\n            // schedule refresh: convert expiry (ISO or numeric) -> ms; мы ожидаем response.expiresAt as ISO or epoch\r\n            // предполагаем response.expiresAt это unix timestamp ms или Date string\r\n            const expiresAt = (response as any).expiresAt;\r\n            // Если expiresAt приходит как строка Date — преобразуем к timestamp\r\n            const expMs =\r\n              typeof expiresAt === 'number'\r\n                ? expiresAt\r\n                : Date.parse(expiresAt) || Date.now() + 60 * 60 * 1000;\r\n            // диспатчим экшен scheduleRefresh\r\n            this.store.dispatch(AuthActions.scheduleRefresh({ expiresAt: expMs }));\r\n          }\r\n        })\r\n      ),\r\n    { dispatch: false }\r\n  );\r\n\r\n  // scheduleRefresh -> запускает таймер, по истечении которого диспатчится refreshToken\r\n  scheduleRefresh$ = createEffect(() =>\r\n    this.actions$.pipe(\r\n      ofType(AuthActions.scheduleRefresh),\r\n      switchMap(({ expiresAt }) => {\r\n        // запускаем таймер, который сработает за 30 сек до expiresAt\r\n        const now = Date.now();\r\n        const msUntil = Math.max(0, expiresAt - now - 30_000); // 30s before expiry\r\n        return timer(msUntil).pipe(map(() => AuthActions.refreshToken()));\r\n      })\r\n    )\r\n  );\r\n\r\n  // refreshToken => вызов API /Auth/refresh\r\n  refreshToken$ = createEffect(() =>\r\n    this.actions$.pipe(\r\n      ofType(AuthActions.refreshToken),\r\n      // берем refresh token из AuthService (он хранит в localStorage), или можно использовать селектор\r\n      switchMap(() => {\r\n        const refreshToken = this.authService.getRefreshToken(); // реализуй в сервисе\r\n        const accessToken = this.authService.getToken();\r\n        if (!refreshToken || !accessToken) {\r\n          return rxOf(\r\n            AuthActions.refreshTokenFailure({ error: 'No refresh/access token available' })\r\n          );\r\n        }\r\n        return this.authService.refresh({ refreshToken }, accessToken).pipe(\r\n          map((response) => AuthActions.refreshTokenSuccess({ response })),\r\n          catchError((err) =>\r\n            rxOf(\r\n              AuthActions.refreshTokenFailure({ error: err.error?.Errors?.[0] || 'Refresh failed' })\r\n            )\r\n          )\r\n        );\r\n      })\r\n    )\r\n  );\r\n\r\n  // on refresh success -> обновляем stored token и снова schedule\r\n  refreshSuccess$ = createEffect(\r\n    () =>\r\n      this.actions$.pipe(\r\n        ofType(AuthActions.refreshTokenSuccess),\r\n        tap(({ response }) => {\r\n          // сохраним токен\r\n          if (response && (response as any).accessToken) {\r\n            this.authService.handleAuthentication((response as any).accessToken);\r\n            // schedule next\r\n            const expiresAt = (response as any).expiresAt;\r\n            const expMs =\r\n              typeof expiresAt === 'number'\r\n                ? expiresAt\r\n                : Date.parse(expiresAt) || Date.now() + 60 * 60 * 1000;\r\n            this.store.dispatch(AuthActions.scheduleRefresh({ expiresAt: expMs }));\r\n          }\r\n        })\r\n      ),\r\n    { dispatch: false }\r\n  );\r\n\r\n  // on refresh failure -> вынуть пользователя (logout)\r\n  refreshFailure$ = createEffect(\r\n    () =>\r\n      this.actions$.pipe(\r\n        ofType(AuthActions.refreshTokenFailure),\r\n        tap(() => {\r\n          // если обновление не удалось — логаутим\r\n          this.store.dispatch(AuthActions.logout());\r\n        })\r\n      ),\r\n    { dispatch: false }\r\n  );\r\n\r\n  // logout -> clear storage & navigate\r\n  logout$ = createEffect(\r\n    () =>\r\n      this.actions$.pipe(\r\n        ofType(AuthActions.logout),\r\n        tap(() => {\r\n          this.authService.logout();\r\n          this.router.navigate(['/login']);\r\n        })\r\n      ),\r\n    { dispatch: false }\r\n  );\r\n\r\n  constructor(\r\n    private actions$: Actions,\r\n    private authService: AuthService,\r\n    private router: Router,\r\n    private store: Store<AuthState>\r\n  ) {}\r\n}\r\n",
+            "constructorObj": {
+                "name": "constructor",
+                "description": "",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "args": [
+                    {
+                        "name": "actions$",
+                        "type": "Actions",
+                        "deprecated": false,
+                        "deprecationMessage": ""
+                    },
+                    {
+                        "name": "authService",
+                        "type": "AuthService",
+                        "deprecated": false,
+                        "deprecationMessage": ""
+                    },
+                    {
+                        "name": "router",
+                        "type": "Router",
+                        "deprecated": false,
+                        "deprecationMessage": ""
+                    },
+                    {
+                        "name": "store",
+                        "type": "Store<AuthState>",
+                        "deprecated": false,
+                        "deprecationMessage": ""
+                    }
+                ],
+                "line": 155,
+                "jsdoctags": [
+                    {
+                        "name": "actions$",
+                        "type": "Actions",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "tagName": {
+                            "text": "param"
+                        }
+                    },
+                    {
+                        "name": "authService",
+                        "type": "AuthService",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "tagName": {
+                            "text": "param"
+                        }
+                    },
+                    {
+                        "name": "router",
+                        "type": "Router",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "tagName": {
+                            "text": "param"
+                        }
+                    },
+                    {
+                        "name": "store",
+                        "type": "Store<AuthState>",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "tagName": {
+                            "text": "param"
+                        }
+                    }
+                ]
+            },
+            "extends": [],
+            "type": "injectable"
+        },
+        {
             "name": "AuthService",
-            "id": "injectable-AuthService-2a0ded84aa31659940d32703e3e2175583f1b907c011e491fdfd44275db91fc6909f735c16f65ebe715a5b8f28662ec1edf988fd911268e8e2fcb72ce3f6f850",
+            "id": "injectable-AuthService-e85a7b78891b9d2ac5a578781f02ad171e5faf3ff42e00925ea77123c582be4c8650bc25cfa031d6b95e33c881906001d7237868ce56851dcee7b98f7e1f5e92",
             "file": "src/app/core/services/auth.service.ts",
             "properties": [
                 {
@@ -855,7 +1114,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 15,
+                    "line": 16,
                     "modifierKind": [
                         123
                     ]
@@ -869,7 +1128,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 18,
+                    "line": 19,
                     "modifierKind": [
                         125
                     ]
@@ -883,7 +1142,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 17,
+                    "line": 18,
                     "modifierKind": [
                         123
                     ]
@@ -891,12 +1150,12 @@
             ],
             "methods": [
                 {
-                    "name": "getToken",
+                    "name": "getRefreshToken",
                     "args": [],
                     "optional": false,
                     "returnType": "string | null",
                     "typeParameters": [],
-                    "line": 80,
+                    "line": 73,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -904,7 +1163,20 @@
                     ]
                 },
                 {
-                    "name": "handleAuthentication",
+                    "name": "getToken",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "string | null",
+                    "typeParameters": [],
+                    "line": 29,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        125
+                    ]
+                },
+                {
+                    "name": "getUserFromToken",
                     "args": [
                         {
                             "name": "token",
@@ -914,9 +1186,9 @@
                         }
                     ],
                     "optional": false,
-                    "returnType": "void",
+                    "returnType": "any",
                     "typeParameters": [],
-                    "line": 72,
+                    "line": 53,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -935,16 +1207,51 @@
                     ]
                 },
                 {
-                    "name": "isLoggedIn",
-                    "args": [],
+                    "name": "handleAuthentication",
+                    "args": [
+                        {
+                            "name": "token",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        },
+                        {
+                            "name": "expiresAt",
+                            "type": "string | number",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "optional": true
+                        }
+                    ],
                     "optional": false,
-                    "returnType": "boolean",
+                    "returnType": "void",
                     "typeParameters": [],
-                    "line": 84,
+                    "line": 78,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
                         125
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": "token",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        },
+                        {
+                            "name": "expiresAt",
+                            "type": "string | number",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "optional": true,
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
                     ]
                 },
                 {
@@ -953,12 +1260,9 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 29,
+                    "line": 43,
                     "deprecated": false,
-                    "deprecationMessage": "",
-                    "modifierKind": [
-                        123
-                    ]
+                    "deprecationMessage": ""
                 },
                 {
                     "name": "login",
@@ -973,7 +1277,7 @@
                     "optional": false,
                     "returnType": "Observable<AuthResponse>",
                     "typeParameters": [],
-                    "line": 56,
+                    "line": 33,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -994,9 +1298,55 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 66,
+                    "line": 93,
                     "deprecated": false,
                     "deprecationMessage": ""
+                },
+                {
+                    "name": "refresh",
+                    "args": [
+                        {
+                            "name": "body",
+                            "type": "literal type",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        },
+                        {
+                            "name": "accessToken",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "any",
+                    "typeParameters": [],
+                    "line": 87,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        125
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": "body",
+                            "type": "literal type",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        },
+                        {
+                            "name": "accessToken",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
                 },
                 {
                     "name": "register",
@@ -1011,7 +1361,7 @@
                     "optional": false,
                     "returnType": "Observable<AuthResponse>",
                     "typeParameters": [],
-                    "line": 46,
+                    "line": 61,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -1031,7 +1381,7 @@
             "deprecationMessage": "",
             "description": "",
             "rawdescription": "\n",
-            "sourceCode": "import { Injectable } from '@angular/core';\r\nimport { HttpClient } from '@angular/common/http';\r\nimport { Observable, BehaviorSubject, tap, map } from 'rxjs';\r\nimport { Router } from '@angular/router';\r\nimport { jwtDecode } from 'jwt-decode';\r\nimport { AuthResponse } from '../../models/auth/AuthResponse';\r\nimport { LoginRequest } from '../../models/auth/LoginRequest';\r\nimport { RegisterRequest } from '../../models/auth/RegisterRequest';\r\nimport { environment } from '../../../environments/environment';\r\nimport { AuthResult } from '../../models/auth/AuthResult';\r\n@Injectable({\r\n  providedIn: 'root',\r\n})\r\nexport class AuthService {\r\n  private apiUrl = `${environment.apiUrl}/Auth`;\r\n\r\n  private currentUserSubject = new BehaviorSubject<DecodedToken | null>(null);\r\n  public currentUser$ = this.currentUserSubject.asObservable();\r\n\r\n  public get currentUserId(): string | null {\r\n    const user = this.currentUserSubject.value;\r\n    return user ? user.sub : null;\r\n  }\r\n\r\n  constructor(private http: HttpClient, private router: Router) {\r\n    this.loadInitialUser();\r\n  }\r\n\r\n  private loadInitialUser(): void {\r\n    const token = this.getToken();\r\n    if (token) {\r\n      try {\r\n        const decodedToken = jwtDecode<DecodedToken>(token);\r\n        if (decodedToken.exp * 1000 > Date.now()) {\r\n          this.currentUserSubject.next(decodedToken);\r\n        } else {\r\n          this.logout();\r\n        }\r\n      } catch (error) {\r\n        console.error('Invalid token found', error);\r\n        this.logout();\r\n      }\r\n    }\r\n  }\r\n\r\n  register(data: RegisterRequest): Observable<AuthResponse> {\r\n    return this.http.post<AuthResponse>(`${this.apiUrl}/register`, data).pipe(\r\n      tap((response) => {\r\n        if (response.token) {\r\n          this.handleAuthentication(response.token);\r\n        }\r\n      })\r\n    );\r\n  }\r\n\r\n  login(data: LoginRequest): Observable<AuthResponse> {\r\n    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, data).pipe(\r\n      tap((response) => {\r\n        if (response.token) {\r\n          this.handleAuthentication(response.token);\r\n        }\r\n      })\r\n    );\r\n  }\r\n\r\n  logout(): void {\r\n    localStorage.removeItem('auth_token');\r\n    this.currentUserSubject.next(null);\r\n    this.router.navigate(['/login']);\r\n  }\r\n\r\n  private handleAuthentication(token: string): void {\r\n    localStorage.setItem('auth_token', token);\r\n    const decodedToken = jwtDecode<DecodedToken>(token);\r\n    this.currentUserSubject.next(decodedToken);\r\n    this.currentUserSubject.next(decodedToken);\r\n    setTimeout(() => document.dispatchEvent(new Event('user-updated')));\r\n  }\r\n\r\n  public getToken(): string | null {\r\n    return localStorage.getItem('auth_token');\r\n  }\r\n\r\n  public isLoggedIn(): boolean {\r\n    return !!this.getToken();\r\n  }\r\n}\r\n",
+            "sourceCode": "import { Injectable } from '@angular/core';\r\nimport { HttpClient } from '@angular/common/http';\r\nimport { Observable, BehaviorSubject, tap, map } from 'rxjs';\r\nimport { Router } from '@angular/router';\r\nimport { jwtDecode } from 'jwt-decode';\r\nimport { AuthResponse } from '../../models/auth/AuthResponse';\r\nimport { LoginRequest } from '../../models/auth/LoginRequest';\r\nimport { RegisterRequest } from '../../models/auth/RegisterRequest';\r\nimport { environment } from '../../../environments/environment';\r\nimport { AuthResult } from '../../models/auth/AuthResult';\r\n\r\n@Injectable({\r\n  providedIn: 'root',\r\n})\r\nexport class AuthService {\r\n  private apiUrl = `${environment.apiUrl}/Auth`;\r\n\r\n  private currentUserSubject = new BehaviorSubject<DecodedToken | null>(null);\r\n  public currentUser$ = this.currentUserSubject.asObservable();\r\n\r\n  public get currentUserId(): string | null {\r\n    const user = this.currentUserSubject.value;\r\n    return user ? user.sub : null;\r\n  }\r\n\r\n  constructor(private http: HttpClient, private router: Router) {\r\n    this.loadInitialUser();\r\n  }\r\n  public getToken(): string | null {\r\n    return localStorage.getItem('auth_token');\r\n  }\r\n\r\n  login(data: LoginRequest): Observable<AuthResponse> {\r\n    return this.http.post<any>(`${this.apiUrl}/login`, data).pipe(\r\n      map((res) => ({\r\n        accessToken: res.accessToken,\r\n        expiresAt: res.expiresAt,\r\n        email: res.email,\r\n        refreshToken: res.refreshToken,\r\n      }))\r\n    );\r\n  }\r\n  loadInitialUser(): void {\r\n    const token = this.getToken();\r\n\r\n    if (token) {\r\n      const user = this.getUserFromToken(token);\r\n      if (user) {\r\n        this.currentUserSubject.next(user);\r\n      }\r\n    }\r\n  }\r\n  private getUserFromToken(token: string): any {\r\n    try {\r\n      const payload = JSON.parse(atob(token.split('.')[1]));\r\n      return { email: payload.email };\r\n    } catch {\r\n      return null;\r\n    }\r\n  }\r\n  register(data: RegisterRequest): Observable<AuthResponse> {\r\n    return this.http.post<any>(`${this.apiUrl}/register`, data).pipe(\r\n      map((res) => ({\r\n        accessToken: res.accessToken,\r\n        expiresAt: res.expiresAt,\r\n        email: res.email,\r\n        refreshToken: res.refreshToken,\r\n      }))\r\n    );\r\n  }\r\n\r\n  // возвращает refreshToken из localStorage\r\n  public getRefreshToken(): string | null {\r\n    const v = localStorage.getItem('auth_refresh_token');\r\n    return v;\r\n  }\r\n\r\n  public handleAuthentication(token: string, expiresAt?: string | number): void {\r\n    localStorage.setItem('auth_token', token);\r\n    if (expiresAt) localStorage.setItem('auth_token_expires_at', expiresAt.toString());\r\n\r\n    const decoded = jwtDecode<DecodedToken>(token);\r\n    this.currentUserSubject.next(decoded);\r\n  }\r\n\r\n  // метод refresh (вызов API)\r\n  public refresh(body: { refreshToken: string }, accessToken: string) {\r\n    // возьми accessToken (дабл) — interceptor подставит Authorization, но на всякий:\r\n    const headers = accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined;\r\n    return this.http.post<AuthResponse>(`${this.apiUrl}/refresh`, body, { headers });\r\n  }\r\n\r\n  logout(): void {\r\n    localStorage.removeItem('auth_token');\r\n    localStorage.removeItem('auth_token_expires_at');\r\n    localStorage.removeItem('auth_refresh_token');\r\n    this.currentUserSubject.next(null);\r\n  }\r\n}\r\n",
             "constructorObj": {
                 "name": "constructor",
                 "description": "",
@@ -1051,7 +1401,7 @@
                         "deprecationMessage": ""
                     }
                 ],
-                "line": 23,
+                "line": 24,
                 "jsdoctags": [
                     {
                         "name": "http",
@@ -1080,7 +1430,7 @@
                         "name": "currentUserId",
                         "type": "",
                         "returnType": "string | null",
-                        "line": 20
+                        "line": 21
                     }
                 }
             },
@@ -1323,7 +1673,7 @@
     "interceptors": [
         {
             "name": "AuthInterceptor",
-            "id": "injectable-AuthInterceptor-ffd6f5c4d346b8ecd40919b7d803b5e95d254e56a5dd4a139826536a65b6cad74707a5b3c5a63d3307a730265b0e2c758b23d92ca6efd16fe9adac9a9280d8fc",
+            "id": "injectable-AuthInterceptor-c630b00dfaf06b15d61d81520dc6ca11ab4872d33d18d267ff7a0b02c5527d7e2f5a7c84d5c0952d4cfb1bb74993a6dbe65f771a986e0888c2fd752c0d38acd3",
             "file": "src/app/core/interceptors/auth.interceptor.ts",
             "properties": [],
             "methods": [
@@ -1375,7 +1725,7 @@
             "deprecationMessage": "",
             "description": "",
             "rawdescription": "\n",
-            "sourceCode": "import { Injectable } from '@angular/core';\r\nimport { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest } from '@angular/common/http';\r\nimport { Observable } from 'rxjs';\r\nimport { AuthService } from '../services/auth.service';\r\n\r\n@Injectable()\r\nexport class AuthInterceptor implements HttpInterceptor {\r\n  constructor(private authService: AuthService) {}\r\n\r\n  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {\r\n    const authToken = this.authService.getToken();\r\n\r\n    if (authToken) {\r\n      const authReq = req.clone({\r\n        headers: req.headers.set('Authorization', `Bearer ${authToken}`),\r\n      });\r\n      return next.handle(authReq);\r\n    }\r\n\r\n    return next.handle(req);\r\n  }\r\n}\r\n",
+            "sourceCode": "import { Injectable } from '@angular/core';\r\nimport { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest } from '@angular/common/http';\r\nimport { Observable } from 'rxjs';\r\nimport { AuthService } from '../services/auth.service';\r\n\r\n@Injectable()\r\nexport class AuthInterceptor implements HttpInterceptor {\r\n  constructor(private authService: AuthService) {}\r\n\r\n  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {\r\n    const authToken = this.authService.getToken();\r\n\r\n    if (authToken) {\r\n      const authReq = req.clone({\r\n        setHeaders: { Authorization: `Bearer ${authToken}` }, // чуть короче и чище\r\n      });\r\n      return next.handle(authReq);\r\n    }\r\n\r\n    return next.handle(req);\r\n  }\r\n}\r\n",
             "constructorObj": {
                 "name": "constructor",
                 "description": "",
@@ -1465,7 +1815,7 @@
         },
         {
             "name": "AuthComponent",
-            "id": "component-AuthComponent-fbbc7ab393246cfdffcdc86e9d76afb046b2fe5153dc08270f9cb459d04b46f89b14efcd23e1dd4b23ab6fbfc2da72f08d8f6a380e363be26713f8b7e70d56c7",
+            "id": "component-AuthComponent-60992025e1126c91e01b420aaa742592dee76fef83974f1784854d059db0f7539e435d6abd8a778ce7b4961b4ebd3612bc26d4961a238a0298b82356b0844857",
             "file": "src/app/auth/auth.component.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -1473,7 +1823,9 @@
             "outputs": [],
             "providers": [],
             "selector": "app-auth",
-            "styleUrls": [],
+            "styleUrls": [
+                "./auth.component.scss"
+            ],
             "styles": [],
             "templateUrl": [
                 "./auth.component.html"
@@ -1484,26 +1836,14 @@
             "outputsClass": [],
             "propertiesClass": [
                 {
-                    "name": "errorMessage",
-                    "defaultValue": "null",
+                    "name": "error$",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "string | null",
+                    "type": "Observable<string | null>",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 17
-                },
-                {
-                    "name": "isLoading",
-                    "defaultValue": "false",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 16
+                    "line": 21
                 },
                 {
                     "name": "isLoginView",
@@ -1514,7 +1854,17 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 13
+                    "line": 15
+                },
+                {
+                    "name": "loading$",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Observable<boolean>",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 20
                 },
                 {
                     "name": "loginForm",
@@ -1524,7 +1874,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 14
+                    "line": 17
                 },
                 {
                     "name": "registerForm",
@@ -1534,43 +1884,17 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 15
+                    "line": 18
                 }
             ],
             "methodsClass": [
-                {
-                    "name": "initLoginForm",
-                    "args": [],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 42,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "modifierKind": [
-                        123
-                    ]
-                },
-                {
-                    "name": "initRegisterForm",
-                    "args": [],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 49,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "modifierKind": [
-                        123
-                    ]
-                },
                 {
                     "name": "ngOnInit",
                     "args": [],
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 28,
+                    "line": 25,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -1580,7 +1904,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 76,
+                    "line": 41,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -1590,7 +1914,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 94,
+                    "line": 47,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -1600,7 +1924,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 64,
+                    "line": 53,
                     "deprecated": false,
                     "deprecationMessage": ""
                 }
@@ -1614,10 +1938,14 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { ChangeDetectorRef, Component, OnInit } from '@angular/core';\r\nimport { FormGroup, FormBuilder, Validators } from '@angular/forms';\r\nimport { ActivatedRoute, Router } from '@angular/router';\r\nimport { AuthService } from '../core/services/auth.service';\r\n\r\n@Component({\r\n  selector: 'app-auth',\r\n  standalone: false,\r\n  templateUrl: './auth.component.html',\r\n  styleUrl: './auth.component.scss',\r\n})\r\nexport class AuthComponent implements OnInit {\r\n  isLoginView = true;\r\n  loginForm!: FormGroup;\r\n  registerForm!: FormGroup;\r\n  isLoading = false;\r\n  errorMessage: string | null = null;\r\n\r\n  // 2. Внедряем ActivatedRoute в конструктор\r\n  constructor(\r\n    private fb: FormBuilder,\r\n    private authService: AuthService,\r\n    private router: Router,\r\n    private cdr: ChangeDetectorRef,\r\n    private route: ActivatedRoute\r\n  ) {}\r\n\r\n  ngOnInit(): void {\r\n    this.route.queryParams.subscribe((params) => {\r\n      if (params['mode'] === 'register') {\r\n        this.isLoginView = false;\r\n      } else {\r\n        this.isLoginView = true;\r\n      }\r\n      this.cdr.markForCheck();\r\n    });\r\n\r\n    this.initLoginForm();\r\n    this.initRegisterForm();\r\n  }\r\n\r\n  private initLoginForm(): void {\r\n    this.loginForm = this.fb.group({\r\n      email: ['', [Validators.required, Validators.email]],\r\n      password: ['', [Validators.required]],\r\n    });\r\n  }\r\n\r\n  private initRegisterForm(): void {\r\n    this.registerForm = this.fb.group({\r\n      fullName: ['', [Validators.required, Validators.maxLength(200)]],\r\n      email: ['', [Validators.required, Validators.email]],\r\n      password: [\r\n        '',\r\n        [\r\n          Validators.required,\r\n          Validators.minLength(8),\r\n          Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$/),\r\n        ],\r\n      ],\r\n    });\r\n  }\r\n\r\n  toggleView(): void {\r\n    this.isLoginView = !this.isLoginView;\r\n    this.errorMessage = null;\r\n\r\n    const mode = this.isLoginView ? null : 'register';\r\n    this.router.navigate([], {\r\n      relativeTo: this.route,\r\n      queryParams: { mode: mode },\r\n      queryParamsHandling: 'merge',\r\n    });\r\n  }\r\n\r\n  onLoginSubmit(): void {\r\n    if (this.loginForm.invalid) return;\r\n    this.isLoading = true;\r\n    this.errorMessage = null;\r\n\r\n    this.authService.login(this.loginForm.value).subscribe({\r\n      next: () => {\r\n        this.isLoading = false;\r\n        this.router.navigate(['/events']);\r\n      },\r\n      error: (err) => {\r\n        this.isLoading = false;\r\n        this.errorMessage = err.error?.Errors?.[0] || 'Invalid credentials. Please try again.';\r\n        this.cdr.markForCheck();\r\n      },\r\n    });\r\n  }\r\n\r\n  onRegisterSubmit(): void {\r\n    if (this.registerForm.invalid) return;\r\n    this.isLoading = true;\r\n    this.errorMessage = null;\r\n\r\n    this.authService.register(this.registerForm.value).subscribe({\r\n      next: () => {\r\n        this.isLoading = false;\r\n        this.router.navigate(['/events']);\r\n      },\r\n      error: (err) => {\r\n        this.isLoading = false;\r\n        this.errorMessage =\r\n          err.error?.Errors?.[0] || 'Registration failed. The email may already be in use.';\r\n        this.cdr.markForCheck();\r\n      },\r\n    });\r\n  }\r\n}\r\n",
-            "styleUrl": "./auth.component.scss",
+            "sourceCode": "import { Component, OnInit } from '@angular/core';\r\nimport { FormGroup, FormBuilder, Validators } from '@angular/forms';\r\nimport { Store } from '@ngrx/store';\r\nimport { Observable } from 'rxjs';\r\nimport * as AuthActions from '../store/auth/auth.actions';\r\nimport { selectLoading, selectError } from '../store/auth/auth.selectors';\r\n\r\n@Component({\r\n  selector: 'app-auth',\r\n  standalone: false,\r\n  templateUrl: './auth.component.html',\r\n  styleUrls: ['./auth.component.scss'],\r\n})\r\nexport class AuthComponent implements OnInit {\r\n  isLoginView = true;\r\n\r\n  loginForm!: FormGroup;\r\n  registerForm!: FormGroup;\r\n\r\n  loading$!: Observable<boolean>;\r\n  error$!: Observable<string | null>;\r\n\r\n  constructor(private fb: FormBuilder, private store: Store) {}\r\n\r\n  ngOnInit(): void {\r\n    this.loginForm = this.fb.group({\r\n      email: ['', [Validators.required, Validators.email]],\r\n      password: ['', [Validators.required]],\r\n    });\r\n\r\n    this.registerForm = this.fb.group({\r\n      fullName: ['', [Validators.required, Validators.maxLength(200)]],\r\n      email: ['', [Validators.required, Validators.email]],\r\n      password: ['', [Validators.required, Validators.minLength(8)]],\r\n    });\r\n\r\n    this.loading$ = this.store.select(selectLoading);\r\n    this.error$ = this.store.select(selectError);\r\n  }\r\n\r\n  onLoginSubmit(): void {\r\n    if (this.loginForm.valid) {\r\n      this.store.dispatch(AuthActions.login({ data: this.loginForm.value }));\r\n    }\r\n  }\r\n\r\n  onRegisterSubmit(): void {\r\n    if (this.registerForm.valid) {\r\n      this.store.dispatch(AuthActions.register({ data: this.registerForm.value }));\r\n    }\r\n  }\r\n\r\n  toggleView(): void {\r\n    this.isLoginView = !this.isLoginView;\r\n  }\r\n}\r\n",
             "assetsDirs": [],
-            "styleUrlsData": "",
+            "styleUrlsData": [
+                {
+                    "data": "@use 'variables' as *;\r\n.auth-container {\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  min-height: 100vh;\r\n  padding: $spacing-base;\r\n  background-color: $bg-body;\r\n}\r\n\r\n.auth-card {\r\n  width: 100%;\r\n  max-width: 420px;\r\n}\r\n\r\n.auth-header {\r\n  text-align: center;\r\n  margin-bottom: $spacing-base * 2;\r\n}\r\n\r\nform {\r\n  app-form-input {\r\n    display: block;\r\n    margin-bottom: $spacing-base * 1.25;\r\n  }\r\n\r\n  app-button {\r\n    ::ng-deep button {\r\n      width: 100%;\r\n      padding-top: $spacing-base * 0.75;\r\n      padding-bottom: $spacing-base * 0.75;\r\n      font-size: 1.1rem;\r\n    }\r\n  }\r\n}\r\n\r\n.toggle-view {\r\n  text-align: center;\r\n  margin-top: $spacing-base * 1.5;\r\n  font-size: 0.9rem;\r\n  color: $text-secondary;\r\n\r\n  a {\r\n    font-weight: $font-weight-medium;\r\n    cursor: pointer;\r\n  }\r\n}\r\n\r\n.error-message {\r\n  margin-top: $spacing-base;\r\n  padding: $spacing-base * 0.75;\r\n  background-color: #fee2e2;\r\n  color: #b91c1c;\r\n  border-radius: $border-radius;\r\n  text-align: center;\r\n  font-size: 0.9rem;\r\n}\r\n",
+                    "styleUrl": "./auth.component.scss"
+                }
+            ],
             "stylesData": "",
             "constructorObj": {
                 "name": "constructor",
@@ -1632,31 +1960,13 @@
                         "deprecationMessage": ""
                     },
                     {
-                        "name": "authService",
-                        "type": "AuthService",
-                        "deprecated": false,
-                        "deprecationMessage": ""
-                    },
-                    {
-                        "name": "router",
-                        "type": "Router",
-                        "deprecated": false,
-                        "deprecationMessage": ""
-                    },
-                    {
-                        "name": "cdr",
-                        "type": "ChangeDetectorRef",
-                        "deprecated": false,
-                        "deprecationMessage": ""
-                    },
-                    {
-                        "name": "route",
-                        "type": "ActivatedRoute",
+                        "name": "store",
+                        "type": "Store",
                         "deprecated": false,
                         "deprecationMessage": ""
                     }
                 ],
-                "line": 17,
+                "line": 21,
                 "jsdoctags": [
                     {
                         "name": "fb",
@@ -1668,35 +1978,8 @@
                         }
                     },
                     {
-                        "name": "authService",
-                        "type": "AuthService",
-                        "deprecated": false,
-                        "deprecationMessage": "",
-                        "tagName": {
-                            "text": "param"
-                        }
-                    },
-                    {
-                        "name": "router",
-                        "type": "Router",
-                        "deprecated": false,
-                        "deprecationMessage": "",
-                        "tagName": {
-                            "text": "param"
-                        }
-                    },
-                    {
-                        "name": "cdr",
-                        "type": "ChangeDetectorRef",
-                        "deprecated": false,
-                        "deprecationMessage": "",
-                        "tagName": {
-                            "text": "param"
-                        }
-                    },
-                    {
-                        "name": "route",
-                        "type": "ActivatedRoute",
+                        "name": "store",
+                        "type": "Store",
                         "deprecated": false,
                         "deprecationMessage": "",
                         "tagName": {
@@ -1709,7 +1992,7 @@
             "implements": [
                 "OnInit"
             ],
-            "templateData": "<div class=\"auth-container\">\r\n  <div class=\"card auth-card\">\r\n    @if (isLoginView) {\r\n    <header class=\"auth-header\">\r\n      <h1>Welcome Back!</h1>\r\n      <p>Sign in to continue to your events.</p>\r\n    </header>\r\n\r\n    <form [formGroup]=\"loginForm\" (ngSubmit)=\"onLoginSubmit()\">\r\n      <app-form-input\r\n        label=\"Email Address\"\r\n        type=\"email\"\r\n        placeholder=\"you@example.com\"\r\n        formControlName=\"email\"\r\n        [required]=\"true\"\r\n      ></app-form-input>\r\n\r\n      <app-form-input\r\n        label=\"Password\"\r\n        type=\"password\"\r\n        placeholder=\"Enter your password\"\r\n        formControlName=\"password\"\r\n        [required]=\"true\"\r\n      ></app-form-input>\r\n\r\n      <app-button\r\n        type=\"submit\"\r\n        label=\"Sign In\"\r\n        [disabled]=\"loginForm.invalid || isLoading\"\r\n      ></app-button>\r\n    </form>\r\n\r\n    <p class=\"toggle-view\">\r\n      Don't have an account?\r\n      <a (click)=\"toggleView()\">Sign up</a>\r\n    </p>\r\n\r\n    } @else {\r\n    <header class=\"auth-header\">\r\n      <h1>Create an Account</h1>\r\n      <p>Join our community to start creating and joining events.</p>\r\n    </header>\r\n\r\n    <form [formGroup]=\"registerForm\" (ngSubmit)=\"onRegisterSubmit()\">\r\n      <app-form-input\r\n        label=\"Full Name\"\r\n        type=\"text\"\r\n        placeholder=\"John Doe\"\r\n        formControlName=\"fullName\"\r\n        [required]=\"true\"\r\n      ></app-form-input>\r\n\r\n      <app-form-input\r\n        label=\"Email Address\"\r\n        type=\"email\"\r\n        placeholder=\"you@example.com\"\r\n        formControlName=\"email\"\r\n        [required]=\"true\"\r\n      ></app-form-input>\r\n\r\n      <app-form-input\r\n        label=\"Password\"\r\n        type=\"password\"\r\n        placeholder=\"Create a strong password\"\r\n        formControlName=\"password\"\r\n        [required]=\"true\"\r\n        helpText=\"Minimum 8 characters, with one uppercase, one lowercase, and one number.\"\r\n      ></app-form-input>\r\n\r\n      <app-button\r\n        type=\"submit\"\r\n        label=\"Create Account\"\r\n        [disabled]=\"registerForm.invalid || isLoading\"\r\n      ></app-button>\r\n    </form>\r\n\r\n    <p class=\"toggle-view\">\r\n      Already have an account?\r\n      <a (click)=\"toggleView()\">Sign in</a>\r\n    </p>\r\n    } @if (errorMessage) {\r\n    <div class=\"error-message\">\r\n      <p>{{ errorMessage }}</p>\r\n    </div>\r\n    }\r\n  </div>\r\n</div>\r\n"
+            "templateData": "<div class=\"auth-container\">\r\n  <div class=\"card auth-card\">\r\n    <form\r\n      *ngIf=\"isLoginView; else registerFormTpl\"\r\n      [formGroup]=\"loginForm\"\r\n      (ngSubmit)=\"onLoginSubmit()\"\r\n    >\r\n      <app-form-input label=\"Email\" formControlName=\"email\"></app-form-input>\r\n      <app-form-input label=\"Password\" type=\"password\" formControlName=\"password\"></app-form-input>\r\n\r\n      <app-button\r\n        type=\"submit\"\r\n        label=\"Sign In\"\r\n        [disabled]=\"loginForm.invalid || !!(loading$ | async)\"\r\n      ></app-button>\r\n    </form>\r\n\r\n    <ng-template #registerFormTpl>\r\n      <form [formGroup]=\"registerForm\" (ngSubmit)=\"onRegisterSubmit()\">\r\n        <app-form-input label=\"Full Name\" formControlName=\"fullName\"></app-form-input>\r\n        <app-form-input label=\"Email\" formControlName=\"email\"></app-form-input>\r\n        <app-form-input\r\n          label=\"Password\"\r\n          type=\"password\"\r\n          formControlName=\"password\"\r\n        ></app-form-input>\r\n        <app-button\r\n          type=\"submit\"\r\n          label=\"Register\"\r\n          [disabled]=\"registerForm.invalid || !!(loading$ | async)\"\r\n        ></app-button>\r\n      </form>\r\n    </ng-template>\r\n\r\n    <div *ngIf=\"error$ | async as error\" class=\"error-message\">\r\n      {{ error }}\r\n    </div>\r\n  </div>\r\n</div>\r\n"
         },
         {
             "name": "Button",
@@ -1798,7 +2081,7 @@
         },
         {
             "name": "Calendar",
-            "id": "component-Calendar-3723be7193f636a257b312480a7d94eb388f824e4b08c9b75a7e16766aadd6751d44aa102482e2ff2e4f9e2c4243673c362cfa44a48319a42c5fda060363f541",
+            "id": "component-Calendar-b3887eb771ad85be47ab9fbe49d4cb0dd958773e18e87a4f39fd20f9b02a55c1e1cb7c9383edd4299424181de058a3cff596c3d299c8ca7661262075c0c18cde",
             "file": "src/app/shared/calendar/calendar.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -1913,7 +2196,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 57,
+                    "line": 55,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -1923,7 +2206,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 126,
+                    "line": 122,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -1940,7 +2223,7 @@
                     "optional": false,
                     "returnType": "boolean",
                     "typeParameters": [],
-                    "line": 141,
+                    "line": 137,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -1961,7 +2244,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 121,
+                    "line": 117,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -1978,7 +2261,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 51,
+                    "line": 49,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2009,7 +2292,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 116,
+                    "line": 112,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -2026,7 +2309,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 133,
+                    "line": 129,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2051,13 +2334,13 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';\r\nexport interface CalendarEvent {\r\n  date: Date;\r\n  title: string;\r\n}\r\n\r\ninterface CalendarDay {\r\n  date: Date;\r\n  dayOfMonth: number;\r\n  isCurrentMonth: boolean;\r\n  isToday: boolean;\r\n  isSelected: boolean;\r\n  hasEvents: boolean;\r\n}\r\n@Component({\r\n  selector: 'app-calendar',\r\n  standalone: false,\r\n  templateUrl: './calendar.html',\r\n  styleUrl: './calendar.scss',\r\n})\r\nexport class Calendar {\r\n  @Input() events: CalendarEvent[] = []; // Список подій\r\n  @Output() dateSelected = new EventEmitter<Date>(); // Подія при виборі дати\r\n\r\n  public currentDate: Date = new Date(); // Поточна дата для відображення місяця\r\n  public selectedDate: Date = new Date(); // Вибрана дата\r\n  public daysInMonth: CalendarDay[] = []; // Масив днів для відображення\r\n  public monthNames = [\r\n    'January',\r\n    'February',\r\n    'March',\r\n    'April',\r\n    'May',\r\n    'June',\r\n    'July',\r\n    'August',\r\n    'September',\r\n    'October',\r\n    'November',\r\n    'December',\r\n  ];\r\n  public weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];\r\n\r\n  ngOnInit(): void {\r\n    // Встановлюємо вибрану дату на початок дня (без часу)\r\n    this.selectedDate.setHours(0, 0, 0, 0);\r\n    this.generateCalendar();\r\n  }\r\n\r\n  // Відстежуємо зміни у вхідному масиві подій\r\n  ngOnChanges(changes: SimpleChanges): void {\r\n    if (changes['events'] && !changes['events'].firstChange) {\r\n      this.generateCalendar();\r\n    }\r\n  }\r\n\r\n  generateCalendar(): void {\r\n    this.daysInMonth = [];\r\n    const year = this.currentDate.getFullYear();\r\n    const month = this.currentDate.getMonth();\r\n\r\n    const firstDayOfMonth = new Date(year, month, 1);\r\n    const lastDayOfMonth = new Date(year, month + 1, 0);\r\n\r\n    const firstDayWeekday = firstDayOfMonth.getDay(); // 0 = Sun, 1 = Mon, ...\r\n    const totalDays = lastDayOfMonth.getDate();\r\n\r\n    const today = new Date();\r\n    today.setHours(0, 0, 0, 0);\r\n\r\n    // Додаємо дні попереднього місяця\r\n    for (let i = 0; i < firstDayWeekday; i++) {\r\n      const date = new Date(year, month, 1 - (firstDayWeekday - i));\r\n      date.setHours(0, 0, 0, 0); // Нормалізуємо дату\r\n      this.daysInMonth.push({\r\n        date: date,\r\n        dayOfMonth: date.getDate(),\r\n        isCurrentMonth: false,\r\n        isToday: false,\r\n        isSelected: false,\r\n        hasEvents: this.isEventDay(date), // Перевіряємо наявність подій\r\n      });\r\n    }\r\n\r\n    for (let i = 1; i <= totalDays; i++) {\r\n      const date = new Date(year, month, i);\r\n      date.setHours(0, 0, 0, 0);\r\n      const isSelectedDay = date.getTime() === this.selectedDate.getTime();\r\n      this.daysInMonth.push({\r\n        date: date,\r\n        dayOfMonth: i,\r\n        isCurrentMonth: true,\r\n        isToday: date.getTime() === today.getTime(),\r\n        isSelected: isSelectedDay,\r\n        hasEvents: this.isEventDay(date),\r\n      });\r\n    }\r\n\r\n    const gridsize = this.daysInMonth.length > 35 ? 42 : 35;\r\n    const remainingDays = gridsize - this.daysInMonth.length;\r\n    for (let i = 1; i <= remainingDays; i++) {\r\n      const date = new Date(year, month + 1, i);\r\n      date.setHours(0, 0, 0, 0);\r\n      this.daysInMonth.push({\r\n        date: date,\r\n        dayOfMonth: i,\r\n        isCurrentMonth: false,\r\n        isToday: false,\r\n        isSelected: false,\r\n        hasEvents: this.isEventDay(date),\r\n      });\r\n    }\r\n    console.log('Calendar generated for:', this.currentDate.toDateString(), this.daysInMonth); // Додано для відладки\r\n  }\r\n\r\n  prevMonth(): void {\r\n    this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() - 1, 1);\r\n    this.generateCalendar();\r\n  }\r\n\r\n  nextMonth(): void {\r\n    this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, 1);\r\n    this.generateCalendar();\r\n  }\r\n\r\n  goToToday(): void {\r\n    this.currentDate = new Date();\r\n    const today = new Date();\r\n    today.setHours(0, 0, 0, 0);\r\n    this.selectDate(today);\r\n  }\r\n\r\n  selectDate(date: Date): void {\r\n    this.selectedDate = new Date(date);\r\n    this.selectedDate.setHours(0, 0, 0, 0);\r\n    this.dateSelected.emit(this.selectedDate);\r\n\r\n    this.generateCalendar();\r\n  }\r\n\r\n  isEventDay(date: Date): boolean {\r\n    const targetTime = date.getTime();\r\n    return this.events.some((event) => {\r\n      const eventDate = new Date(event.date);\r\n      eventDate.setHours(0, 0, 0, 0);\r\n      return eventDate.getTime() === targetTime;\r\n    });\r\n  }\r\n}\r\n",
+            "sourceCode": "import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';\r\nexport interface CalendarEvent {\r\n  date: Date;\r\n  title: string;\r\n}\r\n\r\ninterface CalendarDay {\r\n  date: Date;\r\n  dayOfMonth: number;\r\n  isCurrentMonth: boolean;\r\n  isToday: boolean;\r\n  isSelected: boolean;\r\n  hasEvents: boolean;\r\n}\r\n@Component({\r\n  selector: 'app-calendar',\r\n  standalone: false,\r\n  templateUrl: './calendar.html',\r\n  styleUrl: './calendar.scss',\r\n})\r\nexport class Calendar {\r\n  @Input() events: CalendarEvent[] = [];\r\n  @Output() dateSelected = new EventEmitter<Date>();\r\n\r\n  public currentDate: Date = new Date();\r\n  public selectedDate: Date = new Date();\r\n  public daysInMonth: CalendarDay[] = [];\r\n  public monthNames = [\r\n    'January',\r\n    'February',\r\n    'March',\r\n    'April',\r\n    'May',\r\n    'June',\r\n    'July',\r\n    'August',\r\n    'September',\r\n    'October',\r\n    'November',\r\n    'December',\r\n  ];\r\n  public weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];\r\n\r\n  ngOnInit(): void {\r\n    this.selectedDate.setHours(0, 0, 0, 0);\r\n    this.generateCalendar();\r\n  }\r\n\r\n  ngOnChanges(changes: SimpleChanges): void {\r\n    if (changes['events'] && !changes['events'].firstChange) {\r\n      this.generateCalendar();\r\n    }\r\n  }\r\n\r\n  generateCalendar(): void {\r\n    this.daysInMonth = [];\r\n    const year = this.currentDate.getFullYear();\r\n    const month = this.currentDate.getMonth();\r\n\r\n    const firstDayOfMonth = new Date(year, month, 1);\r\n    const lastDayOfMonth = new Date(year, month + 1, 0);\r\n\r\n    const firstDayWeekday = firstDayOfMonth.getDay();\r\n    const totalDays = lastDayOfMonth.getDate();\r\n\r\n    const today = new Date();\r\n    today.setHours(0, 0, 0, 0);\r\n\r\n    for (let i = 0; i < firstDayWeekday; i++) {\r\n      const date = new Date(year, month, 1 - (firstDayWeekday - i));\r\n      date.setHours(0, 0, 0, 0);\r\n      this.daysInMonth.push({\r\n        date: date,\r\n        dayOfMonth: date.getDate(),\r\n        isCurrentMonth: false,\r\n        isToday: false,\r\n        isSelected: false,\r\n        hasEvents: this.isEventDay(date),\r\n      });\r\n    }\r\n\r\n    for (let i = 1; i <= totalDays; i++) {\r\n      const date = new Date(year, month, i);\r\n      date.setHours(0, 0, 0, 0);\r\n      const isSelectedDay = date.getTime() === this.selectedDate.getTime();\r\n      this.daysInMonth.push({\r\n        date: date,\r\n        dayOfMonth: i,\r\n        isCurrentMonth: true,\r\n        isToday: date.getTime() === today.getTime(),\r\n        isSelected: isSelectedDay,\r\n        hasEvents: this.isEventDay(date),\r\n      });\r\n    }\r\n\r\n    const gridsize = this.daysInMonth.length > 35 ? 42 : 35;\r\n    const remainingDays = gridsize - this.daysInMonth.length;\r\n    for (let i = 1; i <= remainingDays; i++) {\r\n      const date = new Date(year, month + 1, i);\r\n      date.setHours(0, 0, 0, 0);\r\n      this.daysInMonth.push({\r\n        date: date,\r\n        dayOfMonth: i,\r\n        isCurrentMonth: false,\r\n        isToday: false,\r\n        isSelected: false,\r\n        hasEvents: this.isEventDay(date),\r\n      });\r\n    }\r\n  }\r\n\r\n  prevMonth(): void {\r\n    this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() - 1, 1);\r\n    this.generateCalendar();\r\n  }\r\n\r\n  nextMonth(): void {\r\n    this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, 1);\r\n    this.generateCalendar();\r\n  }\r\n\r\n  goToToday(): void {\r\n    this.currentDate = new Date();\r\n    const today = new Date();\r\n    today.setHours(0, 0, 0, 0);\r\n    this.selectDate(today);\r\n  }\r\n\r\n  selectDate(date: Date): void {\r\n    this.selectedDate = new Date(date);\r\n    this.selectedDate.setHours(0, 0, 0, 0);\r\n    this.dateSelected.emit(this.selectedDate);\r\n\r\n    this.generateCalendar();\r\n  }\r\n\r\n  isEventDay(date: Date): boolean {\r\n    const targetTime = date.getTime();\r\n    return this.events.some((event) => {\r\n      const eventDate = new Date(event.date);\r\n      eventDate.setHours(0, 0, 0, 0);\r\n      return eventDate.getTime() === targetTime;\r\n    });\r\n  }\r\n}\r\n",
             "styleUrl": "./calendar.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<div class=\"calendar\">\r\n  <div class=\"calendar-header\">\r\n    <button class=\"nav-button\" (click)=\"prevMonth()\">\r\n      <mat-icon>chevron_left</mat-icon>\r\n    </button>\r\n    <span class=\"month-year\">\r\n      {{ monthNames[currentDate.getMonth()] }} {{ currentDate.getFullYear() }}\r\n    </span>\r\n    <button class=\"nav-button\" (click)=\"nextMonth()\">\r\n      <mat-icon>chevron_right</mat-icon>\r\n    </button>\r\n    <button class=\"today-button\" (click)=\"goToToday()\">Today</button>\r\n  </div>\r\n\r\n  <div class=\"calendar-grid\">\r\n    <!-- === ВИПРАВЛЕНО: Використовуємо @for замість *ngFor === -->\r\n    @for (day of weekDays; track day) {\r\n    <div class=\"weekday\">{{ day }}</div>\r\n    }\r\n    <!-- =============================================== -->\r\n\r\n    <!-- === ВИПРАВЛЕНО: Використовуємо @for та виправлено синтаксис (click) === -->\r\n    @for (day of daysInMonth; track day.date) {\r\n    <div\r\n      class=\"day-cell\"\r\n      [class.current-month]=\"day.isCurrentMonth\"\r\n      [class.today]=\"day.isToday\"\r\n      [class.selected]=\"day.isSelected\"\r\n      [class.has-events]=\"day.hasEvents\"\r\n      (click)=\"day.isCurrentMonth && selectDate(day.date)\"\r\n    >\r\n      <span class=\"day-number\">{{ day.dayOfMonth }}</span>\r\n      @if (day.hasEvents && day.isCurrentMonth) {\r\n      <div class=\"event-indicator\"></div>\r\n      }\r\n    </div>\r\n    }\r\n    <!-- ============================================================== -->\r\n  </div>\r\n</div>\r\n"
+            "templateData": "<div class=\"calendar\">\r\n  <div class=\"calendar-header\">\r\n    <button class=\"nav-button\" (click)=\"prevMonth()\">\r\n      <mat-icon>chevron_left</mat-icon>\r\n    </button>\r\n    <span class=\"month-year\">\r\n      {{ monthNames[currentDate.getMonth()] }} {{ currentDate.getFullYear() }}\r\n    </span>\r\n    <button class=\"nav-button\" (click)=\"nextMonth()\">\r\n      <mat-icon>chevron_right</mat-icon>\r\n    </button>\r\n    <button class=\"today-button\" (click)=\"goToToday()\">Today</button>\r\n  </div>\r\n\r\n  <div class=\"calendar-grid\">\r\n    <!-- === ВИПРАВЛЕНО: Використовуємо @for замість *ngFor === -->\r\n    @for (day of weekDays; track day) {\r\n    <div class=\"weekday\">{{ day }}</div>\r\n    }\r\n    <!-- =============================================== -->\r\n\r\n    @for (day of daysInMonth; track day.date) {\r\n    <div\r\n      class=\"day-cell\"\r\n      [class.current-month]=\"day.isCurrentMonth\"\r\n      [class.today]=\"day.isToday\"\r\n      [class.selected]=\"day.isSelected\"\r\n      [class.has-events]=\"day.hasEvents\"\r\n      (click)=\"day.isCurrentMonth && selectDate(day.date)\"\r\n    >\r\n      <span class=\"day-number\">{{ day.dayOfMonth }}</span>\r\n      @if (day.hasEvents && day.isCurrentMonth) {\r\n      <div class=\"event-indicator\"></div>\r\n      }\r\n    </div>\r\n    }\r\n    <!-- ============================================================== -->\r\n  </div>\r\n</div>\r\n"
         },
         {
             "name": "CreateEvent",
@@ -2202,7 +2485,7 @@
         },
         {
             "name": "EditEvent",
-            "id": "component-EditEvent-21ff768c3d43c4dc2fcde3cfa446757ffb313fc7dc48fa1fc9bc5d655cbd03f0aaf923368930989468284ded8bdb50136cacc9f42a46bf309dd27c92d486b288",
+            "id": "component-EditEvent-a93e107203c11d311e8f983483005cce7a1e9892bc74203d2d953ae80caa4d1e8133c84e79eeead5cbf4fa9cf7befbc47d593810b33d13501a76cefbb2037b93",
             "file": "src/app/events/edit-event/edit-event.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -2265,6 +2548,20 @@
                     "optional": false,
                     "description": "",
                     "line": 15
+                },
+                {
+                    "name": "returnUrl",
+                    "defaultValue": "'/my-events'",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 20,
+                    "modifierKind": [
+                        123
+                    ]
                 }
             ],
             "methodsClass": [
@@ -2281,7 +2578,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 54,
+                    "line": 55,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2302,7 +2599,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 38,
+                    "line": 39,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -2312,7 +2609,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 27,
+                    "line": 28,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -2336,7 +2633,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { ChangeDetectorRef, Component } from '@angular/core';\r\nimport { Router, ActivatedRoute } from '@angular/router';\r\nimport { EventService } from '../services/event.service';\r\nimport { EventDto } from '../../models/EventDto';\r\nimport { EventFormData } from '../../models/EventFormData';\r\nimport { UpdateEventDto } from '../../models/UpdateEventDto';\r\n\r\n@Component({\r\n  selector: 'app-edit-event',\r\n  standalone: false,\r\n  templateUrl: './edit-event.html',\r\n  styleUrl: './edit-event.scss',\r\n})\r\nexport class EditEvent {\r\n  isLoading = true;\r\n  errorMessage: string | null = null;\r\n  private eventId!: string;\r\n  eventData: EventDto | null = null;\r\n\r\n  constructor(\r\n    private eventService: EventService,\r\n    private router: Router,\r\n    private route: ActivatedRoute,\r\n    private cdr: ChangeDetectorRef\r\n  ) {}\r\n\r\n  ngOnInit(): void {\r\n    const id = this.route.snapshot.paramMap.get('id');\r\n    if (!id) {\r\n      this.errorMessage = 'Event ID not found.';\r\n      this.isLoading = false;\r\n      return;\r\n    }\r\n    this.eventId = id;\r\n    this.loadEventData();\r\n  }\r\n\r\n  loadEventData(): void {\r\n    this.eventService.getEventById(this.eventId).subscribe({\r\n      next: (event) => {\r\n        this.eventData = event;\r\n        this.isLoading = false;\r\n        this.cdr.markForCheck();\r\n      },\r\n      error: (err) => {\r\n        this.errorMessage = 'Failed to load event data.';\r\n        this.isLoading = false;\r\n        console.error(err);\r\n        this.cdr.markForCheck();\r\n      },\r\n    });\r\n  }\r\n\r\n  handleFormSubmit(formData: EventFormData): void {\r\n    this.isLoading = true;\r\n    this.errorMessage = null;\r\n\r\n    const updateData: UpdateEventDto = { ...formData };\r\n\r\n    this.eventService.updateEvent(this.eventId, updateData).subscribe({\r\n      next: () => {\r\n        this.isLoading = false;\r\n        alert('Event updated successfully!');\r\n        this.router.navigate(['/my-events']);\r\n      },\r\n      error: (err) => {\r\n        this.isLoading = false;\r\n        this.errorMessage = err.error?.error || 'An unexpected error occurred.';\r\n        console.error('Event update failed', err);\r\n        // Здесь можно добавить cdr.markForCheck(), если используете OnPush\r\n      },\r\n    });\r\n  }\r\n\r\n  onCancel(): void {\r\n    this.router.navigate(['/my-events']);\r\n  }\r\n}\r\n",
+            "sourceCode": "import { ChangeDetectorRef, Component } from '@angular/core';\r\nimport { Router, ActivatedRoute } from '@angular/router';\r\nimport { EventService } from '../services/event.service';\r\nimport { EventDto } from '../../models/EventDto';\r\nimport { EventFormData } from '../../models/EventFormData';\r\nimport { UpdateEventDto } from '../../models/UpdateEventDto';\r\n\r\n@Component({\r\n  selector: 'app-edit-event',\r\n  standalone: false,\r\n  templateUrl: './edit-event.html',\r\n  styleUrl: './edit-event.scss',\r\n})\r\nexport class EditEvent {\r\n  isLoading = true;\r\n  errorMessage: string | null = null;\r\n  private eventId!: string;\r\n  eventData: EventDto | null = null;\r\n\r\n  private returnUrl: string = '/my-events';\r\n  constructor(\r\n    private eventService: EventService,\r\n    private router: Router,\r\n    private route: ActivatedRoute,\r\n    private cdr: ChangeDetectorRef\r\n  ) {}\r\n\r\n  ngOnInit(): void {\r\n    const id = this.route.snapshot.paramMap.get('id');\r\n    if (!id) {\r\n      this.errorMessage = 'Event ID not found.';\r\n      this.isLoading = false;\r\n      return;\r\n    }\r\n    this.eventId = id;\r\n    this.loadEventData();\r\n  }\r\n\r\n  loadEventData(): void {\r\n    this.eventService.getEventById(this.eventId).subscribe({\r\n      next: (event) => {\r\n        this.eventData = event;\r\n        this.isLoading = false;\r\n        this.cdr.markForCheck();\r\n      },\r\n      error: (err) => {\r\n        this.errorMessage = 'Failed to load event data.';\r\n        this.isLoading = false;\r\n        console.error(err);\r\n        this.cdr.markForCheck();\r\n      },\r\n    });\r\n  }\r\n\r\n  handleFormSubmit(formData: EventFormData): void {\r\n    this.isLoading = true;\r\n    this.errorMessage = null;\r\n\r\n    const updateData: UpdateEventDto = { ...formData };\r\n\r\n    this.eventService.updateEvent(this.eventId, updateData).subscribe({\r\n      next: () => {\r\n        this.isLoading = false;\r\n        alert('Event updated successfully!');\r\n        this.router.navigate([this.returnUrl]);\r\n      },\r\n      error: (err) => {\r\n        this.isLoading = false;\r\n        this.errorMessage = err.error?.error || 'An unexpected error occurred.';\r\n        console.error('Event update failed', err);\r\n      },\r\n    });\r\n  }\r\n\r\n  onCancel(): void {\r\n    this.router.navigate([this.returnUrl]);\r\n  }\r\n}\r\n",
             "styleUrl": "./edit-event.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
@@ -2372,7 +2669,7 @@
                         "deprecationMessage": ""
                     }
                 ],
-                "line": 18,
+                "line": 20,
                 "jsdoctags": [
                     {
                         "name": "eventService",
@@ -2417,7 +2714,7 @@
         },
         {
             "name": "EventForm",
-            "id": "component-EventForm-dbafc3e5664a02d57a0ca1ddeef90e1655e53d090b0db55bb9d0d6a0dac5867b7568ab18f7f43121cf909d25e3f29ef61547ef9d036c80cdc84c03c9c97c38e8",
+            "id": "component-EventForm-cd77554192a2ffa5b81764e07acda6721890a44bada1a31c97c5290b8b72b8ee1e94f5611c274b96db51555920df4aefd2b06c127ae3161d573578a58eea6243",
             "file": "src/app/shared/event-form/event-form.ts",
             "changeDetection": "ChangeDetectionStrategy.OnPush",
             "encapsulation": [],
@@ -2439,7 +2736,7 @@
                     "defaultValue": "null",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 44,
+                    "line": 45,
                     "type": "EventDto | null",
                     "decorators": []
                 },
@@ -2448,7 +2745,7 @@
                     "defaultValue": "false",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 45,
+                    "line": 46,
                     "type": "boolean",
                     "decorators": []
                 },
@@ -2457,7 +2754,7 @@
                     "defaultValue": "'Submit'",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 46,
+                    "line": 47,
                     "type": "string",
                     "decorators": []
                 }
@@ -2468,7 +2765,7 @@
                     "defaultValue": "new EventEmitter<void>()",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 49,
+                    "line": 50,
                     "type": "EventEmitter"
                 },
                 {
@@ -2476,7 +2773,7 @@
                     "defaultValue": "new EventEmitter<EventFormData>()",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 48,
+                    "line": 49,
                     "type": "EventEmitter"
                 }
             ],
@@ -2489,7 +2786,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 33
+                    "line": 34
                 },
                 {
                     "name": "maxTags",
@@ -2500,7 +2797,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 40
+                    "line": 41
                 },
                 {
                     "name": "minDate",
@@ -2510,7 +2807,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 34,
+                    "line": 35,
                     "modifierKind": [
                         125,
                         148
@@ -2525,18 +2822,18 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 39
+                    "line": 40
                 },
                 {
                     "name": "separatorKeysCodes",
-                    "defaultValue": "[ENTER, COMMA]",
+                    "defaultValue": "[ENTER]",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "number[]",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 37
+                    "line": 38
                 },
                 {
                     "name": "statusChangesSubscription",
@@ -2546,7 +2843,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 53,
+                    "line": 54,
                     "modifierKind": [
                         123
                     ]
@@ -2560,7 +2857,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 38
+                    "line": 39
                 }
             ],
             "methodsClass": [
@@ -2577,7 +2874,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 186,
+                    "line": 194,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2598,7 +2895,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 123,
+                    "line": 118,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -2618,7 +2915,7 @@
                     "optional": false,
                     "returnType": "ValidatorFn",
                     "typeParameters": [],
-                    "line": 226,
+                    "line": 234,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -2642,7 +2939,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 94,
+                    "line": 91,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -2652,7 +2949,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 62,
+                    "line": 63,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -2662,7 +2959,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 176,
+                    "line": 184,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -2672,9 +2969,52 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 149,
+                    "line": 157,
                     "deprecated": false,
                     "deprecationMessage": ""
+                },
+                {
+                    "name": "onTagKeyDown",
+                    "args": [
+                        {
+                            "name": "event",
+                            "type": "KeyboardEvent",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        },
+                        {
+                            "name": "input",
+                            "type": "HTMLInputElement",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 245,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "jsdoctags": [
+                        {
+                            "name": "event",
+                            "type": "KeyboardEvent",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        },
+                        {
+                            "name": "input",
+                            "type": "HTMLInputElement",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
                 },
                 {
                     "name": "populateForm",
@@ -2689,7 +3029,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 141,
+                    "line": 136,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -2720,7 +3060,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 206,
+                    "line": 214,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2741,7 +3081,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 179,
+                    "line": 187,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -2751,7 +3091,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 215,
+                    "line": 223,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -2768,7 +3108,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { COMMA, ENTER } from '@angular/cdk/keycodes';\r\nimport {\r\n  ChangeDetectionStrategy,\r\n  ChangeDetectorRef,\r\n  Component,\r\n  EventEmitter,\r\n  Input,\r\n  Output,\r\n} from '@angular/core';\r\nimport {\r\n  FormGroup,\r\n  FormBuilder,\r\n  Validators,\r\n  AbstractControl,\r\n  FormArray,\r\n  FormControl,\r\n  ValidationErrors,\r\n  ValidatorFn,\r\n} from '@angular/forms';\r\nimport { EventDto } from '../../models/EventDto';\r\nimport { EventFormData } from '../../models/EventFormData';\r\nimport { dateTimeInFutureValidator } from '../Validators/date-time.validator';\r\nimport { debounceTime, merge, Observable, Subscription, tap } from 'rxjs';\r\nimport { MatChipInputEvent } from '@angular/material/chips';\r\n@Component({\r\n  selector: 'app-event-form',\r\n  standalone: false,\r\n  templateUrl: './event-form.html',\r\n  styleUrl: './event-form.scss',\r\n  changeDetection: ChangeDetectionStrategy.OnPush,\r\n})\r\nexport class EventForm {\r\n  eventForm!: FormGroup;\r\n  public readonly minDate: Date;\r\n\r\n  // --- Властивості для тегів ---\r\n  separatorKeysCodes: number[] = [ENTER, COMMA]; // Клавіші для додавання тегу\r\n  tagCtrl = new FormControl(''); // Окремий FormControl для поля вводу тегів\r\n  selectedTags: string[] = []; // Список введених/вибраних імен тегів\r\n  maxTags = 5; // Максимальна кількість тегів\r\n  // ВИДАЛЕНО: filteredTags, allTags\r\n  // --------------------------------\r\n\r\n  @Input() initialData: EventDto | null = null;\r\n  @Input() isLoading = false;\r\n  @Input() submitButtonText = 'Submit';\r\n\r\n  @Output() formSubmit = new EventEmitter<EventFormData>();\r\n  @Output() formCancel = new EventEmitter<void>();\r\n\r\n  // ВИДАЛЕНО: @ViewChild('tagInput') - більше не потрібен для очищення автодоповнення\r\n\r\n  private statusChangesSubscription: Subscription | undefined;\r\n  // ВИДАЛЕНО: private tagService = inject(TagService);\r\n\r\n  constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef) {\r\n    this.minDate = new Date();\r\n    this.minDate.setHours(0, 0, 0, 0);\r\n    // ВИДАЛЕНО: Налаштування filteredTags\r\n  }\r\n\r\n  ngOnInit(): void {\r\n    // ВИДАЛЕНО: loadAllTags();\r\n    this.initForm();\r\n    if (this.initialData) {\r\n      this.populateForm(this.initialData);\r\n    }\r\n\r\n    // Підписка на зміни статусу форми (залишається)\r\n    const controlsToWatch = [\r\n      'title',\r\n      'description',\r\n      'date',\r\n      'time',\r\n      'location',\r\n      'capacity',\r\n      'tags',\r\n    ]; // Додаємо 'tags' FormArray\r\n    const controlStatusChanges = controlsToWatch\r\n      .map((name) => this.eventForm.get(name)?.statusChanges)\r\n      .filter((obs): obs is Observable<any> => !!obs);\r\n\r\n    this.statusChangesSubscription = merge(\r\n      this.eventForm.statusChanges, // Валідатор dateTimeInFutureValidator\r\n      ...controlStatusChanges // Статуси окремих полів (включаючи tags)\r\n    )\r\n      .pipe(\r\n        debounceTime(0),\r\n        tap(() => this.cdr.markForCheck())\r\n      )\r\n      .subscribe();\r\n  }\r\n\r\n  ngOnDestroy(): void {\r\n    this.statusChangesSubscription?.unsubscribe();\r\n  }\r\n\r\n  // Гетери\r\n  get title(): AbstractControl | null {\r\n    return this.eventForm.get('title');\r\n  }\r\n  get description(): AbstractControl | null {\r\n    return this.eventForm.get('description');\r\n  }\r\n  get date(): AbstractControl | null {\r\n    return this.eventForm.get('date');\r\n  }\r\n  get time(): AbstractControl | null {\r\n    return this.eventForm.get('time');\r\n  }\r\n  get location(): AbstractControl | null {\r\n    return this.eventForm.get('location');\r\n  }\r\n  get capacity(): AbstractControl | null {\r\n    return this.eventForm.get('capacity');\r\n  }\r\n  // --- ДОДАНО/ЗМІНЕНО: Гетер для FormArray тегів ---\r\n  get tagsArray(): FormArray | null {\r\n    return this.eventForm.get('tags') as FormArray | null;\r\n  }\r\n  // --------------------------------------------\r\n\r\n  private initForm(): void {\r\n    this.eventForm = this.fb.group(\r\n      {\r\n        // ... інші контроли ...\r\n        time: ['', Validators.required],\r\n        location: ['', [Validators.required, Validators.maxLength(300)]],\r\n        capacity: ['', [Validators.min(1)]],\r\n        visibility: ['public', Validators.required],\r\n        // --- ЗМІНЕНО: FormArray тепер має валідатор ---\r\n        tags: this.fb.array([], [this.maxTagsValidator(this.maxTags)]),\r\n        // ----------------------------------------------\r\n      },\r\n      {\r\n        validators: dateTimeInFutureValidator(),\r\n      }\r\n    );\r\n  }\r\n\r\n  private populateForm(event: EventDto): void {\r\n    // ... заповнення інших полів ...\r\n    // Заповнюємо вибрані теги (якщо вони є в DTO)\r\n    this.selectedTags = event.tags?.map((tag) => tag.name) || [];\r\n    this.updateTagsFormArray(); // Синхронізуємо FormArray\r\n    this.cdr.markForCheck();\r\n  }\r\n\r\n  onFormSubmit(): void {\r\n    // Перевіряємо валідність основної форми та FormArray тегів\r\n    if (this.eventForm.invalid) {\r\n      this.eventForm.markAllAsTouched();\r\n      // Опціонально: встановити фокус на перше невалідние поле\r\n      this.cdr.markForCheck();\r\n      return;\r\n    }\r\n    // ... підготовка formData ...\r\n    const formValue = this.eventForm.value;\r\n    const startDate = new Date(formValue.date);\r\n    const [hours, minutes] = formValue.time.split(':');\r\n    startDate.setHours(parseInt(hours, 10), parseInt(minutes, 10));\r\n\r\n    const formData: EventFormData = {\r\n      title: formValue.title,\r\n      description: formValue.description,\r\n      start: startDate.toISOString(),\r\n      end: null,\r\n      location: formValue.location,\r\n      capacity: formValue.capacity ? parseInt(formValue.capacity, 10) : null,\r\n      isPublic: formValue.visibility === 'public',\r\n      tagNames: this.selectedTags, // <-- Надсилаємо список імен\r\n    };\r\n    this.formSubmit.emit(formData);\r\n  }\r\n\r\n  onCancelClick(): void {\r\n    this.formCancel.emit();\r\n  }\r\n  triggerUpdate(): void {\r\n    this.cdr.markForCheck();\r\n  }\r\n\r\n  // --- Методи для роботи з тегами (Chips) ---\r\n\r\n  // СПРОЩЕНО: Обробляє тільки введення вручну\r\n  addTag(event: MatChipInputEvent): void {\r\n    const value = (event.value || '').trim();\r\n\r\n    // Перевіряємо, чи є значення, чи тег вже додано і чи не перевищено ліміт\r\n    if (\r\n      value &&\r\n      !this.selectedTags.some((t) => t.toLowerCase() === value.toLowerCase()) &&\r\n      this.selectedTags.length < this.maxTags\r\n    ) {\r\n      this.selectedTags.push(value); // Додаємо до списку\r\n      this.updateTagsFormArray(); // Синхронізуємо FormArray\r\n    }\r\n\r\n    // Очищуємо поле вводу\r\n    event.chipInput!.clear();\r\n    // Скидаємо значення FormControl (для автодоповнення, якщо воно було)\r\n    this.tagCtrl.setValue(null);\r\n  }\r\n\r\n  // Видалення тегу (залишається без змін)\r\n  removeTag(tag: string): void {\r\n    const index = this.selectedTags.indexOf(tag);\r\n    if (index >= 0) {\r\n      this.selectedTags.splice(index, 1);\r\n      this.updateTagsFormArray();\r\n    }\r\n  }\r\n\r\n  // Синхронізує FormArray з selectedTags (залишається без змін)\r\n  private updateTagsFormArray(): void {\r\n    const tagsFormArray = this.tagsArray; // Використовуємо гетер\r\n    if (tagsFormArray) {\r\n      tagsFormArray.clear();\r\n      this.selectedTags.forEach((tag) => tagsFormArray.push(this.fb.control(tag)));\r\n      tagsFormArray.updateValueAndValidity(); // Оновлюємо статус валідності\r\n      this.cdr.markForCheck(); // Повідомляємо про зміни\r\n    }\r\n  }\r\n\r\n  // Кастомний валідатор для максимальної кількості тегів (залишається без змін)\r\n  private maxTagsValidator(max: number): ValidatorFn {\r\n    return (control: AbstractControl): ValidationErrors | null => {\r\n      // Перевіряємо, чи control дійсно є FormArray\r\n      if (!(control instanceof FormArray)) {\r\n        return null; // Або кинути помилку, якщо очікується тільки FormArray\r\n      }\r\n      return control.length > max\r\n        ? { maxTagsExceeded: { max: max, actual: control.length } }\r\n        : null;\r\n    };\r\n  }\r\n  // --- END ---\r\n}\r\n",
+            "sourceCode": "import { COMMA, ENTER } from '@angular/cdk/keycodes';\r\nimport {\r\n  ChangeDetectionStrategy,\r\n  ChangeDetectorRef,\r\n  Component,\r\n  EventEmitter,\r\n  Input,\r\n  Output,\r\n} from '@angular/core';\r\nimport {\r\n  FormGroup,\r\n  FormBuilder,\r\n  Validators,\r\n  AbstractControl,\r\n  FormArray,\r\n  FormControl,\r\n  ValidationErrors,\r\n  ValidatorFn,\r\n} from '@angular/forms';\r\nimport { EventDto } from '../../models/EventDto';\r\nimport { EventFormData } from '../../models/EventFormData';\r\nimport { dateTimeInFutureValidator } from '../Validators/date-time.validator';\r\nimport { debounceTime, merge, Observable, Subscription, tap } from 'rxjs';\r\nimport { MatChipInputEvent } from '@angular/material/chips';\r\nimport { TagDto } from '../../models/TagDto';\r\n@Component({\r\n  selector: 'app-event-form',\r\n  standalone: false,\r\n  templateUrl: './event-form.html',\r\n  styleUrl: './event-form.scss',\r\n  changeDetection: ChangeDetectionStrategy.OnPush,\r\n})\r\nexport class EventForm {\r\n  eventForm!: FormGroup;\r\n  public readonly minDate: Date;\r\n\r\n  // --- Властивості для тегів ---\r\n  separatorKeysCodes: number[] = [ENTER]; // Клавіші для додавання тегу\r\n  tagCtrl = new FormControl(''); // Окремий FormControl для поля вводу тегів\r\n  selectedTags: string[] = []; // Список введених/вибраних імен тегів\r\n  maxTags = 5; // Максимальна кількість тегів\r\n  // ВИДАЛЕНО: filteredTags, allTags\r\n  // --------------------------------\r\n\r\n  @Input() initialData: EventDto | null = null;\r\n  @Input() isLoading = false;\r\n  @Input() submitButtonText = 'Submit';\r\n\r\n  @Output() formSubmit = new EventEmitter<EventFormData>();\r\n  @Output() formCancel = new EventEmitter<void>();\r\n\r\n  // ВИДАЛЕНО: @ViewChild('tagInput') - більше не потрібен для очищення автодоповнення\r\n\r\n  private statusChangesSubscription: Subscription | undefined;\r\n  // ВИДАЛЕНО: private tagService = inject(TagService);\r\n\r\n  constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef) {\r\n    this.minDate = new Date();\r\n    this.minDate.setHours(0, 0, 0, 0);\r\n    // ВИДАЛЕНО: Налаштування filteredTags\r\n  }\r\n\r\n  ngOnInit(): void {\r\n    // ВИДАЛЕНО: loadAllTags();\r\n    this.initForm();\r\n    if (this.initialData) {\r\n      this.populateForm(this.initialData);\r\n    }\r\n\r\n    const controlsToWatch = [\r\n      'title',\r\n      'description',\r\n      'date',\r\n      'time',\r\n      'location',\r\n      'capacity',\r\n      'tags',\r\n    ]; // Додаємо 'tags' FormArray\r\n    const controlStatusChanges = controlsToWatch\r\n      .map((name) => this.eventForm.get(name)?.statusChanges)\r\n      .filter((obs): obs is Observable<any> => !!obs);\r\n\r\n    this.statusChangesSubscription = merge(this.eventForm.statusChanges, ...controlStatusChanges)\r\n      .pipe(\r\n        debounceTime(0),\r\n        tap(() => this.cdr.markForCheck())\r\n      )\r\n      .subscribe();\r\n  }\r\n\r\n  ngOnDestroy(): void {\r\n    this.statusChangesSubscription?.unsubscribe();\r\n  }\r\n\r\n  get title(): AbstractControl | null {\r\n    return this.eventForm.get('title');\r\n  }\r\n  get description(): AbstractControl | null {\r\n    return this.eventForm.get('description');\r\n  }\r\n  get date(): AbstractControl | null {\r\n    return this.eventForm.get('date');\r\n  }\r\n  get time(): AbstractControl | null {\r\n    return this.eventForm.get('time');\r\n  }\r\n  get location(): AbstractControl | null {\r\n    return this.eventForm.get('location');\r\n  }\r\n  get capacity(): AbstractControl | null {\r\n    return this.eventForm.get('capacity');\r\n  }\r\n\r\n  get tagsArray(): FormArray | null {\r\n    return this.eventForm.get('tags') as FormArray | null;\r\n  }\r\n\r\n  private initForm(): void {\r\n    this.eventForm = this.fb.group(\r\n      {\r\n        title: ['', [Validators.required, Validators.maxLength(200)]],\r\n        description: ['', [Validators.required]],\r\n        date: ['', Validators.required],\r\n        time: ['', Validators.required],\r\n        location: ['', [Validators.required, Validators.maxLength(300)]],\r\n        capacity: ['', [Validators.min(1)]],\r\n        visibility: ['public', Validators.required],\r\n        tags: this.fb.array([], [this.maxTagsValidator(this.maxTags)]),\r\n      },\r\n      {\r\n        validators: dateTimeInFutureValidator(),\r\n      }\r\n    );\r\n  }\r\n\r\n  private populateForm(event: EventDto): void {\r\n    const startDate = new Date(event.start);\r\n    this.eventForm.patchValue({\r\n      title: event.title,\r\n      description: event.description,\r\n      date: startDate,\r\n      time: startDate.toTimeString().slice(0, 5), // 'HH:mm'\r\n      location: event.location,\r\n      capacity: event.capacity,\r\n      visibility: event.isPublic ? 'public' : 'private',\r\n    });\r\n\r\n    if (event.tags && event.tags.length > 0) {\r\n      this.selectedTags = event.tags.map((tag: TagDto) => tag.name);\r\n\r\n      this.updateTagsFormArray();\r\n    }\r\n\r\n    this.cdr.markForCheck();\r\n  }\r\n\r\n  onFormSubmit(): void {\r\n    // Перевіряємо валідність основної форми та FormArray тегів\r\n    if (this.eventForm.invalid) {\r\n      this.eventForm.markAllAsTouched();\r\n      // Опціонально: встановити фокус на перше невалідние поле\r\n      this.cdr.markForCheck();\r\n      return;\r\n    }\r\n    // ... підготовка formData ...\r\n    const formValue = this.eventForm.value;\r\n    const startDate = new Date(formValue.date);\r\n    const [hours, minutes] = formValue.time.split(':');\r\n    startDate.setHours(parseInt(hours, 10), parseInt(minutes, 10));\r\n\r\n    const formData: EventFormData = {\r\n      title: formValue.title,\r\n      description: formValue.description,\r\n      start: startDate.toISOString(),\r\n      end: null,\r\n      location: formValue.location,\r\n      capacity: formValue.capacity ? parseInt(formValue.capacity, 10) : null,\r\n      isPublic: formValue.visibility === 'public',\r\n      tagNames: this.selectedTags, // <-- Надсилаємо список імен\r\n    };\r\n    this.formSubmit.emit(formData);\r\n  }\r\n\r\n  onCancelClick(): void {\r\n    this.formCancel.emit();\r\n  }\r\n  triggerUpdate(): void {\r\n    this.cdr.markForCheck();\r\n  }\r\n\r\n  // --- Методи для роботи з тегами (Chips) ---\r\n\r\n  // СПРОЩЕНО: Обробляє тільки введення вручну\r\n  addTag(event: MatChipInputEvent): void {\r\n    const value = (event.value || '').trim();\r\n\r\n    // Перевіряємо, чи є значення, чи тег вже додано і чи не перевищено ліміт\r\n    if (\r\n      value &&\r\n      !this.selectedTags.some((t) => t.toLowerCase() === value.toLowerCase()) &&\r\n      this.selectedTags.length < this.maxTags\r\n    ) {\r\n      this.selectedTags.push(value); // Додаємо до списку\r\n      this.updateTagsFormArray(); // Синхронізуємо FormArray\r\n    }\r\n\r\n    // Очищуємо поле вводу\r\n    event.chipInput!.clear();\r\n    // Скидаємо значення FormControl (для автодоповнення, якщо воно було)\r\n    this.tagCtrl.setValue(null);\r\n  }\r\n\r\n  // Видалення тегу (залишається без змін)\r\n  removeTag(tag: string): void {\r\n    const index = this.selectedTags.indexOf(tag);\r\n    if (index >= 0) {\r\n      this.selectedTags.splice(index, 1);\r\n      this.updateTagsFormArray();\r\n    }\r\n  }\r\n\r\n  // Синхронізує FormArray з selectedTags (залишається без змін)\r\n  private updateTagsFormArray(): void {\r\n    const tagsFormArray = this.tagsArray; // Використовуємо гетер\r\n    if (tagsFormArray) {\r\n      tagsFormArray.clear();\r\n      this.selectedTags.forEach((tag) => tagsFormArray.push(this.fb.control(tag)));\r\n      tagsFormArray.updateValueAndValidity(); // Оновлюємо статус валідності\r\n      this.cdr.markForCheck(); // Повідомляємо про зміни\r\n    }\r\n  }\r\n\r\n  // Кастомний валідатор для максимальної кількості тегів (залишається без змін)\r\n  private maxTagsValidator(max: number): ValidatorFn {\r\n    return (control: AbstractControl): ValidationErrors | null => {\r\n      // Перевіряємо, чи control дійсно є FormArray\r\n      if (!(control instanceof FormArray)) {\r\n        return null; // Або кинути помилку, якщо очікується тільки FormArray\r\n      }\r\n      return control.length > max\r\n        ? { maxTagsExceeded: { max: max, actual: control.length } }\r\n        : null;\r\n    };\r\n  }\r\n  onTagKeyDown(event: KeyboardEvent, input: HTMLInputElement): void {\r\n    const key = event.key;\r\n\r\n    if (key === ',' || key === '‚' || key === '„') {\r\n      event.preventDefault();\r\n\r\n      const value = input.value.trim();\r\n      if (\r\n        value &&\r\n        !this.selectedTags.some((t) => t.toLowerCase() === value.toLowerCase()) &&\r\n        this.selectedTags.length < this.maxTags\r\n      ) {\r\n        this.selectedTags.push(value);\r\n        this.updateTagsFormArray();\r\n      }\r\n\r\n      input.value = '';\r\n      this.tagCtrl.setValue(null);\r\n    }\r\n  }\r\n}\r\n",
             "styleUrl": "./event-form.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
@@ -2792,7 +3132,7 @@
                         "deprecationMessage": ""
                     }
                 ],
-                "line": 53,
+                "line": 54,
                 "jsdoctags": [
                     {
                         "name": "fb",
@@ -2822,7 +3162,7 @@
                         "name": "title",
                         "type": "",
                         "returnType": "AbstractControl | null",
-                        "line": 99
+                        "line": 95
                     }
                 },
                 "description": {
@@ -2831,7 +3171,7 @@
                         "name": "description",
                         "type": "",
                         "returnType": "AbstractControl | null",
-                        "line": 102
+                        "line": 98
                     }
                 },
                 "date": {
@@ -2840,7 +3180,7 @@
                         "name": "date",
                         "type": "",
                         "returnType": "AbstractControl | null",
-                        "line": 105
+                        "line": 101
                     }
                 },
                 "time": {
@@ -2849,7 +3189,7 @@
                         "name": "time",
                         "type": "",
                         "returnType": "AbstractControl | null",
-                        "line": 108
+                        "line": 104
                     }
                 },
                 "location": {
@@ -2858,7 +3198,7 @@
                         "name": "location",
                         "type": "",
                         "returnType": "AbstractControl | null",
-                        "line": 111
+                        "line": 107
                     }
                 },
                 "capacity": {
@@ -2867,7 +3207,7 @@
                         "name": "capacity",
                         "type": "",
                         "returnType": "AbstractControl | null",
-                        "line": 114
+                        "line": 110
                     }
                 },
                 "tagsArray": {
@@ -2876,11 +3216,11 @@
                         "name": "tagsArray",
                         "type": "",
                         "returnType": "FormArray | null",
-                        "line": 118
+                        "line": 114
                     }
                 }
             },
-            "templateData": "<!-- Этот HTML почти идентичен вашему create-event.html, -->\r\n<!-- но обернут в <form> и использует локальные методы -->\r\n<form class=\"event-form\" [formGroup]=\"eventForm\" (ngSubmit)=\"onFormSubmit()\">\r\n  <div>\r\n    <app-form-input\r\n      label=\"Event Title\"\r\n      placeholder=\"e.g., Tech Conference 2025\"\r\n      [required]=\"true\"\r\n      formControlName=\"title\"\r\n    ></app-form-input>\r\n    <!-- Повідомлення про помилки для Title -->\r\n    @if (title?.invalid && (title?.dirty || title?.touched)) {\r\n    <div class=\"field-error-message\">\r\n      @if (title?.hasError('required')) {\r\n      <span>Title is required.</span>\r\n      } @if (title?.hasError('maxlength')) {\r\n      <span>Title cannot exceed 200 characters.</span>\r\n      }\r\n    </div>\r\n    }\r\n  </div>\r\n\r\n  <!-- Description -->\r\n  <div>\r\n    <app-form-input\r\n      label=\"Description\"\r\n      type=\"textarea\"\r\n      placeholder=\"Describe what makes your event special...\"\r\n      [required]=\"true\"\r\n      formControlName=\"description\"\r\n    ></app-form-input>\r\n    <!-- Повідомлення про помилки для Description -->\r\n    @if (description?.invalid && (description?.dirty || description?.touched)) {\r\n    <div class=\"field-error-message\">\r\n      @if (description?.hasError('required')) {\r\n      <span>Description is required.</span>\r\n      }\r\n    </div>\r\n    }\r\n  </div>\r\n\r\n  <!-- Date & Time Row -->\r\n  <div class=\"form-row\">\r\n    <mat-form-field appearance=\"outline\">\r\n      <mat-label>Date</mat-label>\r\n      <input\r\n        matInput\r\n        [matDatepicker]=\"picker\"\r\n        formControlName=\"date\"\r\n        placeholder=\"dd.mm.yyyy\"\r\n        readonly\r\n        [min]=\"minDate\"\r\n      />\r\n      <mat-datepicker-toggle matSuffix [for]=\"picker\"></mat-datepicker-toggle>\r\n      <mat-datepicker #picker></mat-datepicker>\r\n      <mat-error>\r\n        @if (date?.hasError('required')) {\r\n        <span>Date is required.</span>\r\n        } @if (date?.hasError('matDatepickerMin')) {\r\n        <span>Date cannot be in the past.</span>\r\n        } @if ( !date?.hasError('required') && eventForm.hasError('dateTimeInPast') &&\r\n        (date?.touched || time?.touched) ) {\r\n        <span>Selected date and time cannot be in the past.</span>\r\n        }\r\n      </mat-error>\r\n    </mat-form-field>\r\n\r\n    <mat-form-field appearance=\"outline\">\r\n      <mat-label>Time</mat-label>\r\n      <input matInput type=\"time\" formControlName=\"time\" placeholder=\"--:--\" />\r\n      <mat-icon matSuffix>schedule</mat-icon>\r\n      <mat-error>\r\n        @if (date?.hasError('required')) {\r\n        <span>Date is required.</span>\r\n        } @if (date?.hasError('matDatepickerMin')) {\r\n        <span>Date cannot be in the past.</span>\r\n        } @if ( !date?.hasError('required') && eventForm.hasError('dateTimeInPast') &&\r\n        (date?.touched || time?.touched) ) {\r\n        <span>Selected date and time cannot be in the past.</span>\r\n        }\r\n      </mat-error>\r\n    </mat-form-field>\r\n  </div>\r\n\r\n  <div>\r\n    <app-form-input\r\n      label=\"Location\"\r\n      placeholder=\"e.g., Convention Center, San Francisco\"\r\n      [required]=\"true\"\r\n      formControlName=\"location\"\r\n    ></app-form-input>\r\n\r\n    @if (location?.invalid && (location?.dirty || location?.touched)) {\r\n    <div class=\"field-error-message\">\r\n      @if (location?.hasError('required')) {\r\n      <span>Location is required.</span>\r\n      } @if (location?.hasError('maxlength')) {\r\n      <span>Location cannot exceed 300 characters.</span>\r\n      }\r\n    </div>\r\n    }\r\n  </div>\r\n\r\n  <!-- Capacity -->\r\n  <div>\r\n    <app-form-input\r\n      label=\"Capacity (optional)\"\r\n      placeholder=\"Leave empty for unlimited\"\r\n      helpText=\"Maximum number of participants. Leave empty for unlimited capacity.\"\r\n      formControlName=\"capacity\"\r\n      type=\"number\"\r\n      min=\"1\"\r\n    ></app-form-input>\r\n    @if (capacity?.invalid && (capacity?.dirty || capacity?.touched)) {\r\n    <div class=\"field-error-message\">\r\n      @if (capacity?.hasError('min')) {\r\n      <span>Capacity must be a positive number.</span>\r\n      }\r\n    </div>\r\n    }\r\n  </div>\r\n\r\n  <mat-form-field class=\"chip-list-field\">\r\n    <mat-label>Tags (up to {{ maxTags }})</mat-label>\r\n    <mat-chip-grid #chipGrid aria-label=\"Tag selection\">\r\n      @for (tag of selectedTags; track tag) {\r\n      <mat-chip-row (removed)=\"removeTag(tag)\">\r\n        {{ tag }}\r\n        <button matChipRemove aria-label=\"'remove ' + tag\">\r\n          <mat-icon>cancel</mat-icon>\r\n        </button>\r\n      </mat-chip-row>\r\n      }\r\n    </mat-chip-grid>\r\n    <!-- В input прибираємо [matAutocomplete]=\"auto\" -->\r\n    <input\r\n      placeholder=\"Add tags (press Enter or comma)...\"\r\n      #tagInput\r\n      [formControl]=\"tagCtrl\"\r\n      [matChipInputFor]=\"chipGrid\"\r\n      [matChipInputSeparatorKeyCodes]=\"separatorKeysCodes\"\r\n      (matChipInputTokenEnd)=\"addTag($event)\"\r\n    />\r\n    <!-- ВИДАЛЕНО: mat-autocomplete -->\r\n    <!-- Повідомлення про помилки для тегів (з FormArray) -->\r\n    <mat-error>\r\n      <!-- ВИПРАВЛЕНО: Звертаємось до FormArray через гетер -->\r\n      @if (tagsArray?.hasError('maxTagsExceeded')) {\r\n      <span>Cannot add more than {{ maxTags }} tags.</span>\r\n      }\r\n      <!-- Можна додати помилки для tagCtrl (наприклад, якщо введення некоректне) -->\r\n      @if (tagCtrl.invalid && tagCtrl.touched) {\r\n      <!-- ... ваші помилки для FormControl тегу ... -->\r\n      }\r\n    </mat-error>\r\n  </mat-form-field>\r\n\r\n  <!-- Visibility (зазвичай не потребує валідації помилок тут) -->\r\n  <div class=\"form-group\">\r\n    <label class=\"form-label\">Visibility</label>\r\n    <div class=\"radio-group\">\r\n      <label class=\"radio-label\">\r\n        <input type=\"radio\" value=\"public\" formControlName=\"visibility\" />\r\n        <span>Public - Anyone can see and join this event</span>\r\n      </label>\r\n      <label class=\"radio-label\">\r\n        <input type=\"radio\" value=\"private\" formControlName=\"visibility\" />\r\n        <span>Private - Only invited people can see this event</span>\r\n      </label>\r\n    </div>\r\n  </div>\r\n\r\n  <!-- Кнопки дій тепер використовують @Output -->\r\n  <div class=\"form-actions\">\r\n    <app-button\r\n      type=\"button\"\r\n      color=\"secondary\"\r\n      label=\"Cancel\"\r\n      (click)=\"onCancelClick()\"\r\n    ></app-button>\r\n    <app-button\r\n      type=\"submit\"\r\n      color=\"primary\"\r\n      [label]=\"isLoading ? 'Processing...' : submitButtonText\"\r\n      [disabled]=\"eventForm.invalid || isLoading\"\r\n    ></app-button>\r\n  </div>\r\n</form>\r\n"
+            "templateData": "<!-- Этот HTML почти идентичен вашему create-event.html, -->\r\n<!-- но обернут в <form> и использует локальные методы -->\r\n<form class=\"event-form\" [formGroup]=\"eventForm\" (ngSubmit)=\"onFormSubmit()\">\r\n  <div>\r\n    <app-form-input\r\n      label=\"Event Title\"\r\n      placeholder=\"e.g., Tech Conference 2025\"\r\n      [required]=\"true\"\r\n      formControlName=\"title\"\r\n    ></app-form-input>\r\n    <!-- Повідомлення про помилки для Title -->\r\n    @if (title?.invalid && (title?.dirty || title?.touched)) {\r\n    <div class=\"field-error-message\">\r\n      @if (title?.hasError('required')) {\r\n      <span>Title is required.</span>\r\n      } @if (title?.hasError('maxlength')) {\r\n      <span>Title cannot exceed 200 characters.</span>\r\n      }\r\n    </div>\r\n    }\r\n  </div>\r\n\r\n  <!-- Description -->\r\n  <div>\r\n    <app-form-input\r\n      label=\"Description\"\r\n      type=\"textarea\"\r\n      placeholder=\"Describe what makes your event special...\"\r\n      [required]=\"true\"\r\n      formControlName=\"description\"\r\n    ></app-form-input>\r\n    <!-- Повідомлення про помилки для Description -->\r\n    @if (description?.invalid && (description?.dirty || description?.touched)) {\r\n    <div class=\"field-error-message\">\r\n      @if (description?.hasError('required')) {\r\n      <span>Description is required.</span>\r\n      }\r\n    </div>\r\n    }\r\n  </div>\r\n\r\n  <!-- Date & Time Row -->\r\n  <div class=\"form-row\">\r\n    <mat-form-field appearance=\"outline\">\r\n      <mat-label>Date</mat-label>\r\n      <input\r\n        matInput\r\n        [matDatepicker]=\"picker\"\r\n        formControlName=\"date\"\r\n        placeholder=\"dd.mm.yyyy\"\r\n        readonly\r\n        [min]=\"minDate\"\r\n      />\r\n      <mat-datepicker-toggle matSuffix [for]=\"picker\"></mat-datepicker-toggle>\r\n      <mat-datepicker #picker></mat-datepicker>\r\n    </mat-form-field>\r\n\r\n    <mat-form-field appearance=\"outline\">\r\n      <mat-label>Time</mat-label>\r\n      <input matInput type=\"time\" formControlName=\"time\" placeholder=\"--:--\" />\r\n      <mat-icon matSuffix>schedule</mat-icon>\r\n    </mat-form-field>\r\n    <mat-error>\r\n      @if ( !date?.hasError('required') && eventForm.hasError('dateTimeInPast') && (date?.touched ||\r\n      time?.touched) ) {\r\n      <span>Selected date and time cannot be in the past.</span>\r\n      }\r\n    </mat-error>\r\n  </div>\r\n\r\n  <div>\r\n    <app-form-input\r\n      label=\"Location\"\r\n      placeholder=\"e.g., Convention Center, San Francisco\"\r\n      [required]=\"true\"\r\n      formControlName=\"location\"\r\n    ></app-form-input>\r\n\r\n    @if (location?.invalid && (location?.dirty || location?.touched)) {\r\n    <div class=\"field-error-message\">\r\n      @if (location?.hasError('required')) {\r\n      <span>Location is required.</span>\r\n      } @if (location?.hasError('maxlength')) {\r\n      <span>Location cannot exceed 300 characters.</span>\r\n      }\r\n    </div>\r\n    }\r\n  </div>\r\n\r\n  <!-- Capacity -->\r\n  <div>\r\n    <app-form-input\r\n      label=\"Capacity (optional)\"\r\n      placeholder=\"Leave empty for unlimited\"\r\n      helpText=\"Maximum number of participants. Leave empty for unlimited capacity.\"\r\n      formControlName=\"capacity\"\r\n      type=\"number\"\r\n      min=\"1\"\r\n    ></app-form-input>\r\n    @if (capacity?.invalid && (capacity?.dirty || capacity?.touched)) {\r\n    <div class=\"field-error-message\">\r\n      @if (capacity?.hasError('min')) {\r\n      <span>Capacity must be a positive number.</span>\r\n      }\r\n    </div>\r\n    }\r\n  </div>\r\n\r\n  <mat-form-field class=\"chip-list-field\">\r\n    <mat-label>Tags (up to {{ maxTags }})</mat-label>\r\n    <mat-chip-grid #chipGrid aria-label=\"Tag selection\">\r\n      @for (tag of selectedTags; track tag) {\r\n      <mat-chip-row (removed)=\"removeTag(tag)\">\r\n        {{ tag }}\r\n        <button matChipRemove aria-label=\"'remove ' + tag\">\r\n          <mat-icon>cancel</mat-icon>\r\n        </button>\r\n      </mat-chip-row>\r\n      }\r\n    </mat-chip-grid>\r\n\r\n    <input\r\n      placeholder=\"Add tags (press Enter or comma)...\"\r\n      #tagInput\r\n      [formControl]=\"tagCtrl\"\r\n      [matChipInputFor]=\"chipGrid\"\r\n      [matChipInputSeparatorKeyCodes]=\"separatorKeysCodes\"\r\n      (matChipInputTokenEnd)=\"addTag($event)\"\r\n      (keydown)=\"onTagKeyDown($event, tagInput)\"\r\n    />\r\n\r\n    <mat-error>\r\n      @if (tagsArray?.hasError('maxTagsExceeded')) {\r\n      <span>Cannot add more than {{ maxTags }} tags.</span>\r\n      } @if (tagCtrl.invalid && tagCtrl.touched) { }\r\n    </mat-error>\r\n  </mat-form-field>\r\n\r\n  <!-- Visibility (зазвичай не потребує валідації помилок тут) -->\r\n  <div class=\"form-group\">\r\n    <label class=\"form-label\">Visibility</label>\r\n    <div class=\"radio-group\">\r\n      <label class=\"radio-label\">\r\n        <input type=\"radio\" value=\"public\" formControlName=\"visibility\" />\r\n        <span>Public - Anyone can see and join this event</span>\r\n      </label>\r\n      <label class=\"radio-label\">\r\n        <input type=\"radio\" value=\"private\" formControlName=\"visibility\" />\r\n        <span>Private - Only invited people can see this event</span>\r\n      </label>\r\n    </div>\r\n  </div>\r\n\r\n  <!-- Кнопки дій тепер використовують @Output -->\r\n  <div class=\"form-actions\">\r\n    <app-button\r\n      type=\"button\"\r\n      color=\"secondary\"\r\n      label=\"Cancel\"\r\n      (click)=\"onCancelClick()\"\r\n    ></app-button>\r\n    <app-button\r\n      type=\"submit\"\r\n      color=\"primary\"\r\n      [label]=\"isLoading ? 'Processing...' : submitButtonText\"\r\n      [disabled]=\"eventForm.invalid || isLoading\"\r\n    ></app-button>\r\n  </div>\r\n</form>\r\n"
         },
         {
             "name": "Events",
@@ -3265,7 +3605,7 @@
             "implements": [
                 "OnInit"
             ],
-            "templateData": "<div class=\"container discover-events-page\">\r\n  <header class=\"page-header\">\r\n    <h1>Discover Events</h1>\r\n    <p>Find and join exciting events happening around you</p>\r\n  </header>\r\n\r\n  <div class=\"search-bar\">\r\n    <mat-icon class=\"search-icon\">search</mat-icon>\r\n    <app-form-input\r\n      placeholder=\"Search events by title...\"\r\n      [(ngModel)]=\"searchTerm\"\r\n      (ngModelChange)=\"onSearchChange()\"\r\n    >\r\n    </app-form-input>\r\n  </div>\r\n\r\n  <div class=\"events-grid\">\r\n    @for (event of events; track event.id) {\r\n    <div class=\"card event-card\">\r\n      <div class=\"event-card-content\">\r\n        <h2>{{ event.title }}</h2>\r\n        <p class=\"organizer-info\">\r\n          <mat-icon>person</mat-icon>\r\n          <span\r\n            >Organized by: <strong>{{ event.organizerName }}</strong></span\r\n          >\r\n        </p>\r\n\r\n        <p>{{ event.description }}</p>\r\n\r\n        <ul class=\"event-details\">\r\n          <li>\r\n            <mat-icon>calendar_today</mat-icon>\r\n            <span>{{ event.start | date : 'MMM d, y' }}</span>\r\n          </li>\r\n          <li>\r\n            <mat-icon>schedule</mat-icon>\r\n            <span>{{ event.start | date : 'HH:mm' }}</span>\r\n          </li>\r\n          <li>\r\n            <mat-icon>location_on</mat-icon>\r\n            <span>{{ event.location }}</span>\r\n          </li>\r\n          <li>\r\n            <mat-icon>people</mat-icon>\r\n            <span>{{ event.participantsCount }} / {{ event.capacity ?? '∞' }} participants</span>\r\n          </li>\r\n          @if (event.tags && event.tags.length > 0) {\r\n          <mat-chip-listbox aria-label=\"Event Tags\" class=\"event-tags agenda-tags\">\r\n            @for(tag of event.tags; track tag.id) {\r\n            <mat-chip-option disabled>{{ tag.name }}</mat-chip-option>\r\n            }\r\n          </mat-chip-listbox>\r\n          }\r\n        </ul>\r\n      </div>\r\n\r\n      <div class=\"event-card-footer\">\r\n        <div class=\"footer-actions\">\r\n          @if (isOrganizer(event)) {\r\n          <app-button\r\n            label=\"Edit\"\r\n            color=\"secondary\"\r\n            [routerLink]=\"['/events', event.id, 'edit']\"\r\n          ></app-button>\r\n          }\r\n        </div>\r\n\r\n        <div class=\"footer-participation\">\r\n          @if (isParticipant(event)) {\r\n          <app-button label=\"Leave\" color=\"danger\" (click)=\"onLeaveEvent(event.id)\"></app-button>\r\n          } @else {\r\n          <app-button\r\n            label=\"Join Event\"\r\n            color=\"success\"\r\n            (click)=\"onJoinEvent(event.id)\"\r\n          ></app-button>\r\n          }\r\n        </div>\r\n      </div>\r\n    </div>\r\n    } @empty {\r\n    <p class=\"empty-state\">No events match your search.</p>\r\n    }\r\n  </div>\r\n</div>\r\n"
+            "templateData": "<div class=\"container discover-events-page\">\r\n  <header class=\"page-header\">\r\n    <h1>Discover Events</h1>\r\n    <p>Find and join exciting events happening around you</p>\r\n  </header>\r\n\r\n  <div class=\"search-bar\">\r\n    <mat-icon class=\"search-icon\">search</mat-icon>\r\n    <app-form-input\r\n      placeholder=\"Search events by title...\"\r\n      [(ngModel)]=\"searchTerm\"\r\n      (ngModelChange)=\"onSearchChange()\"\r\n    >\r\n    </app-form-input>\r\n  </div>\r\n\r\n  <div class=\"events-grid\">\r\n    @for (event of events; track event.id) {\r\n    <div class=\"card event-card\">\r\n      <div class=\"event-card-content\">\r\n        <h2>{{ event.title }}</h2>\r\n        <p class=\"organizer-info\">\r\n          <mat-icon>person</mat-icon>\r\n          <span\r\n            >Organized by: <strong>{{ event.organizerName }}</strong></span\r\n          >\r\n        </p>\r\n\r\n        <p>{{ event.description }}</p>\r\n\r\n        <ul class=\"event-details\">\r\n          <li>\r\n            <mat-icon>calendar_today</mat-icon>\r\n            <span>{{ event.start | date : 'MMM d, y' }}</span>\r\n          </li>\r\n          <li>\r\n            <mat-icon>schedule</mat-icon>\r\n            <span>{{ event.start | date : 'HH:mm' }}</span>\r\n          </li>\r\n          <li>\r\n            <mat-icon>location_on</mat-icon>\r\n            <span>{{ event.location }}</span>\r\n          </li>\r\n          <li>\r\n            <mat-icon>people</mat-icon>\r\n            <span>{{ event.participantsCount }} / {{ event.capacity ?? '∞' }} participants</span>\r\n          </li>\r\n          @if (event.tags && event.tags.length > 0) {\r\n          <mat-chip-listbox aria-label=\"Event Tags\" class=\"event-tags agenda-tags\">\r\n            @for(tag of event.tags; track tag.id) {\r\n            <mat-chip-option disabled>{{ tag.name }}</mat-chip-option>\r\n            }\r\n          </mat-chip-listbox>\r\n          }\r\n        </ul>\r\n      </div>\r\n\r\n      <div class=\"event-card-footer\">\r\n        <div class=\"footer-actions\">\r\n          @if (isOrganizer(event)) {\r\n          <app-button\r\n            label=\"Edit\"\r\n            color=\"secondary\"\r\n            [routerLink]=\"['/events', event.id, 'edit']\"\r\n            [queryParams]=\"{ returnUrl: '/events' }\"\r\n          ></app-button>\r\n          }\r\n        </div>\r\n\r\n        <div class=\"footer-participation\">\r\n          @if (isParticipant(event)) {\r\n          <app-button label=\"Leave\" color=\"danger\" (click)=\"onLeaveEvent(event.id)\"></app-button>\r\n          } @else {\r\n          <app-button\r\n            label=\"Join Event\"\r\n            color=\"success\"\r\n            (click)=\"onJoinEvent(event.id)\"\r\n          ></app-button>\r\n          }\r\n        </div>\r\n      </div>\r\n    </div>\r\n    } @empty {\r\n    <p class=\"empty-state\">No events match your search.</p>\r\n    }\r\n  </div>\r\n</div>\r\n"
         },
         {
             "name": "FormInput",
@@ -4053,19 +4393,19 @@
             "implements": [
                 "OnInit"
             ],
-            "templateData": "<div class=\"container my-events-page\">\r\n  <header class=\"page-header\">\r\n    <div class=\"header-text\">\r\n      <h1>My Events</h1>\r\n      <p>View and manage your event calendar</p>\r\n    </div>\r\n  </header>\r\n\r\n  @if (isLoading) {\r\n  <div class=\"loading-state\">\r\n    <p>Loading your events...</p>\r\n  </div>\r\n  } @else if (error) {\r\n  <div class=\"error-state\">\r\n    <p>{{ error }}</p>\r\n  </div>\r\n  } @else {\r\n  <div class=\"calendar-and-agenda-container\">\r\n    <div class=\"calendar-wrapper\">\r\n      <app-calendar [events]=\"calendarEvents\" (dateSelected)=\"onDateSelected($event)\">\r\n      </app-calendar>\r\n    </div>\r\n\r\n    <div class=\"agenda-wrapper\">\r\n      <h2 class=\"agenda-title\">Schedule for {{ selectedDate | date : 'fullDate' }}</h2>\r\n      <div class=\"agenda-events-list\">\r\n        @for (event of eventsForSelectedDay; track event.id) {\r\n\r\n        <div class=\"agenda-item\">\r\n          <div class=\"agenda-item-time\">{{ event.start | date : 'HH:mm' }}</div>\r\n\r\n          <div class=\"agenda-item-details\">\r\n            <h3 class=\"agenda-item-title\">{{ event.title }}</h3>\r\n            <p class=\"agenda-item-location\">{{ event.location }}</p>\r\n\r\n            @if (isOrganizer(event)) {\r\n            <span class=\"organizer-badge\">You are the organizer</span>\r\n            }\r\n          </div>\r\n\r\n          <div class=\"agenda-item-actions\">\r\n            @if (isOrganizer(event)) {\r\n            <app-button\r\n              label=\"Edit\"\r\n              color=\"secondary\"\r\n              [routerLink]=\"['/events', event.id, 'edit']\"\r\n            ></app-button>\r\n            } @else {\r\n\r\n            <a class=\"agenda-item-link\" [routerLink]=\"['/events', event.id]\">\r\n              <svg\r\n                xmlns=\"http://www.w3.org/2000/svg\"\r\n                width=\"20\"\r\n                height=\"20\"\r\n                viewBox=\"0 0 24 24\"\r\n                fill=\"none\"\r\n                stroke=\"currentColor\"\r\n                stroke-width=\"2\"\r\n                stroke-linecap=\"round\"\r\n                stroke-linejoin=\"round\"\r\n              >\r\n                <polyline points=\"9 18 15 12 9 6\"></polyline>\r\n              </svg>\r\n            </a>\r\n            }\r\n          </div>\r\n        </div>\r\n        } @empty {\r\n        <div class=\"empty-agenda\">\r\n          <p>No events scheduled for this day.</p>\r\n        </div>\r\n        }\r\n      </div>\r\n    </div>\r\n  </div>\r\n  }\r\n</div>\r\n"
+            "templateData": "<div class=\"container my-events-page\">\r\n  <header class=\"page-header\">\r\n    <div class=\"header-text\">\r\n      <h1>My Events</h1>\r\n      <p>View and manage your event calendar</p>\r\n    </div>\r\n  </header>\r\n\r\n  @if (isLoading) {\r\n  <div class=\"loading-state\">\r\n    <p>Loading your events...</p>\r\n  </div>\r\n  } @else if (error) {\r\n  <div class=\"error-state\">\r\n    <p>{{ error }}</p>\r\n  </div>\r\n  } @else {\r\n  <div class=\"calendar-and-agenda-container\">\r\n    <div class=\"calendar-wrapper\">\r\n      <app-calendar [events]=\"calendarEvents\" (dateSelected)=\"onDateSelected($event)\">\r\n      </app-calendar>\r\n    </div>\r\n\r\n    <div class=\"agenda-wrapper\">\r\n      <h2 class=\"agenda-title\">Schedule for {{ selectedDate | date : 'fullDate' }}</h2>\r\n      <div class=\"agenda-events-list\">\r\n        @for (event of eventsForSelectedDay; track event.id) {\r\n\r\n        <div class=\"agenda-item\">\r\n          <div class=\"agenda-item-time\">{{ event.start | date : 'HH:mm' }}</div>\r\n\r\n          <div class=\"agenda-item-details\">\r\n            <h3 class=\"agenda-item-title\">{{ event.title }}</h3>\r\n            <p class=\"agenda-item-location\">{{ event.location }}</p>\r\n\r\n            @if (isOrganizer(event)) {\r\n            <span class=\"organizer-badge\">You are the organizer</span>\r\n            }\r\n          </div>\r\n\r\n          <div class=\"agenda-item-actions\">\r\n            @if (isOrganizer(event)) {\r\n            <app-button\r\n              label=\"Edit\"\r\n              color=\"secondary\"\r\n              [routerLink]=\"['/events', event.id, 'edit']\"\r\n              [queryParams]=\"{ returnUrl: '/my-events' }\"\r\n            ></app-button>\r\n            } @else {\r\n\r\n            <a class=\"agenda-item-link\" [routerLink]=\"['/events', event.id]\">\r\n              <svg\r\n                xmlns=\"http://www.w3.org/2000/svg\"\r\n                width=\"20\"\r\n                height=\"20\"\r\n                viewBox=\"0 0 24 24\"\r\n                fill=\"none\"\r\n                stroke=\"currentColor\"\r\n                stroke-width=\"2\"\r\n                stroke-linecap=\"round\"\r\n                stroke-linejoin=\"round\"\r\n              >\r\n                <polyline points=\"9 18 15 12 9 6\"></polyline>\r\n              </svg>\r\n            </a>\r\n            }\r\n          </div>\r\n        </div>\r\n        } @empty {\r\n        <div class=\"empty-agenda\">\r\n          <p>No events scheduled for this day.</p>\r\n        </div>\r\n        }\r\n      </div>\r\n    </div>\r\n  </div>\r\n  }\r\n</div>\r\n"
         }
     ],
     "modules": [
         {
             "name": "AppModule",
-            "id": "module-AppModule-5ef30159fe63fd9c6a748db7fb7b314aedb0e8ffb6f39fe058c4f266179ae61a76164187c3376d00c791d85e8d11f3d4e358cd7f46ed3de5723126bd6297a948",
+            "id": "module-AppModule-576cf9c5db75e4608210765d518ecd74ae09e637f78f64d58ed672784149ae0053dec39aedabc10def047b909726f060ae8ea8ee3ea0d989e7453268c2841dff",
             "description": "",
             "deprecationMessage": "",
             "deprecated": false,
             "file": "src/app/app-module.ts",
             "methods": [],
-            "sourceCode": "import {\r\n  NgModule,\r\n  provideBrowserGlobalErrorListeners,\r\n  provideZonelessChangeDetection,\r\n} from '@angular/core';\r\nimport { BrowserModule } from '@angular/platform-browser';\r\nimport { BrowserAnimationsModule } from '@angular/platform-browser/animations';\r\n\r\nimport { AppRoutingModule } from './app-routing-module';\r\nimport { App } from './app';\r\n\r\nimport { SharedModule } from './shared/shared-module';\r\nimport { CoreModule } from './core/core-module';\r\nimport { EventsModule } from './events/events-module';\r\n\r\n@NgModule({\r\n  declarations: [App],\r\n  imports: [BrowserModule, BrowserAnimationsModule, AppRoutingModule, CoreModule, EventsModule],\r\n  providers: [provideBrowserGlobalErrorListeners(), provideZonelessChangeDetection()],\r\n  bootstrap: [App],\r\n})\r\nexport class AppModule {}\r\n",
+            "sourceCode": "import {\r\n  NgModule,\r\n  provideBrowserGlobalErrorListeners,\r\n  provideZonelessChangeDetection,\r\n} from '@angular/core';\r\nimport { BrowserModule } from '@angular/platform-browser';\r\nimport { BrowserAnimationsModule } from '@angular/platform-browser/animations';\r\nimport { AppRoutingModule } from './app-routing-module';\r\nimport { App } from './app';\r\n\r\nimport { SharedModule } from './shared/shared-module';\r\nimport { CoreModule } from './core/core-module';\r\nimport { EventsModule } from './events/events-module';\r\nimport { authReducer } from './store/auth/auth.reducer';\r\nimport { StoreModule } from '@ngrx/store';\r\nimport { EffectsModule } from '@ngrx/effects';\r\nimport { AuthEffects } from './store/auth/auth.effects';\r\n\r\n@NgModule({\r\n  declarations: [App],\r\n  imports: [\r\n    BrowserModule,\r\n    BrowserAnimationsModule,\r\n    AppRoutingModule,\r\n    CoreModule,\r\n    EventsModule,\r\n    StoreModule.forFeature('auth', authReducer),\r\n    StoreModule.forRoot({ auth: authReducer }),\r\n    EffectsModule.forRoot([AuthEffects]),\r\n  ],\r\n  providers: [provideBrowserGlobalErrorListeners(), provideZonelessChangeDetection()],\r\n  bootstrap: [App],\r\n})\r\nexport class AppModule {}\r\n",
             "children": [
                 {
                     "type": "providers",
@@ -4149,13 +4489,13 @@
         },
         {
             "name": "AuthModule",
-            "id": "module-AuthModule-7e1dc523850fd8f7fc776f8a5d8baf8e2b64fe470d726229c41c5f490d6fc9045e1e07aae819b8e0806f42e4769d3c80784cb0381cd935859f4960de378d78f2",
+            "id": "module-AuthModule-0c8be139ad1f9b1ef74bdd65a8dea6f401828e92b93d86994c49789af3f5b5102a8db12b5037e34a2a68d3d99d2398b7ebbfa1ba5ad883f9824ea07fdf0e3385",
             "description": "",
             "deprecationMessage": "",
             "deprecated": false,
             "file": "src/app/auth/auth-module.ts",
             "methods": [],
-            "sourceCode": "import { NgModule } from '@angular/core';\r\nimport { CommonModule } from '@angular/common';\r\n\r\nimport { ReactiveFormsModule } from '@angular/forms';\r\nimport { RouterModule } from '@angular/router';\r\nimport { SharedModule } from '../shared/shared-module';\r\nimport { AuthComponent } from './auth.component';\r\n\r\n@NgModule({\r\n  declarations: [AuthComponent],\r\n  imports: [CommonModule, ReactiveFormsModule, RouterModule, SharedModule],\r\n})\r\nexport class AuthModule {}\r\n",
+            "sourceCode": "import { NgModule } from '@angular/core';\r\nimport { CommonModule } from '@angular/common';\r\nimport { ReactiveFormsModule } from '@angular/forms';\r\nimport { RouterModule } from '@angular/router';\r\nimport { StoreModule } from '@ngrx/store';\r\nimport { EffectsModule } from '@ngrx/effects';\r\n\r\nimport { SharedModule } from '../shared/shared-module';\r\nimport { AuthComponent } from './auth.component';\r\nimport { authReducer } from '../store/auth/auth.reducer';\r\nimport { AuthEffects } from '../store/auth/auth.effects';\r\n\r\n@NgModule({\r\n  declarations: [AuthComponent],\r\n  imports: [\r\n    CommonModule,\r\n    ReactiveFormsModule,\r\n    RouterModule,\r\n    SharedModule,\r\n    StoreModule.forFeature('auth', authReducer),\r\n    EffectsModule.forFeature([AuthEffects]),\r\n  ],\r\n})\r\nexport class AuthModule {}\r\n",
             "children": [
                 {
                     "type": "providers",
@@ -4382,7 +4722,17 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "CanActivateFn",
-                "defaultValue": "(\r\n  route,\r\n  state\r\n): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree => {\r\n  const authService = inject(AuthService);\r\n  const router = inject(Router);\r\n\r\n  if (authService.isLoggedIn()) {\r\n    return true;\r\n  } else {\r\n    console.log('AuthGuard: User not logged in, redirecting to /login');\r\n    return router.createUrlTree(['/login']);\r\n  }\r\n}"
+                "defaultValue": "(route, state): boolean | UrlTree => {\r\n  const authService = inject(AuthService);\r\n  const router = inject(Router);\r\n\r\n  const token = authService.getToken();\r\n\r\n  if (!token) {\r\n    console.log('AuthGuard: no token, redirecting to /login');\r\n    return router.createUrlTree(['/login']);\r\n  }\r\n\r\n  try {\r\n    const decoded = jwtDecode<DecodedToken>(token);\r\n    const isExpired = decoded.exp && decoded.exp * 1000 < Date.now();\r\n\r\n    if (isExpired) {\r\n      console.warn('AuthGuard: token expired, redirecting to /login');\r\n      authService.logout();\r\n      return router.createUrlTree(['/login']);\r\n    }\r\n\r\n    return true;\r\n  } catch {\r\n    console.error('AuthGuard: invalid token');\r\n    authService.logout();\r\n    return router.createUrlTree(['/login']);\r\n  }\r\n}"
+            },
+            {
+                "name": "authReducer",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/store/auth/auth.reducer.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "",
+                "defaultValue": "createReducer(\r\n  initialState,\r\n\r\n  on(AuthActions.login, (state) => ({\r\n    ...state,\r\n    loading: true,\r\n    error: null,\r\n  })),\r\n\r\n  on(AuthActions.loginSuccess, (state, { response }) => ({\r\n    ...state,\r\n    accessToken: response.accessToken,\r\n    refreshToken: response.refreshToken ?? null,\r\n    user: { email: response.email, fullName: '' },\r\n    loading: false,\r\n  })),\r\n\r\n  on(AuthActions.loginFailure, (state, { error }) => ({\r\n    ...state,\r\n    loading: false,\r\n    error,\r\n  })),\r\n\r\n  on(AuthActions.logout, () => initialState)\r\n)"
             },
             {
                 "name": "environment",
@@ -4403,6 +4753,186 @@
                 "deprecationMessage": "",
                 "type": "object",
                 "defaultValue": "{\r\n  production: false,\r\n  apiUrl: 'http://localhost:5028/api',\r\n}"
+            },
+            {
+                "name": "initialState",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/store/auth/auth.reducer.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "AuthState",
+                "defaultValue": "{\r\n  user: null,\r\n  accessToken: null,\r\n  refreshToken: null,\r\n  loading: false,\r\n  error: null,\r\n}"
+            },
+            {
+                "name": "login",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/store/auth/auth.actions.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "",
+                "defaultValue": "createAction('[Auth] Login', props<{ data: LoginRequest }>())"
+            },
+            {
+                "name": "loginFailure",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/store/auth/auth.actions.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "",
+                "defaultValue": "createAction('[Auth] Login Failure', props<{ error: string }>())"
+            },
+            {
+                "name": "loginSuccess",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/store/auth/auth.actions.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "",
+                "defaultValue": "createAction(\r\n  '[Auth] Login Success',\r\n  props<{ response: AuthResponse }>()\r\n)"
+            },
+            {
+                "name": "logout",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/store/auth/auth.actions.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "",
+                "defaultValue": "createAction('[Auth] Logout')"
+            },
+            {
+                "name": "refreshToken",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/store/auth/auth.actions.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "",
+                "defaultValue": "createAction('[Auth] Refresh Token')"
+            },
+            {
+                "name": "refreshTokenFailure",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/store/auth/auth.actions.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "",
+                "defaultValue": "createAction(\r\n  '[Auth] Refresh Token Failure',\r\n  props<{ error: string }>()\r\n)"
+            },
+            {
+                "name": "refreshTokenSuccess",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/store/auth/auth.actions.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "",
+                "defaultValue": "createAction(\r\n  '[Auth] Refresh Token Success',\r\n  props<{ response: AuthResponse }>()\r\n)"
+            },
+            {
+                "name": "register",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/store/auth/auth.actions.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "",
+                "defaultValue": "createAction('[Auth] Register', props<{ data: RegisterRequest }>())"
+            },
+            {
+                "name": "registerFailure",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/store/auth/auth.actions.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "",
+                "defaultValue": "createAction('[Auth] Register Failure', props<{ error: string }>())"
+            },
+            {
+                "name": "registerSuccess",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/store/auth/auth.actions.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "",
+                "defaultValue": "createAction(\r\n  '[Auth] Register Success',\r\n  props<{ response: AuthResponse }>()\r\n)"
+            },
+            {
+                "name": "scheduleRefresh",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/store/auth/auth.actions.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "",
+                "defaultValue": "createAction(\r\n  '[Auth] Schedule Refresh',\r\n  props<{ expiresAt: number }>()\r\n)"
+            },
+            {
+                "name": "selectAccessToken",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/store/auth/auth.selectors.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "",
+                "defaultValue": "createSelector(selectAuthState, (state) => state.accessToken)"
+            },
+            {
+                "name": "selectAuthState",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/store/auth/auth.selectors.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "",
+                "defaultValue": "createFeatureSelector<AuthState>('auth')"
+            },
+            {
+                "name": "selectError",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/store/auth/auth.selectors.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "",
+                "defaultValue": "createSelector(selectAuthState, (state) => state.error)"
+            },
+            {
+                "name": "selectLoading",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/store/auth/auth.selectors.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "",
+                "defaultValue": "createSelector(selectAuthState, (state) => state.loading)"
+            },
+            {
+                "name": "selectRefreshToken",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/store/auth/auth.selectors.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "",
+                "defaultValue": "createSelector(selectAuthState, (state) => state.refreshToken)"
+            },
+            {
+                "name": "selectUser",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/store/auth/auth.selectors.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "",
+                "defaultValue": "createSelector(selectAuthState, (state) => state.user)"
             }
         ],
         "functions": [
@@ -4430,7 +4960,29 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "CanActivateFn",
-                    "defaultValue": "(\r\n  route,\r\n  state\r\n): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree => {\r\n  const authService = inject(AuthService);\r\n  const router = inject(Router);\r\n\r\n  if (authService.isLoggedIn()) {\r\n    return true;\r\n  } else {\r\n    console.log('AuthGuard: User not logged in, redirecting to /login');\r\n    return router.createUrlTree(['/login']);\r\n  }\r\n}"
+                    "defaultValue": "(route, state): boolean | UrlTree => {\r\n  const authService = inject(AuthService);\r\n  const router = inject(Router);\r\n\r\n  const token = authService.getToken();\r\n\r\n  if (!token) {\r\n    console.log('AuthGuard: no token, redirecting to /login');\r\n    return router.createUrlTree(['/login']);\r\n  }\r\n\r\n  try {\r\n    const decoded = jwtDecode<DecodedToken>(token);\r\n    const isExpired = decoded.exp && decoded.exp * 1000 < Date.now();\r\n\r\n    if (isExpired) {\r\n      console.warn('AuthGuard: token expired, redirecting to /login');\r\n      authService.logout();\r\n      return router.createUrlTree(['/login']);\r\n    }\r\n\r\n    return true;\r\n  } catch {\r\n    console.error('AuthGuard: invalid token');\r\n    authService.logout();\r\n    return router.createUrlTree(['/login']);\r\n  }\r\n}"
+                }
+            ],
+            "src/app/store/auth/auth.reducer.ts": [
+                {
+                    "name": "authReducer",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/store/auth/auth.reducer.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "defaultValue": "createReducer(\r\n  initialState,\r\n\r\n  on(AuthActions.login, (state) => ({\r\n    ...state,\r\n    loading: true,\r\n    error: null,\r\n  })),\r\n\r\n  on(AuthActions.loginSuccess, (state, { response }) => ({\r\n    ...state,\r\n    accessToken: response.accessToken,\r\n    refreshToken: response.refreshToken ?? null,\r\n    user: { email: response.email, fullName: '' },\r\n    loading: false,\r\n  })),\r\n\r\n  on(AuthActions.loginFailure, (state, { error }) => ({\r\n    ...state,\r\n    loading: false,\r\n    error,\r\n  })),\r\n\r\n  on(AuthActions.logout, () => initialState)\r\n)"
+                },
+                {
+                    "name": "initialState",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/store/auth/auth.reducer.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "AuthState",
+                    "defaultValue": "{\r\n  user: null,\r\n  accessToken: null,\r\n  refreshToken: null,\r\n  loading: false,\r\n  error: null,\r\n}"
                 }
             ],
             "src/environments/environment.docker.ts": [
@@ -4455,6 +5007,180 @@
                     "deprecationMessage": "",
                     "type": "object",
                     "defaultValue": "{\r\n  production: false,\r\n  apiUrl: 'http://localhost:5028/api',\r\n}"
+                }
+            ],
+            "src/app/store/auth/auth.actions.ts": [
+                {
+                    "name": "login",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/store/auth/auth.actions.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "defaultValue": "createAction('[Auth] Login', props<{ data: LoginRequest }>())"
+                },
+                {
+                    "name": "loginFailure",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/store/auth/auth.actions.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "defaultValue": "createAction('[Auth] Login Failure', props<{ error: string }>())"
+                },
+                {
+                    "name": "loginSuccess",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/store/auth/auth.actions.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "defaultValue": "createAction(\r\n  '[Auth] Login Success',\r\n  props<{ response: AuthResponse }>()\r\n)"
+                },
+                {
+                    "name": "logout",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/store/auth/auth.actions.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "defaultValue": "createAction('[Auth] Logout')"
+                },
+                {
+                    "name": "refreshToken",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/store/auth/auth.actions.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "defaultValue": "createAction('[Auth] Refresh Token')"
+                },
+                {
+                    "name": "refreshTokenFailure",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/store/auth/auth.actions.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "defaultValue": "createAction(\r\n  '[Auth] Refresh Token Failure',\r\n  props<{ error: string }>()\r\n)"
+                },
+                {
+                    "name": "refreshTokenSuccess",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/store/auth/auth.actions.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "defaultValue": "createAction(\r\n  '[Auth] Refresh Token Success',\r\n  props<{ response: AuthResponse }>()\r\n)"
+                },
+                {
+                    "name": "register",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/store/auth/auth.actions.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "defaultValue": "createAction('[Auth] Register', props<{ data: RegisterRequest }>())"
+                },
+                {
+                    "name": "registerFailure",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/store/auth/auth.actions.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "defaultValue": "createAction('[Auth] Register Failure', props<{ error: string }>())"
+                },
+                {
+                    "name": "registerSuccess",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/store/auth/auth.actions.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "defaultValue": "createAction(\r\n  '[Auth] Register Success',\r\n  props<{ response: AuthResponse }>()\r\n)"
+                },
+                {
+                    "name": "scheduleRefresh",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/store/auth/auth.actions.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "defaultValue": "createAction(\r\n  '[Auth] Schedule Refresh',\r\n  props<{ expiresAt: number }>()\r\n)"
+                }
+            ],
+            "src/app/store/auth/auth.selectors.ts": [
+                {
+                    "name": "selectAccessToken",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/store/auth/auth.selectors.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "defaultValue": "createSelector(selectAuthState, (state) => state.accessToken)"
+                },
+                {
+                    "name": "selectAuthState",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/store/auth/auth.selectors.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "defaultValue": "createFeatureSelector<AuthState>('auth')"
+                },
+                {
+                    "name": "selectError",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/store/auth/auth.selectors.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "defaultValue": "createSelector(selectAuthState, (state) => state.error)"
+                },
+                {
+                    "name": "selectLoading",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/store/auth/auth.selectors.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "defaultValue": "createSelector(selectAuthState, (state) => state.loading)"
+                },
+                {
+                    "name": "selectRefreshToken",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/store/auth/auth.selectors.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "defaultValue": "createSelector(selectAuthState, (state) => state.refreshToken)"
+                },
+                {
+                    "name": "selectUser",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/store/auth/auth.selectors.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "defaultValue": "createSelector(selectAuthState, (state) => state.user)"
                 }
             ]
         },
@@ -4545,7 +5271,7 @@
         ]
     },
     "coverage": {
-        "count": 3,
+        "count": 2,
         "status": "low",
         "files": [
             {
@@ -4563,7 +5289,7 @@
                 "linktype": "component",
                 "name": "AuthComponent",
                 "coveragePercent": 0,
-                "coverageCount": "0/13",
+                "coverageCount": "0/11",
                 "status": "low"
             },
             {
@@ -4600,7 +5326,7 @@
                 "linktype": "injectable",
                 "name": "AuthService",
                 "coveragePercent": 0,
-                "coverageCount": "0/12",
+                "coverageCount": "0/14",
                 "status": "low"
             },
             {
@@ -4618,7 +5344,7 @@
                 "linktype": "component",
                 "name": "EditEvent",
                 "coveragePercent": 0,
-                "coverageCount": "0/10",
+                "coverageCount": "0/11",
                 "status": "low"
             },
             {
@@ -4708,7 +5434,7 @@
                 "linktype": "interface",
                 "name": "AuthResponse",
                 "coveragePercent": 0,
-                "coverageCount": "0/4",
+                "coverageCount": "0/5",
                 "status": "low"
             },
             {
@@ -4726,7 +5452,7 @@
                 "linktype": "interface",
                 "name": "DecodedToken",
                 "coveragePercent": 0,
-                "coverageCount": "0/5",
+                "coverageCount": "0/6",
                 "status": "low"
             },
             {
@@ -4799,7 +5525,7 @@
                 "linktype": "component",
                 "name": "EventForm",
                 "coveragePercent": 0,
-                "coverageCount": "0/25",
+                "coverageCount": "0/26",
                 "status": "low"
             },
             {
@@ -4809,6 +5535,214 @@
                 "name": "FormInput",
                 "coveragePercent": 0,
                 "coverageCount": "0/15",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/store/auth/auth.actions.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "login",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/store/auth/auth.actions.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "loginFailure",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/store/auth/auth.actions.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "loginSuccess",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/store/auth/auth.actions.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "logout",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/store/auth/auth.actions.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "refreshToken",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/store/auth/auth.actions.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "refreshTokenFailure",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/store/auth/auth.actions.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "refreshTokenSuccess",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/store/auth/auth.actions.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "register",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/store/auth/auth.actions.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "registerFailure",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/store/auth/auth.actions.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "registerSuccess",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/store/auth/auth.actions.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "scheduleRefresh",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/store/auth/auth.effects.ts",
+                "type": "injectable",
+                "linktype": "injectable",
+                "name": "AuthEffects",
+                "coveragePercent": 0,
+                "coverageCount": "0/10",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/store/auth/auth.reducer.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "authReducer",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/store/auth/auth.reducer.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "initialState",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/store/auth/auth.selectors.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "selectAccessToken",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/store/auth/auth.selectors.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "selectAuthState",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/store/auth/auth.selectors.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "selectError",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/store/auth/auth.selectors.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "selectLoading",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/store/auth/auth.selectors.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "selectRefreshToken",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/store/auth/auth.selectors.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "selectUser",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/store/auth/auth.state.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "AuthState",
+                "coveragePercent": 0,
+                "coverageCount": "0/6",
                 "status": "low"
             },
             {

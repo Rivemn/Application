@@ -27,7 +27,7 @@ namespace WebAPI.Extensions
 		private static void AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
 		{
 			var jwtSection = configuration.GetSection("Jwt");
-			var key = Encoding.ASCII.GetBytes(jwtSection["Key"]
+			var key = Encoding.UTF8.GetBytes(jwtSection["Key"]
 				?? throw new InvalidOperationException("JWT Key not configured."));
 
 			services.AddAuthentication(options =>

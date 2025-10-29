@@ -1,6 +1,7 @@
 <div class="auth-container">
   <div class="card auth-card">
-    @if (isLoginView) {
+    @if ({ isLoading: isLoading$ | async, error: errorMessage$ | async }; as vm) { @if (isLoginView)
+    {
     <header class="auth-header">
       <h1>Welcome Back!</h1>
       <p>Sign in to continue to your events.</p>
@@ -26,7 +27,7 @@
       <app-button
         type="submit"
         label="Sign In"
-        [disabled]="loginForm.invalid || isLoading"
+        [disabled]="loginForm.invalid || (vm.isLoading ?? false)"
       ></app-button>
     </form>
 
@@ -70,7 +71,7 @@
       <app-button
         type="submit"
         label="Create Account"
-        [disabled]="registerForm.invalid || isLoading"
+        [disabled]="registerForm.invalid || (vm.isLoading ?? false)"
       ></app-button>
     </form>
 
@@ -78,10 +79,10 @@
       Already have an account?
       <a (click)="toggleView()">Sign in</a>
     </p>
-    } @if (errorMessage) {
+    } @if (vm.error) {
     <div class="error-message">
-      <p>{{ errorMessage }}</p>
+      <p>{{ vm.error }}</p>
     </div>
-    }
+    } }
   </div>
 </div>

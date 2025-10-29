@@ -8,10 +8,17 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 {
 	public void Configure(EntityTypeBuilder<User> builder)
 	{
-		    builder
+		builder
 			.HasMany(u => u.OrganizedEvents)
 			.WithOne(e => e.Organizer)
 			.HasForeignKey(e => e.OrganizerId)
-			.OnDelete(DeleteBehavior.Restrict); 
+			.OnDelete(DeleteBehavior.Restrict);
+
+		builder.Property(u => u.RefreshToken)
+			   .HasMaxLength(150)
+			   .IsRequired(false);
+
+		builder.Property(u => u.RefreshTokenExpiryTime)
+			   .IsRequired(false);
 	}
 }

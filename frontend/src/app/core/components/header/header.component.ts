@@ -1,44 +1,35 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { map, Observable, Subscription } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
-
+import { Store } from '@ngrx/store';
+import { selectIsLoggedIn, selectCurrentUser } from '../../../store/auth/auth.selectors';
+import { AuthState } from '../../../store/auth/auth.state';
+import * as AuthActions from '../../../store/auth/auth.actions';
 @Component({
   selector: 'app-header',
   standalone: false,
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent {
-  isAuthenticated = false;
-  userName: string | null = null;
-  private authSubscription!: Subscription;
+  isAuthenticated$!: Observable<boolean>;
+  userName$!: Observable<string | null>;
 
-  constructor(
-    public router: Router,
-    private authService: AuthService,
-    private cdr: ChangeDetectorRef
-  ) {}
+  constructor(public router: Router, private store: Store<AuthState>) {}
 
   ngOnInit(): void {
-    this.authSubscription = this.authService.currentUser$.subscribe((user: DecodedToken | null) => {
-      this.isAuthenticated = !!user;
-      this.userName = user ? user.fullName : null;
+    this.isAuthenticated$ = this.store.select(selectIsLoggedIn);
 
-      this.cdr.markForCheck();
-    });
-    document.addEventListener('user-updated', () => {
-      this.cdr.detectChanges();
-    });
+    this.userName$ = this.store
+      .select(selectCurrentUser)
+      .pipe(map((user: DecodedToken | null) => (user ? user.fullName : null)));
   }
 
   onLogout(): void {
-    this.authService.logout();
+    this.store.dispatch(AuthActions.logout());
   }
 
-  ngOnDestroy(): void {
-    if (this.authSubscription) {
-      this.authSubscription.unsubscribe();
-    }
-  }
+  ngOnDestroy(): void {}
 }

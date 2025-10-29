@@ -12,7 +12,10 @@ CREATE TABLE "Users" (
     "Id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "Email" VARCHAR(255) UNIQUE NOT NULL,
     "FullName" VARCHAR(255) NOT NULL,
-    "PasswordHash" TEXT NOT NULL
+    "PasswordHash" TEXT NOT NULL,
+
+    "RefreshToken" TEXT NULL,
+    "RefreshTokenExpiryTime" TIMESTAMP WITH TIME ZONE NULL
 );
 
 -- Таблиця подій
@@ -66,7 +69,7 @@ CREATE TABLE "EventTags" (
 -- 3. Заповнення даних (Seed)
 -- ==============================
 
--- Користувачі (Пароль: Password123!)
+-- Користувачі 
 INSERT INTO "Users" ("Email", "FullName", "PasswordHash") VALUES
     ('anna.petrenko@example.com', 'Анна Петренко', '$2a$12$R.e.Bq.2j.1u.x.u8.f.uON01m0A3b.P0H1.U9g/u8.3e.a.a'),
     ('ivan.ivanov@example.com', 'Іван Іванов', '$2a$12$R.e.Bq.2j.1u.x.u8.f.uON01m0A3b.P0H1.U9g/u8.3e.a.a'),

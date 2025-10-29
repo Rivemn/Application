@@ -13,7 +13,10 @@ import { SharedModule } from '../shared/shared-module';
 import { Events } from './event-list/events';
 import { EditEvent } from './edit-event/edit-event';
 import { MatChipListbox, MatChipOption } from '@angular/material/chips';
-
+import { authReducer } from '../store/auth/auth.reducer';
+import { AuthEffects } from '../store/auth/auth.effects';
+import { StoreModule } from '@ngrx/store';
+import { AuthModule } from '../auth/auth-module';
 @NgModule({
   declarations: [Events, MyEvents, CreateEvent, EditEvent],
   imports: [
@@ -28,6 +31,7 @@ import { MatChipListbox, MatChipOption } from '@angular/material/chips';
     MatNativeDateModule,
     MatChipListbox,
     MatChipOption,
+    AuthModule,
   ],
 })
 export class EventsModule {}

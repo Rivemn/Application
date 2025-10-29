@@ -10,7 +10,7 @@ import { SharedModule } from '../shared-module';
 
 @Component({
   selector: 'app-form-input-wrapper',
-  standalone: false,
+  standalone: true,
   imports: [CommonModule, ReactiveFormsModule, SharedModule, JsonPipe],
   template: `
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
