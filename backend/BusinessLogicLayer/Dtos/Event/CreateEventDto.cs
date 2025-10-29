@@ -1,5 +1,4 @@
-﻿
-namespace BusinessLogicLayer.Dtos
+﻿namespace BusinessLogicLayer.Dtos.Event
 {
 
 	public class CreateEventDto

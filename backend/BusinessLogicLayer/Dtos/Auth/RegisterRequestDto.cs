@@ -1,4 +1,4 @@
-﻿namespace BusinessLogicLayer.Dtos
+﻿namespace BusinessLogicLayer.Dtos.Auth
 {
 	public class RegisterRequestDto
 	{

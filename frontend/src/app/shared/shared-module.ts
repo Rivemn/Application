@@ -13,8 +13,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { AiAssistant } from './ai-assistant/ai-assistant';
+
 @NgModule({
-  declarations: [Button, FormInput, Calendar, EventForm],
+  declarations: [Button, FormInput, Calendar, EventForm, AiAssistant],
   imports: [
     CommonModule,
     FormsModule,
@@ -29,6 +31,15 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatChipsModule,
     MatAutocompleteModule,
   ],
-  exports: [Button, FormInput, Calendar, EventForm, CommonModule, FormsModule, RouterModule],
+  exports: [
+    Button,
+    FormInput,
+    Calendar,
+    EventForm,
+    AiAssistant,
+    CommonModule,
+    FormsModule,
+    RouterModule,
+  ],
 })
 export class SharedModule {}

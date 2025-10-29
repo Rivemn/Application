@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using BusinessLogicLayer.Common;
-using BusinessLogicLayer.Dtos;
+using BusinessLogicLayer.Dtos.Auth;
 using BusinessLogicLayer.Interfaces;
 using DataAccessLayer.Entities;
 using DataAccessLayer.Interfaces;

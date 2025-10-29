@@ -1,4 +1,4 @@
-﻿using BusinessLogicLayer.Dtos;
+﻿using BusinessLogicLayer.Dtos.Event;
 using FluentValidation;
 
 namespace WebAPI.Validators

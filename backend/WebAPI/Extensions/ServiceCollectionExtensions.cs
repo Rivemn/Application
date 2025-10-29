@@ -12,6 +12,8 @@ namespace WebAPI.Extensions
 	{
 		public static IServiceCollection AddApiLayer(this IServiceCollection services, IConfiguration configuration)
 		{
+			services.AddHttpClient();
+
 			services.AddControllers();
 
 			services.AddFluentValidationAutoValidation();

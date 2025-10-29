@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BusinessLogicLayer.Dtos
+namespace BusinessLogicLayer.Dtos.Event
 {
 	public class TagDto
 	{

@@ -32,3 +32,11 @@ $border-radius: 0.5rem; // 8px (видно на кнопках, карточка
 $spacing-base: 1rem; // 16px (базовый отступ)
 $container-max-width: 1280px; // Максимальная ширина контейнера
 $transition-base: all 0.2s ease-in-out; // Плавные переходы
+
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+
+// Стандартна тінь (для карток)
+$shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+
+// Велика тінь (для модальних вікон, випадаючих списків)
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);

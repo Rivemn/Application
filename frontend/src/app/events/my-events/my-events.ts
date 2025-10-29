@@ -1,10 +1,19 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { EventService } from '../services/event.service';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  OnDestroy,
+} from '@angular/core';
+
 import { EventDto } from '../../models/EventDto';
-import { AuthService } from '../../core/services/auth.service';
+import { TagDto } from '../../models/TagDto';
+
 import { Store } from '@ngrx/store';
-import { Subscription } from 'rxjs';
+import { Subscription, firstValueFrom } from 'rxjs';
 import { selectCurrentUser } from '../../store/auth/auth.selectors';
+import { EventService } from '../services/event.service';
+import { TagService } from '../services/tag.service';
 import { AuthState } from '../../store/auth/auth.state';
 
 interface CalendarEvent {
@@ -19,7 +28,7 @@ interface CalendarEvent {
   styleUrls: ['./my-events.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MyEvents implements OnInit {
+export class MyEvents implements OnInit, OnDestroy {
   public allMyEvents: EventDto[] = [];
   public calendarEvents: CalendarEvent[] = [];
   public eventsForSelectedDay: EventDto[] = [];
@@ -28,13 +37,16 @@ export class MyEvents implements OnInit {
   public error: string | null = null;
   public currentUserId: string | null = null;
 
+  public allTags: TagDto[] = [];
+
   private authSubscription: Subscription | undefined;
 
   constructor(
     private eventService: EventService,
+    private tagService: TagService,
 
-    private cdr: ChangeDetectorRef,
-    private store: Store<AuthState>
+    private store: Store<AuthState>,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -44,38 +56,58 @@ export class MyEvents implements OnInit {
       .select(selectCurrentUser)
       .subscribe((user: DecodedToken | null) => {
         this.currentUserId = user ? user.sub : null;
-      });
-    // ---------------------------------------------
 
-    this.loadMyEvents();
+        this.loadInitialData();
+
+        this.cdr.markForCheck();
+      });
   }
 
   ngOnDestroy(): void {
     this.authSubscription?.unsubscribe();
   }
 
-  loadMyEvents(): void {
+  loadInitialData(): void {
     this.isLoading = true;
     this.error = null;
+    this.cdr.markForCheck();
 
-    this.eventService.getMyEvents().subscribe({
-      next: (data) => {
-        this.allMyEvents = data;
+    // Переконуємося, що в нас є користувач, перш ніж запитувати його події
+    if (!this.currentUserId) {
+      this.isLoading = false;
+      this.error = 'Please log in to see your events.';
+      this.cdr.markForCheck();
+      return;
+    }
+
+    // Використовуємо Promise.all для паралельного завантаження
+    Promise.all([
+      // getMyEvents() тепер неявно використовує ID користувача з токена (через Interceptor)
+      firstValueFrom(this.eventService.getMyEvents()),
+      firstValueFrom(this.tagService.getAllTags()),
+    ])
+      .then(([eventsData, tagsData]) => {
+        // Обробка подій
+        this.allMyEvents = eventsData;
         this.calendarEvents = this.allMyEvents.map((event) => ({
           title: event.title,
           date: new Date(event.start),
         }));
         this.filterEventsForDate(this.selectedDate);
+
+        // Обробка тегів
+        this.allTags = tagsData;
+
+        // Завершення
         this.isLoading = false;
         this.cdr.markForCheck();
-      },
-      error: (err) => {
-        console.error('Failed to load my events', err);
-        this.error = 'Could not load your events. Please try again.';
+      })
+      .catch((err) => {
+        console.error('Failed to load initial data for MyEvents', err);
+        this.error = 'Could not load your events or tags. Please try again.';
         this.isLoading = false;
         this.cdr.markForCheck();
-      },
-    });
+      });
   }
 
   public onDateSelected(date: Date): void {
@@ -93,6 +125,7 @@ export class MyEvents implements OnInit {
       );
     });
   }
+
   public isOrganizer(event: EventDto): boolean {
     return this.currentUserId != null && event.organizerId === this.currentUserId;
   }

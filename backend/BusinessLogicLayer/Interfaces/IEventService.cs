@@ -1,5 +1,5 @@
 ﻿using BusinessLogicLayer.Common;
-using BusinessLogicLayer.Dtos;
+using BusinessLogicLayer.Dtos.Event;
 using DataAccessLayer.Entities;
 using System;
 using System.Collections.Generic;

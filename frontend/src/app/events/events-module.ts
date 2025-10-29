@@ -17,6 +17,7 @@ import { authReducer } from '../store/auth/auth.reducer';
 import { AuthEffects } from '../store/auth/auth.effects';
 import { StoreModule } from '@ngrx/store';
 import { AuthModule } from '../auth/auth-module';
+import { AiAssistant } from '../shared/ai-assistant/ai-assistant';
 @NgModule({
   declarations: [Events, MyEvents, CreateEvent, EditEvent],
   imports: [

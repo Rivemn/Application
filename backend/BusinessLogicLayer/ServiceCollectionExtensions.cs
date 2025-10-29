@@ -15,6 +15,9 @@ namespace BusinessLogicLayer
 			services.AddScoped<IAuthService, AuthService>();
 			services.AddScoped<IEventService, EventService>();
 
+			services.AddScoped<ITagService, TagService>();
+			services.AddScoped<IAiAssistantService, AiAssistantService>();
+
 			services.AddAutoMapper(typeof(MappingProfile));
 
 			return services;

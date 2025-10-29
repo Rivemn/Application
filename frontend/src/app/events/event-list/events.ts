@@ -37,8 +37,7 @@ export class Events implements OnInit {
       .select(selectCurrentUser)
       .subscribe((user: DecodedToken | null) => {
         this.currentUserId = user ? user.sub : null;
-        this.loadEvents(); // Завантажуємо події *після* отримання ID користувача
-        // this.cdr.markForCheck(); // loadEvents сам викличе markForCheck
+        this.loadEvents();
       });
   }
 

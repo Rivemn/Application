@@ -1,5 +1,5 @@
 ﻿using BusinessLogicLayer.Common;
-using BusinessLogicLayer.Dtos;
+using BusinessLogicLayer.Dtos.Auth;
 using System;
 using System.Collections.Generic;
 using System.Linq;

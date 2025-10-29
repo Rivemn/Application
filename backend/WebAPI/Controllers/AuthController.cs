@@ -1,5 +1,5 @@
 ﻿using BusinessLogicLayer.Common;
-using BusinessLogicLayer.Dtos;
+using BusinessLogicLayer.Dtos.Auth;
 using BusinessLogicLayer.Interfaces;
 using BusinessLogicLayer.Services;
 using Microsoft.AspNetCore.Authorization;

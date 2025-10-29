@@ -1,5 +1,5 @@
 ﻿using BusinessLogicLayer.Common;
-using BusinessLogicLayer.Dtos;
+using BusinessLogicLayer.Dtos.Event;
 using BusinessLogicLayer.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

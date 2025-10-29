@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using BusinessLogicLayer.Dtos;
+using BusinessLogicLayer.Dtos.Auth;
+using BusinessLogicLayer.Dtos.Event;
 using BusinessLogicLayer.Mappings.Resolvers;
 using DataAccessLayer.Entities;
 
