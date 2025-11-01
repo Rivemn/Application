@@ -4,6 +4,9 @@ using WebAPI.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+builder.Configuration.AddEnvironmentVariables();
+
 builder.Services.AddCors(options =>
 {
 	options.AddPolicy("AllowAngularDev", policy =>
@@ -28,10 +31,17 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
 	app.UseSwaggerDocumentation();
-	app.UseCors("AllowAngularDev");
+
 }
 
 app.UseRouting();
+
+
+if (app.Environment.IsDevelopment())
+{
+	app.UseCors("AllowAngularDev");
+}
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

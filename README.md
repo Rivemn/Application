@@ -1,48 +1,70 @@
-🚀 Quick Deploy (Production)
+## 🛠️ Development Quick Start
 
-1. Prerequisites
+### 1. Environment
 
-Ensure docker and docker-compose are installed on your server.
+1.  Create a `.env` file from `.env.example`.
+2.  Fill it with your **development** values (e.g., `ASPNETCORE_ENVIRONMENT=Development`, `DB_NAME=myapp_db_dev`, `DOMAIN=localhost`, `NGINX_PORT=80`).
 
-Point your domain's (YOUR-DOMAIN.com) A-record to your server's IP.
+### 2. Launch
 
-Create a .env file from .env.example and fill in your production values (especially DOMAIN=YOUR-DOMAIN.com).
+1.  Run the development build:
+    ```bash
+    docker-compose -f docker-compose.dev.yml up --build
+    ```
+2.  The application will be available at `http://localhost` (or the port you specified in `NGINX_PORT`).
+3.  Swagger UI will be available at `http://localhost/swagger/`.
 
-2. Step 1: Get SSL Certificate (First-time only)
+---
 
-Temporarily edit your docker-compose.yml:
+## 🚀 Quick Deploy (Production)
 
-In the nginx service volumes section:
+### 1. Prerequisites
 
-Change ./nginx/nginx.prod.conf to ./nginx/nginx.init.conf.
+- Ensure `docker` and `docker-compose` are installed on your server.
+- Point your domain's (`YOUR-DOMAIN.com`) A-record to your server's IP.
+- Create a `.env` file from `.env.example` and fill in your **production** values (especially `DOMAIN=YOUR-DOMAIN.com`).
 
-Start only Nginx:
+### 2. Step 1: Get SSL Certificate (First-time only)
 
-docker-compose up -d nginx
+1.  Temporarily edit your `docker-compose.yml`:
 
-Run Certbot (replace with your email and your domain):
+    - In the `nginx` service `volumes` section, change `./nginx/nginx.prod.conf` to `./nginx/nginx.init.conf`.
 
-docker run -it --rm \
- -v application_certbot_conf:/etc/letsencrypt \
- -v application_certbot_www:/var/www/certbot \
- certbot/certbot certonly \
- --webroot -w /var/www/certbot \
- -d eventmanagement.duckdns.org \
- -m YOUR-EMAIL@example.com \
- --agree-tos \
- --no-eff-email
-Stop the temporary Nginx:
+2.  Start only Nginx:
 
-docker-compose down
+    ```bash
+    docker-compose up -d nginx
+    ```
 
-3. Step 2: Launch Application
+3.  Run Certbot (replace with your email and your domain):
 
-Revert your docker-compose.yml change:
+    ```bash
+    docker run -it --rm \
+     -v application_certbot_conf:/etc/letsencrypt \
+     -v application_certbot_www:/var/www/certbot \
+     certbot/certbot certonly \
+     --webroot -w /var/www/certbot \
+     -d eventmanagement.duckdns.org \
+     -m YOUR-EMAIL@example.com \
+     --agree-tos \
+     --no-eff-email
+    ```
 
-In the nginx service, change ./nginx/nginx.init.conf back to ./nginx/nginx.prod.conf.
+4.  Stop the temporary Nginx:
+    ```bash
+    docker-compose down
+    ```
 
-Launch the entire application stack:
+### 3. Step 2: Launch Application
 
-docker-compose up -d --build
+1.  Revert your `docker-compose.yml` change:
 
-Your site is now live at https://YOUR-DOMAIN.com. Certificates will renew automatically.
+    - In the `nginx` service, change `./nginx/nginx.init.conf` back to `./nginx/nginx.prod.conf`.
+
+2.  Launch the entire application stack:
+
+    ```bash
+    docker-compose up -d --build
+    ```
+
+3.  Your site is now live at `https://YOUR-DOMAIN.com`. Certificates will renew automatically.
