@@ -12,5 +12,3 @@ export const selectIsLoggedIn = createSelector(selectAuthState, (state) => !!sta
 export const selectCurrentUser = createSelector(selectAuthState, (state) => state.user);
 
 export const selectAccessToken = createSelector(selectAuthState, (state) => state.accessToken);
-
-export const selectRefreshToken = createSelector(selectAuthState, (state) => state.refreshToken);

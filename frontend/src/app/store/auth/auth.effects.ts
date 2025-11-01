@@ -17,7 +17,7 @@ import { Store } from '@ngrx/store';
 import { AuthState } from './auth.state';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthResult } from '../../models/auth/AuthResult';
-import { selectRefreshToken, selectAccessToken } from './auth.selectors';
+import { selectAccessToken } from './auth.selectors';
 
 @Injectable()
 export class AuthEffects {
@@ -114,16 +114,18 @@ export class AuthEffects {
 
     this.refreshToken$ = createEffect(() =>
       this.actions$.pipe(
-        ofType(AuthActions.refreshToken),
-        withLatestFrom(this.store.select(selectRefreshToken), this.store.select(selectAccessToken)),
-        switchMap(([action, refreshToken, accessToken]) => {
-          if (!refreshToken || !accessToken) {
-            return rxOf(
-              AuthActions.refreshTokenFailure({ error: 'No refresh/access token available' })
-            );
-          }
+        ofType(AuthActions.refreshToken), // withLatestFrom(this.store.select(selectRefreshToken), this.store.select(selectAccessToken)), // switchMap(([action, refreshToken, accessToken]) => { // <-- Старая строка
+        // ИЗМЕНЕНИЕ: Убираем withLatestFrom, т.к. refreshToken больше не в state
+        switchMap(() => {
+          // <-- Новая строка
 
-          return this.authService.refresh({ refreshToken }, accessToken).pipe(
+          // ИЗМЕНЕНИЕ: Убираем проверку на refreshToken
+          // if (!refreshToken || !accessToken) { ... } // <-- УДАЛЕНО
+
+          // ИЗМЕНЕНИЕ: Вызываем authService.refresh() без аргументов
+          // return this.authService.refresh({ refreshToken }, accessToken).pipe( // <-- Старая строка
+          return this.authService.refresh().pipe(
+            // <-- Новая строка
             map((authResult: AuthResult) => {
               if (authResult.succeeded && authResult.response) {
                 return AuthActions.refreshTokenSuccess({ authResponse: authResult.response });
@@ -144,7 +146,6 @@ export class AuthEffects {
         })
       )
     );
-
     this.refreshFailure$ = createEffect(() =>
       this.actions$.pipe(
         ofType(AuthActions.refreshTokenFailure),

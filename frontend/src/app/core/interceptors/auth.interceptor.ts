@@ -17,6 +17,9 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(private store: Store<AuthState>) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    req = req.clone({
+      withCredentials: true,
+    });
     if (
       req.url.includes('/api/Auth/login') ||
       req.url.includes('/api/Auth/register') ||
@@ -27,7 +30,6 @@ export class AuthInterceptor implements HttpInterceptor {
 
     return this.addTokenToRequest(req, next);
   }
-
   private addTokenToRequest(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return this.store.select(selectAccessToken).pipe(
       take(1),

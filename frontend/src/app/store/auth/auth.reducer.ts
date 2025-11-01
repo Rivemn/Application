@@ -7,9 +7,6 @@ import { jwtDecode } from 'jwt-decode';
 function setStorage(response: AuthResponse): DecodedToken | null {
   try {
     localStorage.setItem('accessToken', response.accessToken);
-
-    localStorage.setItem('refreshToken', response.refreshToken ?? '');
-
     const user = jwtDecode<DecodedToken>(response.accessToken);
     return user;
   } catch (e) {
@@ -17,11 +14,9 @@ function setStorage(response: AuthResponse): DecodedToken | null {
     return null;
   }
 }
-
 // Допоміжна функція для очищення
 function clearStorageAndState(): AuthState {
   localStorage.removeItem('accessToken');
-  localStorage.removeItem('refreshToken');
   return initialAuthState;
 }
 
@@ -55,12 +50,10 @@ export const authReducer = createReducer(
         isLoading: false,
         error: null,
         accessToken: authResponse.accessToken,
-        refreshToken: authResponse.refreshToken ?? null,
         user: user,
       };
     }
   ),
-
   // --- Невдача ---
   on(
     AuthActions.loginFailure,
@@ -80,11 +73,8 @@ export const authReducer = createReducer(
 
   // --- Завантаження зі сховища при старті ---
   on(AuthActions.loadAuthFromStorage, (state): AuthState => {
-    const accessToken = localStorage.getItem('accessToken');
-    const refreshToken = localStorage.getItem('refreshToken'); // localStorage.getItem() повертає string | null, що коректно
-
-    if (!accessToken || !refreshToken) {
-      // Якщо null або "", це спрацює
+    const accessToken = localStorage.getItem('accessToken'); // ИЗМЕНЕНИЕ: Больше не читаем refreshToken из localStorage // const refreshToken = localStorage.getItem('refreshToken'); // <-- УДАЛЕНО // ИЗМЕНЕНИЕ: Убираем проверку на refreshToken
+    if (!accessToken) {
       return initialAuthState;
     }
 
@@ -99,11 +89,10 @@ export const authReducer = createReducer(
       return {
         ...state,
         accessToken: accessToken,
-        refreshToken: refreshToken,
         user: user,
       };
     } catch (error) {
-      return clearStorageAndState(); // Невалідний токен
+      return clearStorageAndState();
     }
   })
 );
