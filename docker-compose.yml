@@ -24,6 +24,8 @@ services:
       args:
         CONFIGURATION: ${BUILD_CONFIGURATION}
     container_name: ${PROJECT_NAME}_backend
+    env_file:
+      - .env
     environment:
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
       ASPNETCORE_URLS: http://+:5000
