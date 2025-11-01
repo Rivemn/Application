@@ -26,7 +26,7 @@ export class AuthService {
     return this.http.post<AuthResult>(`${this.apiUrl}/login`, data);
   }
 
-  refresh(data: RefreshTokenRequestDto, accessToken: string): Observable<AuthResult> {
-    return this.http.post<AuthResult>(`${this.apiUrl}/refresh`, data);
+  refresh(): Observable<AuthResult> {
+    return this.http.post<AuthResult>(`${this.apiUrl}/refresh`, {});
   }
 }

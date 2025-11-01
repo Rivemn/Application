@@ -44,8 +44,7 @@ namespace WebAPI.Controllers
 				{
 					result.Data.AccessToken,
 					result.Data.ExpiresAt,
-					result.Data.Email,
-					result.Data.RefreshToken
+					result.Data.Email
 				},
 				errors = Array.Empty<string>(),
 				errorCode = (string?)null
@@ -79,7 +78,6 @@ namespace WebAPI.Controllers
 					result.Data.AccessToken,
 					result.Data.ExpiresAt,
 					result.Data.Email,
-					result.Data.RefreshToken
 				},
 				errors = Array.Empty<string>(),
 				errorCode = (string?)null
@@ -128,7 +126,6 @@ namespace WebAPI.Controllers
 					result.Data.AccessToken,
 					result.Data.ExpiresAt,
 					result.Data.Email,
-					result.Data.RefreshToken
 				},
 				errors = Array.Empty<string>(),
 				errorCode = (string?)null
